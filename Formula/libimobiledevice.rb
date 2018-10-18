@@ -14,7 +14,7 @@ class Libimobiledevice < Formula
   end
 
   head do
-    url "https://git.libimobiledevice.org/libimobiledevice.git"
+    url "https://github.com/kobiton/libimobiledevice.git", :branch => "kobiton"
     depends_on "autoconf" => :build
     depends_on "automake" => :build
     depends_on "libtool" => :build
