@@ -1,4 +1,3 @@
-# This file is the edit version of commit 1b62cb95ea3acc6386e1a59e4f46b9fe8ff41ff3
 class Ffmpeg < Formula
   desc "Play, record, convert, and stream audio and video"
   homepage "https://ffmpeg.org/"
