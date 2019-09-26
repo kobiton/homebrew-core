@@ -24,7 +24,7 @@ class Libimobiledevice < Formula
   depends_on "pkg-config" => :build
   depends_on "libplist"
   depends_on "libtasn1"
-  depends_on "openssl"
+  depends_on "openssl@1.1"
   depends_on "usbmuxd"
 
   def install
