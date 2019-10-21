@@ -25,7 +25,7 @@ class Usbmuxd < Formula
   end
 
   head do
-    url "https://github.com/kobiton/libusbmuxd.git"
+    url "https://github.com/kobiton/libusbmuxd.git", :tag => "v2.14.0"
 
     depends_on "autoconf" => :build
     depends_on "automake" => :build
