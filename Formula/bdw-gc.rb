@@ -1,15 +1,15 @@
 class BdwGc < Formula
   desc "Garbage collector for C and C++"
   homepage "https://www.hboehm.info/gc/"
-  url "https://github.com/ivmai/bdwgc/releases/download/v7.6.8/gc-7.6.8.tar.gz"
-  sha256 "040ac5cdbf1bebc7c8cd4928996bbae0c54497c151ea5639838fa0128102e258"
+  url "https://github.com/ivmai/bdwgc/releases/download/v8.0.4/gc-8.0.4.tar.gz"
+  sha256 "436a0ddc67b1ac0b0405b61a9675bca9e075c8156f4debd1d06f3a56c7cd289d"
 
   bottle do
     cellar :any
-    sha256 "54404df7c3199dcdf7ac78df64791b36ef3fb841eb32d7e7e5130c6bd9fbfb8f" => :mojave
-    sha256 "ba0c4e665f50956ebe41269a91c812e5c752828cb669ea83d9ed76965ed8f4eb" => :high_sierra
-    sha256 "e77147a4e1bd4cb5d007ca98ff8792f2ae769b2ee8029d59eb52fec5d23140a7" => :sierra
-    sha256 "00146ac7fa9bdb2f06788ebe3f1a33bff19a2c26f431cd78d51507764ba39558" => :el_capitan
+    sha256 "3c8765da91b046c3ab3f73fb00f885608dc4d8415071ca0170f4aa7b1048a6bf" => :catalina
+    sha256 "05219d7d030791e3c3e3751b36a603a710cce86dc63c97cc64ea6743b8828406" => :mojave
+    sha256 "280e51afa899236777022c30b756fb4b87e034b9e23a5526c183fe3d0e24731c" => :high_sierra
+    sha256 "6a4132230171a8bff236796655c87f453d9f711ea1d22a9e0d61ac05dc624394" => :sierra
   end
 
   head do
@@ -27,7 +27,8 @@ class BdwGc < Formula
     system "./configure", "--disable-debug",
                           "--disable-dependency-tracking",
                           "--prefix=#{prefix}",
-                          "--enable-cplusplus"
+                          "--enable-cplusplus",
+                          "--enable-static"
     system "make"
     system "make", "check"
     system "make", "install"

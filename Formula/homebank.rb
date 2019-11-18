@@ -1,14 +1,14 @@
 class Homebank < Formula
   desc "Manage your personal accounts at home"
   homepage "http://homebank.free.fr"
-  url "http://homebank.free.fr/public/homebank-5.2.1.tar.gz"
-  sha256 "7fe1dd487bca1115e59d7668aeb4de32eb8ce1964f74d24ceb28694736597744"
+  url "http://homebank.free.fr/public/homebank-5.2.8.tar.gz"
+  sha256 "fe98a3585a23ed66695a96b9162dbf1872f4fd78c01471019b60786476bc558d"
+  revision 1
 
   bottle do
-    sha256 "26a0cc3cf6eb56cc5523e7a18395ff7c76f3dc69ca896df2947c82122db08e8e" => :mojave
-    sha256 "1c66b7a0b56f88137724074fb6c663b4844e365c0dcad4dab2306cb4535ece9b" => :high_sierra
-    sha256 "b5d0f629bf7edb08e966bab0661a15b6b621b5e28cfba415ddbafc1cfce77e84" => :sierra
-    sha256 "8bda09727dabefac523464eaa6683bf067c35406aaad0ad730f3401c7b135b97" => :el_capitan
+    sha256 "4db7d01578a8588f38d2f481830e662b11039bde595c9958e51839d5a4471360" => :catalina
+    sha256 "f6f16efea946ceac7d430f3aef7177454c11b759cc64433ef140b3e209dbb8b7" => :mojave
+    sha256 "4ea21bb9617242f762aee8f92d152b21408c8908a4a7f1e0c7a79fb83bfd6888" => :high_sierra
   end
 
   depends_on "intltool" => :build

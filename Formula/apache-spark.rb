@@ -1,9 +1,9 @@
 class ApacheSpark < Formula
   desc "Engine for large-scale data processing"
   homepage "https://spark.apache.org/"
-  url "https://www.apache.org/dyn/closer.lua?path=spark/spark-2.3.2/spark-2.3.2-bin-hadoop2.7.tgz"
-  version "2.3.2"
-  sha256 "6246b20d95c7596a29fb26d5b50a3ae3163a35915bec6c515a8e183383bedc43"
+  url "https://www.apache.org/dyn/closer.lua?path=spark/spark-2.4.4/spark-2.4.4-bin-hadoop2.7.tgz"
+  version "2.4.4"
+  sha256 "72833745defba95262fbe67306a48c251dbbe17585d65f6095057fc3dc2812ea"
   head "https://github.com/apache/spark.git"
 
   bottle :unneeded
@@ -21,6 +21,6 @@ class ApacheSpark < Formula
   end
 
   test do
-    assert_match "Long = 1000", pipe_output(bin/"spark-shell", "sc.parallelize(1 to 1000).count()")
+    assert_match "Long = 1000", pipe_output(bin/"spark-shell --conf spark.driver.bindAddress=127.0.0.1", "sc.parallelize(1 to 1000).count()")
   end
 end

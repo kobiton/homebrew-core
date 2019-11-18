@@ -1,15 +1,14 @@
 class Compcert < Formula
   desc "Formally verified C compiler"
   homepage "http://compcert.inria.fr"
-  url "https://github.com/AbsInt/CompCert/archive/v3.4.tar.gz"
-  sha256 "7098136318ea1db90d9807a58fd27e90306e8022cb7d6e335ca2c13f3787ec89"
+  url "https://github.com/AbsInt/CompCert/archive/v3.6.tar.gz"
+  sha256 "7a77839f6b990ab632ba14feccf4f17da189f0e3b95d6ce2ef0986e4caebc575"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "67ecedda2c906df96558f64d918fb4b1eacf82f51931d090db17c4533eeb8bc0" => :mojave
-    sha256 "037513cdd7b75ba60e9ab3fb2e78201e7bb3eb36bc02aa8493377e7e8ada3e58" => :high_sierra
-    sha256 "54a044c3b9f387eb400c2a7e881a2b2df040d02786fbd37da8948db2a362ae9a" => :sierra
-    sha256 "6d33c7c5f3e1fb223a164392b1cdaa7c548d8bf8f44f0c0a7472bc4683a8a4de" => :el_capitan
+    sha256 "e904948cfca89178fa8c3c30c915297dac6e7c2e6d0b6e92c73751840dc7d93e" => :mojave
+    sha256 "bf146ab08494dbc6980eb6ec1974293c429bfad58e7bc1dcd1d9ee38bfb2d40c" => :high_sierra
+    sha256 "cec12dd570caf6a5ac749a73adb88e5dd2d3a0ab354e586857a00a0d1ee2aaa3" => :sierra
   end
 
   depends_on "coq" => :build

@@ -1,41 +1,27 @@
 class Libomp < Formula
   desc "LLVM's OpenMP runtime library"
   homepage "https://openmp.llvm.org/"
-  url "https://releases.llvm.org/6.0.1/openmp-6.0.1.src.tar.xz"
-  sha256 "66afca2b308351b180136cf899a3b22865af1a775efaf74dc8a10c96d4721c5a"
+  url "https://releases.llvm.org/9.0.0/openmp-9.0.0.src.tar.xz"
+  sha256 "9979eb1133066376cc0be29d1682bc0b0e7fb541075b391061679111ae4d3b5b"
 
   bottle do
     cellar :any
-    sha256 "dbaecca3bef86692ab838e66ab605ee75b5d1cd08350b06a28177c17b2859762" => :mojave
-    sha256 "046f659ad8a2cc336049a1e7f7be0dac2f2e28ce322409f10396f9582b94b660" => :high_sierra
-    sha256 "ba1b9a78326c671fb864a95d93f2fcf47f3af2ef8f12f6c7ee54a7c0cf7802b4" => :sierra
-    sha256 "0ea5b6ae3e9e0b32a2b49a7430fb0f653430107164089b067a7b0039e91ce527" => :el_capitan
+    sha256 "9fd9fde692bb74837400788a60ceb3822fee3560ee4f013f9163710abd3117c1" => :catalina
+    sha256 "fb4cd79b18ce160393ab87bf8c7bea5c1e52d0bb2b26fd70058d5239010e6635" => :mojave
+    sha256 "22213fdebbde7cd5b793203b18280d35b70add744b496751821dd060e5ab1326" => :high_sierra
   end
 
   depends_on "cmake" => :build
   depends_on :macos => :yosemite
 
   def install
-    system "cmake", ".", *std_cmake_args
+    # Disable LIBOMP_INSTALL_ALIASES, otherwise the library is installed as
+    # libgomp alias which can conflict with GCC's libgomp.
+    system "cmake", ".", *std_cmake_args, "-DLIBOMP_INSTALL_ALIASES=OFF"
     system "make", "install"
-    system "cmake", ".", "-DLIBOMP_ENABLE_SHARED=OFF", *std_cmake_args
+    system "cmake", ".", "-DLIBOMP_ENABLE_SHARED=OFF", *std_cmake_args,
+                         "-DLIBOMP_INSTALL_ALIASES=OFF"
     system "make", "install"
-  end
-
-  def caveats; <<~EOS
-    On Apple Clang, you need to add several options to use OpenMP's front end
-    instead of the standard driver option. This usually looks like
-      -Xpreprocessor -fopenmp -lomp
-
-    You might need to make sure the lib and include directories are discoverable
-    if #{HOMEBREW_PREFIX} is not searched:
-
-      -L#{opt_lib} -I#{opt_include}
-
-    For CMake, the following flags will cause the OpenMP::OpenMP_CXX target to
-    be set up correctly:
-      -DOpenMP_CXX_FLAGS="-Xpreprocessor -fopenmp -I#{opt_include}" -DOpenMP_CXX_LIB_NAMES="omp" -DOpenMP_omp_LIBRARY=#{opt_lib}/libomp.dylib
-  EOS
   end
 
   test do

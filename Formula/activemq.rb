@@ -1,12 +1,12 @@
 class Activemq < Formula
   desc "Apache ActiveMQ: powerful open source messaging server"
   homepage "https://activemq.apache.org/"
-  url "https://www.apache.org/dyn/closer.cgi?path=/activemq/5.15.6/apache-activemq-5.15.6-bin.tar.gz"
-  sha256 "0d5493da5eea538f62f8858c1983572c706fab8443fcf8eedf26bb605a98c600"
+  url "https://www.apache.org/dyn/closer.cgi?path=/activemq/5.15.10/apache-activemq-5.15.10-bin.tar.gz"
+  sha256 "e4b37693eae9b8d6fa9717176d3696d36eb4c516cf0baea21823e1f0c0b1cfab"
 
   bottle :unneeded
 
-  depends_on :java => "1.7+"
+  depends_on :java => "1.8+"
 
   def install
     rm_rf Dir["bin/linux-x86-*"]

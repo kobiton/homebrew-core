@@ -5,15 +5,14 @@ class PandocCrossref < Formula
 
   desc "Pandoc filter for numbering and cross-referencing"
   homepage "https://github.com/lierdakil/pandoc-crossref"
-  url "https://hackage.haskell.org/package/pandoc-crossref-0.3.3.0/pandoc-crossref-0.3.3.0.tar.gz"
-  sha256 "3c36ea56cb5feb167806e59e97613470f887c068dc27a9332fe91df0d183cc3e"
+  url "https://hackage.haskell.org/package/pandoc-crossref-0.3.4.1/pandoc-crossref-0.3.4.1.tar.gz"
+  sha256 "de22767a19cb8b58fb77be4e85e05040e68830b37eb565afa6f63c8da7221aa6"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "f393944b4015b3bf249f774e5cc7f242adb9a06ac2951e0d41e47c829b3d18f7" => :mojave
-    sha256 "8ab28ffcd5baa7dbf4ddfc911bbafa1e9b1fb6dcd2191c4e36588a3ac867ad46" => :high_sierra
-    sha256 "660fbcc8fdd583bcf3740c6fc8bd312b5970c3f4ff140b5ebc482bd1a4fc9afa" => :sierra
-    sha256 "9ed94e5c687ca4962b15b99f79febbf00dac8a729338e9e4c44e7ee106a15e07" => :el_capitan
+    sha256 "b0fa6168a6ea1ee11fef90adb7efad220e8ed63c7929bea59af5d6e594449496" => :mojave
+    sha256 "d530921cde82795081d8c3fae684eecfb254641c9e0e8101197196dbf8390aa5" => :high_sierra
+    sha256 "317f60c2fa7fdb295dc4f9608e8ee275fc3ebfe5b5b196346b475ec43e7a414a" => :sierra
   end
 
   depends_on "cabal-install" => :build
@@ -21,9 +20,7 @@ class PandocCrossref < Formula
   depends_on "pandoc"
 
   def install
-    args = []
-    args << "--constraint=cryptonite -support_aesni" if MacOS.version <= :lion
-    install_cabal_package *args
+    install_cabal_package
   end
 
   test do

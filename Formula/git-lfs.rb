@@ -1,24 +1,23 @@
 class GitLfs < Formula
   desc "Git extension for versioning large files"
   homepage "https://github.com/git-lfs/git-lfs"
-  url "https://github.com/git-lfs/git-lfs/archive/v2.5.2.tar.gz"
-  sha256 "0ab21f0f9b6c40acd9748a1669f1023ef38f913d8be83bbf7b7c7d983bd3c4d1"
+  url "https://github.com/git-lfs/git-lfs/releases/download/v2.8.0/git-lfs-v2.8.0.tar.gz"
+  sha256 "3347bbe6055b38902e4ef65d0f0aa00b3f100b2ad67a43aee6f340e4eb731535"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "3377acf8787d371ad90ef8b7ff71d6b57b449f9ff5b39c3a90238b67347e4801" => :mojave
-    sha256 "1d63156198f40531d37835cef7aea1c0d3bccd139e5c479275ee9cc23f8f5e57" => :high_sierra
-    sha256 "954c4e5cc6f3351752b679a75ada30f3b58605c2bbfdc9f41c7d034176ba822b" => :sierra
-    sha256 "6254b44ef41509d07398976dbefa8cab59cbd9eb25d59fa40f8ed5d30e2aecf4" => :el_capitan
+    sha256 "1dfa249482bce6cdbfc46d6d34e88afd4fc7947dd98d4072b5c6c8909a31b03c" => :mojave
+    sha256 "1ea60ee3dffe2ce7af00768361dbd4b2783d2159b7b269960d8504b0ab05c3a6" => :high_sierra
+    sha256 "5f4a9d27c5d73aea0c8cb4ed403e15df4885d7aac44fec4d3fee1a82779c6a05" => :sierra
   end
 
   depends_on "go" => :build
+  uses_from_macos "ruby"
 
   # System Ruby uses old TLS versions no longer supported by RubyGems.
   depends_on "ruby" => :build if MacOS.version <= :sierra
 
   def install
-    ENV["GOPATH"] = buildpath
     ENV["GIT_LFS_SHA"] = ""
     ENV["VERSION"] = version
 
@@ -27,6 +26,7 @@ class GitLfs < Formula
       ENV["GEM_HOME"] = ".gem_home"
       system "gem", "install", "ronn"
 
+      system "make", "vendor"
       system "make"
       system "make", "man", "RONN=.gem_home/bin/ronn"
 

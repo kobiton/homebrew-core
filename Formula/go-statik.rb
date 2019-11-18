@@ -1,15 +1,15 @@
 class GoStatik < Formula
   desc "Embed files into a Go executable"
   homepage "https://github.com/rakyll/statik"
-  url "https://github.com/rakyll/statik/archive/v0.1.4.tar.gz"
-  sha256 "3f547d8d2033b1b16a3549f48b69e8671a64fd6b18aea2322007f54c837d1dde"
+  url "https://github.com/rakyll/statik/archive/v0.1.6.tar.gz"
+  sha256 "f157a1ada813eb643ddd9a60a0efe3158f1da25b1d11bc1ef6c7fa219d4b23bf"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "18339f5e80245b9bc68e34ff1b20a049174bdf5204b8db52c11259c9b4906e2f" => :mojave
-    sha256 "0d487e1428fd79d04c28d9b355c4ce22f090868b35f90e6f21c7bf6c0e801ff6" => :high_sierra
-    sha256 "f6e4f1d7b34a2598e75bd8172b948646d78d08e2f6b096404fd365e3673d2a48" => :sierra
-    sha256 "5c07aec9cad77dc1d0ace389456cb30c331f943f63eb2d5fa4af117bd6c4b960" => :el_capitan
+    sha256 "0f746f843baa189a6c418fbd0ab441e5fce4cadfaa3b85cb10b694b55a144d3b" => :catalina
+    sha256 "4e347596a83f169bdb0b72cd81d69ea275966fead97f7decb67c873380c179b8" => :mojave
+    sha256 "4ec52d9626abcbb07f25640c9ecec4e620faa9ee619f6f289f172aa7bc509590" => :high_sierra
+    sha256 "e0e8c356eb1ed32cf074d4abfa81fd8fa9d6d8dfb7c7724c696a521f974a3b44" => :sierra
   end
 
   depends_on "go" => :build
@@ -17,7 +17,7 @@ class GoStatik < Formula
   conflicts_with "statik", :because => "both install `statik` binaries"
 
   def install
-    ENV["GOPATH"] = buildpath
+    ENV["GOPATH"] = HOMEBREW_CACHE/"go_cache"
     (buildpath/"src/github.com/rakyll/statik").install buildpath.children
 
     cd "src/github.com/rakyll/statik" do
@@ -27,7 +27,8 @@ class GoStatik < Formula
   end
 
   test do
-    system bin/"statik", "-src", "/Library/Fonts/STIXGeneral.otf"
+    font_name = (MacOS.version >= :catalina) ? "Arial Unicode.ttf" : "Arial.ttf"
+    system bin/"statik", "-src", "/Library/Fonts/#{font_name}"
     assert_predicate testpath/"statik/statik.go", :exist?
     refute_predicate (testpath/"statik/statik.go").size, :zero?
   end

@@ -1,7 +1,7 @@
 class Gtkx < Formula
   desc "GUI toolkit"
   homepage "https://gtk.org/"
-  revision 2
+  revision 3
 
   stable do
     url "https://download.gnome.org/sources/gtk+/2.24/gtk+-2.24.32.tar.xz"
@@ -9,10 +9,11 @@ class Gtkx < Formula
   end
 
   bottle do
-    sha256 "1cf12a33a310ade188f96a927d2e916eab0b94785e2c4c98e400a20caa71e213" => :mojave
-    sha256 "f1e4965a3aa5655e628e46c1ffd9421ec1abf9ba4f0757be1ce7b3a8009fec58" => :high_sierra
-    sha256 "77275da434ff045cab02f69e3847b983510bd2f45e022b0af0adb620c6a6821a" => :sierra
-    sha256 "f6117acd04e65a2ec378ad21b8b6519dc0d048f24b398456c09474af74ec2c11" => :el_capitan
+    rebuild 1
+    sha256 "09e223d16f3e891d2a4184c66fecbf0a777e70e23680ac794dd8c44e4a63d5cf" => :catalina
+    sha256 "cec64106c085533a58f8d436f029b2d7199a14cd15af9ece086814396ba48b0e" => :mojave
+    sha256 "30ce8d0a4062200196f8d802ae75769d8e05d530c338619d290704c46a7d317b" => :high_sierra
+    sha256 "a1324b85f6749111c3eb598c6d3ed231eaa8281b60fc2eb13d48a5f342da3efc" => :sierra
   end
 
   head do
@@ -30,7 +31,6 @@ class Gtkx < Formula
   depends_on "gdk-pixbuf"
   depends_on "hicolor-icon-theme"
   depends_on "pango"
-  depends_on "jasper" => :optional
 
   # Patch to allow Eiffel Studio to run in Cocoa / non-X11 mode, as well as Freeciv's freeciv-gtk2 client
   # See:
@@ -47,6 +47,7 @@ class Gtkx < Formula
     args = ["--disable-dependency-tracking",
             "--disable-silent-rules",
             "--prefix=#{prefix}",
+            "--enable-static",
             "--disable-glibtest",
             "--enable-introspection=yes",
             "--with-gdktarget=quartz",
@@ -79,6 +80,7 @@ class Gtkx < Formula
     gdk_pixbuf = Formula["gdk-pixbuf"]
     gettext = Formula["gettext"]
     glib = Formula["glib"]
+    harfbuzz = Formula["harfbuzz"]
     libpng = Formula["libpng"]
     pango = Formula["pango"]
     pixman = Formula["pixman"]
@@ -91,6 +93,7 @@ class Gtkx < Formula
       -I#{gettext.opt_include}
       -I#{glib.opt_include}/glib-2.0
       -I#{glib.opt_lib}/glib-2.0/include
+      -I#{harfbuzz.opt_include}/harfbuzz
       -I#{include}/gtk-2.0
       -I#{libpng.opt_include}/libpng16
       -I#{lib}/gtk-2.0/include

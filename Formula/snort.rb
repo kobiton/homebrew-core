@@ -1,26 +1,31 @@
 class Snort < Formula
   desc "Flexible Network Intrusion Detection System"
   homepage "https://www.snort.org"
-  url "https://www.snort.org/downloads/snort/snort-2.9.11.1.tar.gz"
-  sha256 "9f6b3aeac5a109f55504bd370564ac431cb1773507929dc461626898f33f46cd"
+  url "https://www.snort.org/downloads/snort/snort-2.9.12.tar.gz"
+  mirror "https://distfiles.macports.org/snort/snort-2.9.12.tar.gz"
+  sha256 "7b02e11987c6cb4f6d79d72799ca9ad2b4bd59cc1d96bb7d6c91549f990d99d0"
+  revision 1
 
   bottle do
     cellar :any
-    sha256 "7eb1bf8de87e1f55412cbc27e4b7e25d37819506481a036058d666ca2c62052e" => :mojave
-    sha256 "ac8a7b3007b307d8368da7e3879e3c6cd6c718746b9443d544f5e8adcb286be6" => :high_sierra
-    sha256 "b152a9869efd30d40e0d3750a0fd12f825360bf7c1d7cb39156320d32381a649" => :sierra
-    sha256 "00de9088a3e7471026430cf17a7cc7d3d9787496398662c2e2c6a7c766c212cd" => :el_capitan
+    rebuild 2
+    sha256 "21333e3b46c2a9e9b64661a891a0d16558c888d9b260b1a713a7583d98e8999c" => :catalina
+    sha256 "a900ea0646b89f1152f16dd0e86df4a5f8bd8de73269653bc4b6629110467bc0" => :mojave
+    sha256 "a69f95c8452769835680ea5410db5c853749539758ebdb7aa38ed5ec1dde2a02" => :high_sierra
   end
 
   depends_on "pkg-config" => :build
   depends_on "daq"
   depends_on "libdnet"
+  depends_on "libpcap"
   depends_on "luajit"
-  depends_on "openssl"
+  depends_on "nghttp2"
+  depends_on "openssl@1.1"
   depends_on "pcre"
 
   def install
-    openssl = Formula["openssl"]
+    openssl = Formula["openssl@1.1"]
+    libpcap = Formula["libpcap"]
 
     args = %W[
       --prefix=#{prefix}
@@ -39,6 +44,8 @@ class Snort < Formula
       --enable-targetbased
       --with-openssl-includes=#{openssl.opt_include}
       --with-openssl-libraries=#{openssl.opt_lib}
+      --with-libpcap-includes=#{libpcap.opt_include}
+      --with-libpcap-libraries=#{libpcap.opt_lib}
     ]
 
     system "./configure", *args

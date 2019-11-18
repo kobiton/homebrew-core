@@ -1,13 +1,14 @@
 class GstEditingServices < Formula
   desc "GStreamer Editing Services"
   homepage "https://gstreamer.freedesktop.org/modules/gst-editing-services.html"
-  url "https://gstreamer.freedesktop.org/src/gst-editing-services/gstreamer-editing-services-1.14.4.tar.xz"
-  sha256 "53d1d25b356009505ae0d22c218d6c6b1215399d9f6e3fe5d7b88e156531b35f"
+  url "https://gstreamer.freedesktop.org/src/gst-editing-services/gstreamer-editing-services-1.16.1.tar.xz"
+  sha256 "c884878f9e6ddac96e4f174654d12fe52e3d48eaaec27a80767c0d56cb2f6780"
 
   bottle do
-    sha256 "52e97704b23a052cfdcc63d669e740ad9bc57ee31e7284f54a6f26f057686405" => :mojave
-    sha256 "962d5a55d1eadf89696469d523ea7889313dcf1093bfef6d6c5babc78e4fa212" => :high_sierra
-    sha256 "b558c069cf73e4bb82c15db8fd48e75ed86b5c015bd79173c176ee8562af1c99" => :sierra
+    sha256 "2989c392e6784984644d2c200c16ba5377487e5233ced15ce0abfe352c7a19b6" => :catalina
+    sha256 "2ee5c075c178a4b3fbaf660e256a9c7972ad740b6ba6c6a3499a749c3828fc25" => :mojave
+    sha256 "c3f48c4ab638e4787d97da06d10fc6102dfb6de9b8c59a6838a1845a73c463c6" => :high_sierra
+    sha256 "97a43fc06ee67c0a9522695c1d761e6e9a324ce6409ccc25aaa447b90909f47e" => :sierra
   end
 
   depends_on "gobject-introspection" => :build

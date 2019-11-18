@@ -1,28 +1,31 @@
 class Pijul < Formula
   desc "Patch-based distributed version control system"
   homepage "https://pijul.org"
-  url "https://pijul.org/releases/pijul-0.10.0.tar.gz"
-  sha256 "da3fcba4ab39a4371cda7273691364c2355c9b216bb7867d92dae5812ebb71d2"
+  url "https://pijul.org/releases/pijul-0.12.0.tar.gz"
+  sha256 "987820fa2a6fe92a9f516f5e9b41ad59a597973e72cb0c7a44ca0f38e741a7e6"
+  revision 1
 
   bottle do
-    sha256 "f3a26a1788fc22994cb3523a776f137bcb2cd40af185ac6a4a3419a4b7909354" => :mojave
-    sha256 "471d6fe7837fa61170561c1e19d5a0fe455bae57a5a793b4e087cc3ff0d49e41" => :high_sierra
-    sha256 "8682e459dd342214e3524ecb8849e19dbf38ec5a91fc192d1818d44f1d8e84d7" => :sierra
-    sha256 "6343c522e7fe764dee0141721648060078f20364df4d2c3100683ed1063adf6a" => :el_capitan
+    cellar :any
+    rebuild 1
+    sha256 "c5cc98c1979e4e782685774e3e5ff449f6968123f6e79ff68ecf8c4cf8656266" => :catalina
+    sha256 "73bf314aa865452f0f7104430a64be1922f31553c2b41e36e8fc0ba8657ca7b2" => :mojave
+    sha256 "b5dbbecb1823507658c535c4d60d8374a0924169a1994bf68d0210a62f42ea17" => :high_sierra
   end
 
   depends_on "pkg-config" => :build
   depends_on "rust" => :build
   depends_on "libsodium"
-  depends_on "openssl"
+  depends_on "nettle"
+  depends_on "openssl@1.1"
 
   def install
     # Ensure that the `openssl` crate picks up the intended library.
     # https://crates.io/crates/openssl#manual-configuration
-    ENV["OPENSSL_DIR"] = Formula["openssl"].opt_prefix
+    ENV["OPENSSL_DIR"] = Formula["openssl@1.1"].opt_prefix
 
     cd "pijul" do
-      system "cargo", "install", "--root", prefix, "--path", "."
+      system "cargo", "install", "--locked", "--root", prefix, "--path", "."
     end
   end
 

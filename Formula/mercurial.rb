@@ -3,27 +3,26 @@
 class Mercurial < Formula
   desc "Scalable distributed version control system"
   homepage "https://mercurial-scm.org/"
-  url "https://mercurial-scm.org/release/mercurial-4.7.1.tar.gz"
-  sha256 "8503383c1c31842576516b803d07564216470887ca6388719e4c4089663b410c"
+  url "https://www.mercurial-scm.org/release/mercurial-5.2.tar.gz"
+  sha256 "ff030e923f03ee15c91191996fcb099bfcfa60c7df263be227f67b6a65d36194"
 
   bottle do
-    sha256 "63347ee99f1f71595adc7e7736bc45d75b07f0c97fc791ad4e5002f647214276" => :mojave
-    sha256 "2fa3ea5ef0d9ba13ce5b195149f1f82a66e8146f05a469830a786942fc3f839c" => :high_sierra
-    sha256 "670c91f394a646b77960809c8a1db3cb67336c599e2a418510709689214af791" => :sierra
-    sha256 "1d37cef12a5496c82d1067542e7f2bdc07abe431d0edfbcd45f608b709ff8885" => :el_capitan
+    sha256 "d614de3ff6e07cdfd1fffcf5d8e5df6bb408b3643ff0e6d50595a09dede76b57" => :catalina
+    sha256 "0b579458fa6275a7de1ab73a81b85960d481ee5c82a33c7eb5d2e896ff7b01a3" => :mojave
+    sha256 "f96ce11aa1ebf7e71ee40d607a44eda70e9717cf76fcfb71dfabec2b08524f53" => :high_sierra
   end
 
-  depends_on "python@2"
+  depends_on "python"
 
   def install
-    ENV.prepend_path "PATH", Formula["python@2"].opt_libexec/"bin"
+    ENV["HGPYTHON3"] = "1"
 
     system "make", "PREFIX=#{prefix}", "install-bin"
 
     # Install chg (see https://www.mercurial-scm.org/wiki/CHg)
     cd "contrib/chg" do
-      system "make", "PREFIX=#{prefix}", "HGPATH=#{bin}/hg", \
-             "HG=#{bin}/hg"
+      system "make", "PREFIX=#{prefix}", "PYTHON=python3", "HGPATH=#{bin}/hg",
+                     "HG=#{bin}/hg"
       bin.install "chg"
     end
 
@@ -46,8 +45,10 @@ class Mercurial < Formula
 
   def caveats
     return unless (opt_bin/"hg").exist?
+
     cacerts_configured = `#{opt_bin}/hg config web.cacerts`.strip
     return if cacerts_configured.empty?
+
     <<~EOS
       Homebrew has detected that Mercurial is configured to use a certificate
       bundle file as its trust store for TLS connections instead of using the

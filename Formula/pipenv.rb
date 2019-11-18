@@ -3,26 +3,29 @@ class Pipenv < Formula
 
   desc "Python dependency management tool"
   homepage "https://docs.pipenv.org/"
-  url "https://files.pythonhosted.org/packages/f9/f3/54e27a163defd13256dc38ec350eb041bab4be1b6d634a633d92b2180fe3/pipenv-2018.10.13.tar.gz"
-  sha256 "a785235bf2ddf65ea8a91531b3372471d9ad86036335dba8bd63f20c00a68e63"
+  url "https://files.pythonhosted.org/packages/fd/e9/01822318551caa0d62a181ba3b10f0f3757bb1e270da97165bd52db92776/pipenv-2018.11.26.tar.gz"
+  sha256 "a673e606e8452185e9817a987572b55360f4d28b50831ef3b42ac3cab3fee846"
+  revision 2
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "e3d9cc4d7d5b92a1d1f4c50aee985dd052c014c1138b35327ac064e2de21a869" => :mojave
-    sha256 "059f2bb00a326036bc6fb4e15a0d63e4598f5c769b7fc6a31dcd066bdde74d14" => :high_sierra
-    sha256 "ffdd7010502a77f3fc2abaa859bc23c3f4f9c72b121133b73bc1111b9689f0e1" => :sierra
+    rebuild 1
+    sha256 "8f084160ecf6fec95317a0a298242040590ded00f5d375796c28697f1e9507c8" => :catalina
+    sha256 "df13002254ad48b6586ed47c9c754992dbf669ce630b6c6c90ceca0a79c21e17" => :mojave
+    sha256 "41aec81be5fa304ba9cfe4a061ac9088f6d51fac05bc0c6b73afddec431c6bb1" => :high_sierra
+    sha256 "d961acb64dbd94b43950f877ce48e0bf519c07b71eed0188acdf81d55876d75c" => :sierra
   end
 
   depends_on "python"
 
   resource "certifi" do
-    url "https://files.pythonhosted.org/packages/e1/0f/f8d5e939184547b3bdc6128551b831a62832713aa98c2ccdf8c47ecc7f17/certifi-2018.8.24.tar.gz"
-    sha256 "376690d6f16d32f9d1fe8932551d80b23e9d393a8578c5633a2ed39a64861638"
+    url "https://files.pythonhosted.org/packages/41/b6/4f0cefba47656583217acd6cd797bc2db1fede0d53090fdc28ad2c8e0716/certifi-2018.10.15.tar.gz"
+    sha256 "6d58c986d22b038c8c0df30d639f23a3e6d172a05c3583e766f4c0b785c0986a"
   end
 
   resource "virtualenv" do
-    url "https://files.pythonhosted.org/packages/33/bc/fa0b5347139cd9564f0d44ebd2b147ac97c36b2403943dbee8a25fd74012/virtualenv-16.0.0.tar.gz"
-    sha256 "ca07b4c0b54e14a91af9f34d0919790b016923d157afda5efdde55c96718f752"
+    url "https://files.pythonhosted.org/packages/8b/f4/360aa656ddb0f4168aeaa1057d8784b95d1ce12f34332c1cf52420b6db4e/virtualenv-16.3.0.tar.gz"
+    sha256 "729f0bcab430e4ef137646805b5b1d8efbb43fe53d4a0f33328624a84a5121f7"
   end
 
   resource "virtualenv-clone" do
@@ -38,18 +41,20 @@ class Pipenv < Formula
     venv.pip_install resources
     venv.pip_install buildpath
 
-    # `pipenv` needs to be able to find `virtualenv` and `pewtwo` on PATH. So we
+    # `pipenv` needs to be able to find `virtualenv` on PATH. So we
     # install symlinks for those scripts in `#{libexec}/tools` and create a
     # wrapper script for `pipenv` which adds `#{libexec}/tools` to PATH.
-    (libexec/"tools").install_symlink libexec/"bin/pewtwo", libexec/"bin/pip",
-                                      libexec/"bin/virtualenv"
+    (libexec/"tools").install_symlink libexec/"bin/pip", libexec/"bin/virtualenv"
     env = {
       :PATH => "#{libexec}/tools:$PATH",
     }
     (bin/"pipenv").write_env_script(libexec/"bin/pipenv", env)
 
-    output = Utils.popen_read("#{libexec}/bin/pipenv --completion")
+    output = Utils.popen_read("SHELL=bash #{libexec}/bin/pipenv --completion")
     (bash_completion/"pipenv").write output
+
+    output = Utils.popen_read("SHELL=zsh #{libexec}/bin/pipenv --completion")
+    (zsh_completion/"_pipenv").write output
   end
 
   # Avoid relative paths
@@ -57,6 +62,7 @@ class Pipenv < Formula
     lib_python_path = Pathname.glob(libexec/"lib/python*").first
     lib_python_path.each_child do |f|
       next unless f.symlink?
+
       realpath = f.realpath
       rm f
       ln_s realpath, f

@@ -1,28 +1,24 @@
 class Lighttpd < Formula
   desc "Small memory footprint, flexible web-server"
   homepage "https://www.lighttpd.net/"
-  url "https://download.lighttpd.net/lighttpd/releases-1.4.x/lighttpd-1.4.50.tar.xz"
-  sha256 "29378312d8887cbc14ffe8a7fadef2d5a08c7e7e1be942795142346ad95629eb"
+  url "https://download.lighttpd.net/lighttpd/releases-1.4.x/lighttpd-1.4.54.tar.xz"
+  sha256 "cf14cce2254a96d8fcb6d3181e1a3c29a8f832531c3e86ff6f2524ecda9a8721"
+  revision 1
 
   bottle do
-    sha256 "7cf8159d02248fa5ea43fbfa417806c2770257e156962ee3cf081632635ce0c6" => :mojave
-    sha256 "9434517884196a66f4638ef886428e4ebb0220d68a44e987fb82b9e4015e5741" => :high_sierra
-    sha256 "7cf2702a5e55fd0c304b6f6ebb2f4370a3149afedddb0e3b6e221f6f292cf6a7" => :sierra
-    sha256 "c7d4f9a437e97d8b085d499dc39e7b78b753291cfbed93dfd7d9ca13f9e48bd4" => :el_capitan
+    sha256 "2304d5648f19472c302da66804ea9a9b3cc8f99dbd1af4f52d6e2f4735791b2b" => :catalina
+    sha256 "72ff091bcfe57ff9cffdfd0085df6f9d762af2ae035aae6df9c4d5dc79cf488b" => :mojave
+    sha256 "bc6a0b55b7a9d498a22531ee598deb41f3807ca5ec5d1a76622112b5ecb12471" => :high_sierra
+    sha256 "1ef383b4243ad91d306f8dead8a0ff161bbec840e3a8db226e45ddaa6fb5d3a3" => :sierra
   end
-
-  option "with-lua@5.1", "Include Lua scripting support for mod_magnet"
-  deprecated_option "with-lua51" => "with-lua@5.1"
 
   depends_on "autoconf" => :build
   depends_on "automake" => :build
   depends_on "libtool" => :build
   depends_on "pkg-config" => :build
   depends_on "openldap"
-  depends_on "openssl"
+  depends_on "openssl@1.1"
   depends_on "pcre"
-  depends_on "libev" => :optional
-  depends_on "lua@5.1" => :optional
 
   # default max. file descriptors; this option will be ignored if the server is not started as root
   MAX_FDS = 512
@@ -54,9 +50,6 @@ class Lighttpd < Formula
       --with-zlib
       --with-bzip2
     ]
-
-    args << "--with-lua" if build.with? "lua@5.1"
-    args << "--with-libev" if build.with? "libev"
 
     # autogen must be run, otherwise prebuilt configure may complain
     # about a version mismatch between included automake and Homebrew's

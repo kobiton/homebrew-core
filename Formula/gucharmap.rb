@@ -1,14 +1,15 @@
 class Gucharmap < Formula
   desc "GNOME Character Map, based on the Unicode Character Database"
   homepage "https://wiki.gnome.org/Apps/Gucharmap"
-  url "https://download.gnome.org/sources/gucharmap/11.0/gucharmap-11.0.2.tar.xz"
-  sha256 "17e76eacd7c9e72fda21afc2da19d8c3f892814e36ae6f6f561a67bcf9bc9819"
+  url "https://download.gnome.org/sources/gucharmap/12.0/gucharmap-12.0.1.tar.xz"
+  sha256 "39de8aad9d7f0af33c29db1a89f645e76dad2fce00d1a0f7c8a689252a2c2155"
+  revision 1
 
   bottle do
-    sha256 "9d7f11d212f14124235cd57c9170551a7ff1f965333448e5bb49594b8bf2ea1d" => :mojave
-    sha256 "350a714b5b085203bb43049adb8c2f4b50c9692557c91e25c9b3e071d6a7235a" => :high_sierra
-    sha256 "de608586f7faf216b532f88d644448ad9fa714ba3302a576a379ad88847eae81" => :sierra
-    sha256 "7c84a8518219abc1e1e96aa365391fcb738c8bef2c07b24ad772acdcc7665b27" => :el_capitan
+    sha256 "02bf0a815ddc6b3cf366c2a4fee899e1dba4c72d2952c4e9df87a52fcf658d5b" => :catalina
+    sha256 "9c965568b01c23bb6ef12d997fa2f7335298ac6cba1acfb1ca0680b85a93e198" => :mojave
+    sha256 "644ffd53ce114c7790c97183807812121fb681aeb308303dcedbb5c2a889c5de" => :high_sierra
+    sha256 "b939644d0bb0ea2f732242acd4bca679a538dd18c8bd2d9ef23cdb37afb5043f" => :sierra
   end
 
   depends_on "coreutils" => :build
@@ -16,11 +17,14 @@ class Gucharmap < Formula
   depends_on "intltool" => :build
   depends_on "itstool" => :build
   depends_on "pkg-config" => :build
+  depends_on "python" => :build
   depends_on "gtk+3"
 
   def install
+    xy = Language::Python.major_minor_version "python3"
+    ENV.append_path "PYTHONPATH", "#{Formula["libxml2"].opt_lib}/python#{xy}/site-packages"
     ENV["WGET"] = "curl"
-    ENV.append_path "PYTHONPATH", "#{Formula["libxml2"].opt_lib}/python2.7/site-packages"
+
     system "./configure", "--disable-debug",
                           "--disable-dependency-tracking",
                           "--disable-silent-rules",

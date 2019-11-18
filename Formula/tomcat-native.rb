@@ -1,35 +1,37 @@
 class TomcatNative < Formula
   desc "Lets Tomcat use some native resources for performance"
   homepage "https://tomcat.apache.org/native-doc/"
-  url "https://www.apache.org/dyn/closer.cgi?path=tomcat/tomcat-connectors/native/1.2.17/source/tomcat-native-1.2.17-src.tar.gz"
-  sha256 "e16858e6ad91c26c17491a26f3ed4a53ab441c44fb3490caf09075ef4dda857e"
+  url "https://www.apache.org/dyn/closer.cgi?path=tomcat/tomcat-connectors/native/1.2.23/source/tomcat-native-1.2.23-src.tar.gz"
+  mirror "https://archive.apache.org/dist/tomcat/tomcat-connectors/native/1.2.23/source/tomcat-native-1.2.23-src.tar.gz"
+  sha256 "5ae5940f759cfdd68384ecf61f2c4fd9b01eb430ab0d349c0b197df0b0c0c3c7"
+  revision 1
 
   bottle do
     cellar :any
-    sha256 "91d644803c75d85a149c17ef213e80b7c81e867f7e226e70bc346ffc731a70bc" => :mojave
-    sha256 "137532c6913d0cde5b0bd4ef6ce317cbc276774e2bebfea7deb56f9b851fcc8b" => :high_sierra
-    sha256 "87df7d63fe779e9a703064a5257278f36ff125564a450862406cf27837f19d69" => :sierra
-    sha256 "a6d4ba16ee959ddfd2c5b0430d3e812898893bd5b6fbc54828a5d84544e4fa1b" => :el_capitan
+    sha256 "499d10e958763721cb39297d1dbf5a7e6d7ed6f6bdda0c08ee1159af2f4fe974" => :catalina
+    sha256 "945488a79003f860822a2848a68b69f4443697db9bcee063be5cbf27df7d2424" => :mojave
+    sha256 "e14b2958741b69ca96218c7a942a35277c6657ef978597ac17ea1a3fd21dfa62" => :high_sierra
+    sha256 "771ea402f8194159234038dc462bdc3442ed3af9f4a6d1ff5eb3d7babafe8de0" => :sierra
   end
 
   depends_on "libtool" => :build
   depends_on "apr"
   depends_on :java => "1.7+"
-  depends_on "openssl"
-  depends_on "tomcat" => :recommended
+  depends_on "openssl@1.1"
+  depends_on "tomcat"
 
   def install
     cd "native" do
       system "./configure", "--prefix=#{prefix}",
                             "--with-apr=#{Formula["apr"].opt_prefix}",
                             "--with-java-home=#{ENV["JAVA_HOME"]}",
-                            "--with-ssl=#{Formula["openssl"].opt_prefix}"
+                            "--with-ssl=#{Formula["openssl@1.1"].opt_prefix}"
 
       # fixes occasional compiling issue: glibtool: compile: specify a tag with `--tag'
       args = ["LIBTOOL=glibtool --tag=CC"]
       # fixes a broken link in mountain lion's apr-1-config (it should be /XcodeDefault.xctoolchain/):
       # usr/local/opt/libtool/bin/glibtool: line 1125: /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.8.xctoolchain/usr/bin/cc: No such file or directory
-      args << "CC=#{ENV.cc}" if MacOS.version >= :mountain_lion
+      args << "CC=#{ENV.cc}"
       system "make", *args
       system "make", "install"
     end

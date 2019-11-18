@@ -2,25 +2,23 @@ class Pwntools < Formula
   include Language::Python::Virtualenv
 
   desc "CTF framework used by Gallopsled in every CTF"
-  homepage "https://pwntools.com/"
-  url "https://github.com/Gallopsled/pwntools/archive/3.12.0.tar.gz"
-  sha256 "e743daa158a3ac1e958b52e61de47f3db6cec701379712eeda4f4a977ca32309"
+  homepage "https://github.com/Gallopsled/pwntools"
+  url "https://github.com/Gallopsled/pwntools/archive/3.12.2.tar.gz"
+  sha256 "8e048b514ee449b4c76f4eba1b4fcd48fdefd1bf04ae4c62b44e984923d2e979"
+  revision 1
 
   bottle do
     cellar :any
-    rebuild 1
-    sha256 "cbae139d1ee708f9cd64da8c4dec4b085d30c7de631377b71e6ba235081862f0" => :mojave
-    sha256 "7f14e0eb3b4432b3f83e9e9ec111ece13074554fc3c2639b1b498bf446ad9955" => :high_sierra
-    sha256 "eeb5624205ad19b86908e51e32f8c3cd5faf3c5c75c8e3e29cbcc58597eaf022" => :sierra
+    sha256 "dbb4dede51695c257adf7f73274864c8a1a72e6c485192faa900515abd669407" => :catalina
+    sha256 "258e2df2d025801d2173307b68639b968f0293d3d5f9acb8c7a884e5cd639768" => :mojave
+    sha256 "3a6fa84fbdd9683af6b5800fd4fa14e8369419f3a8abc9b5e8bd23bde447c3a5" => :high_sierra
+    sha256 "60d76ec99a2646e6ea82e226aff196f45af7d209c36ed848cc29dea52b5e1c54" => :sierra
   end
 
-  depends_on "binutils"
-  depends_on "openssl"
+  depends_on "openssl@1.1"
   depends_on "python@2" # does not support Python 3
 
-  if Tab.for_name("moreutils").with?("errno")
-    conflicts_with "moreutils", :because => "Both install `errno` binaries"
-  end
+  conflicts_with "moreutils", :because => "Both install `errno` binaries"
 
   def install
     venv = virtualenv_create(libexec)

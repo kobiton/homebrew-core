@@ -2,28 +2,27 @@ class Caf < Formula
   # Renamed from libccpa
   desc "Implementation of the Actor Model for C++"
   homepage "https://actor-framework.org/"
-  url "https://github.com/actor-framework/actor-framework/archive/0.16.0.tar.gz"
-  sha256 "36e37971c399892302b738de18cbf3dd9049956228ede91cb09131eb5a18aa7f"
+  url "https://github.com/actor-framework/actor-framework/archive/0.17.3.tar.gz"
+  sha256 "af235dbb5001a86d716c19f1b597be81bbcf172b87d42e2a38dc3ac97ea3863d"
+  revision 1
   head "https://github.com/actor-framework/actor-framework.git"
 
   bottle do
     cellar :any
-    sha256 "781d27935c9feb66f7d4271df0cdcfb6d53515cfdc1402e6706d5c59fd05a372" => :mojave
-    sha256 "ee5d7eaaef8344e97a60c5081b0d557ca248628541863bca84489d3ecd10e3ac" => :high_sierra
-    sha256 "9091136ee2f067176a1dab4a060f24695d8944f20750d3ffab5374adb65dce68" => :sierra
-    sha256 "423d9c03f8c45ebf29abe6fcee1daa86e74e266ba935aab40ed0cd6f99b3662d" => :el_capitan
+    sha256 "3dfc237be96a491a0f27b6e03ec0c0d30a0bc29bd446fbfff40b9cf9379f52fd" => :catalina
+    sha256 "6f838279b270a0cbdecc7e6a5bd13aba2e7bbe83b5374b8a1cd880423c7500d9" => :mojave
+    sha256 "4a0c871ff5848389f01c21d85a6d9b59c6b5d73404329bfa408b732d62b5a2bf" => :high_sierra
   end
 
   depends_on "cmake" => :build
-
-  needs :cxx11
+  depends_on "openssl@1.1"
 
   def install
     system "./configure", "--prefix=#{prefix}", "--no-examples",
                           "--build-static", "--no-opencl"
-    system "make"
-    system "make", "test"
-    system "make", "install"
+    system "make", "--directory=build"
+    system "make", "--directory=build", "test"
+    system "make", "--directory=build", "install"
   end
 
   test do

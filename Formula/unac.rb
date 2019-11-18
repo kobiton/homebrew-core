@@ -1,12 +1,12 @@
 class Unac < Formula
   desc "C library and command that removes accents from a string"
   homepage "https://savannah.nongnu.org/projects/unac"
-  url "https://mirrors.ocf.berkeley.edu/debian/pool/main/u/unac/unac_1.8.0.orig.tar.gz"
-  mirror "https://mirrorservice.org/sites/ftp.debian.org/debian/pool/main/u/unac/unac_1.8.0.orig.tar.gz"
+  url "https://deb.debian.org/debian/pool/main/u/unac/unac_1.8.0.orig.tar.gz"
   sha256 "29d316e5b74615d49237556929e95e0d68c4b77a0a0cfc346dc61cf0684b90bf"
 
   bottle do
     cellar :any
+    sha256 "c065103ee8b1c39a665dcca68787edadc6a60620e627912a721b3d5732ff0152" => :catalina
     sha256 "29753f2d4ea3f9a56f9a3d8fdca4c4fe47044ff1bc986d9ecc06d5f376197da6" => :mojave
     sha256 "eade4a2fba6e5828dccd3779b5e6681ca2558dbde421639624f089be835c55e8" => :high_sierra
     sha256 "b97f2799eafd917f8fe1cc47c39634bc91a19ca452ce11ec8fd5edf37ea1dba3" => :sierra
@@ -34,8 +34,7 @@ class Unac < Formula
   end
 
   patch do
-    url "https://mirrors.ocf.berkeley.edu/debian/pool/main/u/unac/unac_1.8.0-6.diff.gz"
-    mirror "https://mirrorservice.org/sites/ftp.debian.org/debian/pool/main/u/unac/unac_1.8.0-6.diff.gz"
+    url "https://deb.debian.org/debian/pool/main/u/unac/unac_1.8.0-6.diff.gz"
     sha256 "13a362f8d682670c71182ab5f0bbf3756295a99fae0d7deb9311e611a43b8111"
   end
 

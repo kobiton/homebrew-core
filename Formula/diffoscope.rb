@@ -1,14 +1,14 @@
 class Diffoscope < Formula
   desc "In-depth comparison of files, archives, and directories"
   homepage "https://diffoscope.org"
-  url "https://files.pythonhosted.org/packages/24/28/057571b62db9f0b640f4fcd101c7975382921d7d0596410ea0c461a93cc2/diffoscope-102.tar.gz"
-  sha256 "a632d851a8aa8d0858bc84d8173c5425c7b42e7503612f028f9bd8d33b4a5f6c"
+  url "https://files.pythonhosted.org/packages/89/3f/e99b3a34f7b57b9680582936db229bba361e12b088a20cf82ebd3fafcd8c/diffoscope-128.tar.gz"
+  sha256 "b3baeb222b8ea81765c4b1e3db084da923e0f08f1a4d1207014abb4f0cd29568"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "959db9b34d03d0cee0233469a878e44a47e0db2e20bc7c73e21fe94146deeccc" => :mojave
-    sha256 "f71a2675a73754634a5930cabcdbd34c52c4e23a895870f8303863c56d18fada" => :high_sierra
-    sha256 "f71a2675a73754634a5930cabcdbd34c52c4e23a895870f8303863c56d18fada" => :sierra
+    sha256 "a3adf0916ecc3946fa7edf974b05d8b2dcd39caab86056ef3572e1f0e4122b71" => :catalina
+    sha256 "a3adf0916ecc3946fa7edf974b05d8b2dcd39caab86056ef3572e1f0e4122b71" => :mojave
+    sha256 "a3adf0916ecc3946fa7edf974b05d8b2dcd39caab86056ef3572e1f0e4122b71" => :high_sierra
   end
 
   depends_on "gnu-tar"
@@ -17,8 +17,13 @@ class Diffoscope < Formula
   depends_on "python"
 
   resource "libarchive-c" do
-    url "https://files.pythonhosted.org/packages/b9/2c/c975b3410e148dab00d14471784a743268614e21121e50e4e00b13f38370/libarchive-c-2.8.tar.gz"
-    sha256 "06d44d5b9520bdac93048c72b7ed66d11a6626da16d2086f9aad079674d8e061"
+    url "https://files.pythonhosted.org/packages/63/fe/9e6c78db381934e28c7ec3d30d4f209fe24442d17f1bd8c56d13ae185cf6/libarchive-c-2.9.tar.gz"
+    sha256 "9919344cec203f5db6596a29b5bc26b07ba9662925a05e24980b84709232ef60"
+  end
+
+  resource "progressbar" do
+    url "https://files.pythonhosted.org/packages/a3/a6/b8e451f6cff1c99b4747a2f7235aa904d2d49e8e1464e0b798272aa84358/progressbar-2.5.tar.gz"
+    sha256 "5d81cb529da2e223b53962afd6c8ca0f05c6670e40309a7219eacc36af9b6c63"
   end
 
   resource "python-magic" do
@@ -49,6 +54,6 @@ class Diffoscope < Formula
   test do
     (testpath/"test1").write "test"
     cp testpath/"test1", testpath/"test2"
-    system "#{bin}/diffoscope", "test1", "test2"
+    system "#{bin}/diffoscope", "--progress", "test1", "test2"
   end
 end

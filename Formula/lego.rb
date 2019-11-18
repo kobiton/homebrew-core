@@ -1,25 +1,28 @@
 class Lego < Formula
   desc "Let's Encrypt client"
-  homepage "https://github.com/xenolf/lego"
-  url "https://github.com/xenolf/lego/archive/v1.0.1.tar.gz"
-  sha256 "2ff71e9d67c9b49a1a0c4e2244241af69e4d42b09d7c41bae582a0dc555e33de"
+  homepage "https://go-acme.github.io/lego/"
+  url "https://github.com/go-acme/lego.git",
+    :tag      => "v3.2.0",
+    :revision => "11ee928ace97cc5f274df13da015f5f84ae3756d"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "daac836746b6cfc7ba2aaa748e438b42cf725e2e946f5d59b9998f99f231662b" => :mojave
-    sha256 "f479f3752c94a3ec6592698925686fb8ed215d13b7210b66ae7b6c50565385dd" => :high_sierra
-    sha256 "29dad74958b2799553a699fe544d48c414ed02e1ebf2b67bd912740f22d59623" => :sierra
-    sha256 "06452881b46e6f9711313a5ff84429d437d83b3f1234cae370cacc9a3e4d66c7" => :el_capitan
+    sha256 "ffdee52b3c648683f4fabbcdc56baa0dc9cb20b44ac877155f08a6d627d2cc69" => :catalina
+    sha256 "9dea300001bce666a42667cbf8c967bf2c73d0494b072bd147dd99c6b8aa2b2f" => :mojave
+    sha256 "506828353d7593b758035b0e3302661c78b75c347b5165829f2ab0ae18224422" => :high_sierra
   end
 
   depends_on "go" => :build
 
   def install
     ENV["GOPATH"] = buildpath
-    (buildpath/"src/github.com/xenolf/lego").install buildpath.children
-    cd "src/github.com/xenolf/lego" do
-      system "go", "build", "-o", bin/"lego", "-ldflags",
-             "-X main.version=#{version}"
+
+    dir = buildpath/"src/github.com/go-acme/lego"
+    dir.install buildpath.children
+
+    cd dir do
+      system "go", "build", "-ldflags", "-X main.version=#{version}",
+          "-o", bin/"lego", "cmd/lego/main.go"
       prefix.install_metafiles
     end
   end

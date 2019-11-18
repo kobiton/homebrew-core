@@ -1,16 +1,15 @@
 class RangeV3 < Formula
-  desc "Experimental range library for C++11/14/17"
+  desc "Experimental range library for C++14/17/20"
   homepage "https://ericniebler.github.io/range-v3/"
-  url "https://github.com/ericniebler/range-v3/archive/0.3.6.tar.gz"
-  sha256 "ce6e80c6b018ca0e03df8c54a34e1fd04282ac1b068cd39e902e2e5201ac117f"
+  url "https://github.com/ericniebler/range-v3/archive/0.9.1.tar.gz"
+  sha256 "2b5b442d572b5978ea51c650adfaf0796f39f326404d09b83d846e04f571876b"
 
   bottle do
     cellar :any_skip_relocation
-    rebuild 1
-    sha256 "3135c91c7daa107bd86bd4abe1f3b9973409388307b345274e05d85f6f89bb49" => :mojave
-    sha256 "a93d105ccdb20a6fd049ca369eb7eb4732432ed0d71a15a7434c5487209a11ba" => :high_sierra
-    sha256 "0332e059707ac24e467f524ce53c034d069c5cc5e9f4f64dac55a09a3c462c7e" => :sierra
-    sha256 "0332e059707ac24e467f524ce53c034d069c5cc5e9f4f64dac55a09a3c462c7e" => :el_capitan
+    sha256 "35f0f6197f9740b0429b08a341e2dab02fe2cbf10faeeac8b204a26c7117e249" => :catalina
+    sha256 "d50bc210a23dfaaa55c6164392572a5fe21d51f588b53087adaa131fcf233db7" => :mojave
+    sha256 "d50bc210a23dfaaa55c6164392572a5fe21d51f588b53087adaa131fcf233db7" => :high_sierra
+    sha256 "2ef924d9e34791e3c94128602ad48ab8ad34f6542712ab9b73e79c4a80ba2443" => :sierra
   end
 
   depends_on "cmake" => :build
@@ -37,7 +36,7 @@ class RangeV3 < Formula
         std::cout << std::endl;
       }
     EOS
-    system ENV.cc, "-std=c++11", "-stdlib=libc++", "-lc++",
+    system ENV.cc, "-std=c++14", "-stdlib=libc++", "-lc++",
                    "-o", "test", "test.cpp"
     assert_equal "h e l l o \n", shell_output("./test")
   end

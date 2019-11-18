@@ -1,17 +1,18 @@
 class Vte3 < Formula
   desc "Terminal emulator widget used by GNOME terminal"
   homepage "https://developer.gnome.org/vte/"
-  url "https://download.gnome.org/sources/vte/0.54/vte-0.54.1.tar.xz"
-  sha256 "a724fa0543c689e30a3d0ff07e4195a86dc7c4fe57b469be97c7c87f27604e53"
+  url "https://download.gnome.org/sources/vte/0.58/vte-0.58.2.tar.xz"
+  sha256 "33c966d2b1f2c3b0f9416dbca883fd746159b5bd040350e3b78f8104b2a42bc0"
 
   bottle do
-    sha256 "ec19d7d94a28cc5c5148e04049a8c1e37843194dbed11180a1f3eea803849e26" => :mojave
-    sha256 "9970189ca3729c31932a092d89aec7d8e74e1545998570508e9d767716a951f1" => :high_sierra
-    sha256 "c50d512e53dff8489936b8c524f893a818e17f75f7b5002e4c7c19622bfdd4e7" => :sierra
+    sha256 "ff98e6695262b0a5a9577f7dd488197d5ab46347a6a7000ae100992e11470506" => :catalina
+    sha256 "ab0bac4db500c1da6d61839f83613bb214d73cafc5ab43ea6b1c6943a27b2615" => :mojave
+    sha256 "4090c5d0e97526711d26ea7d2e6aff4873c985e4e890490b0acbb1a249c3b849" => :high_sierra
   end
 
   depends_on "gobject-introspection" => :build
-  depends_on "intltool" => :build
+  depends_on "meson" => :build
+  depends_on "ninja" => :build
   depends_on "pkg-config" => :build
   depends_on "gettext"
   depends_on "gnutls"
@@ -19,17 +20,25 @@ class Vte3 < Formula
   depends_on "pcre2"
   depends_on "vala"
 
+  # submitted upstream as https://gitlab.gnome.org/tschoonj/vte/merge_requests/1
+  patch :DATA
+
   def install
+    ENV["XML_CATALOG_FILES"] = "#{etc}/xml/catalog"
+
     args = [
-      "--disable-dependency-tracking",
       "--prefix=#{prefix}",
-      "--disable-Bsymbolic",
-      "--enable-introspection=yes",
-      "--enable-gnome-pty-helper",
+      "-Dgir=true",
+      "-Dgtk3=true",
+      "-Dgnutls=true",
+      "-Dvapi=true",
     ]
 
-    system "./configure", *args
-    system "make", "install"
+    mkdir "build" do
+      system "meson", *args, ".."
+      system "ninja", "-v"
+      system "ninja", "install", "-v"
+    end
   end
 
   test do
@@ -50,6 +59,7 @@ class Vte3 < Formula
     glib = Formula["glib"]
     gnutls = Formula["gnutls"]
     gtkx3 = Formula["gtk+3"]
+    harfbuzz = Formula["harfbuzz"]
     libepoxy = Formula["libepoxy"]
     libpng = Formula["libpng"]
     libtasn1 = Formula["libtasn1"]
@@ -68,6 +78,7 @@ class Vte3 < Formula
       -I#{glib.opt_lib}/glib-2.0/include
       -I#{gnutls.opt_include}
       -I#{gtkx3.opt_include}/gtk-3.0
+      -I#{harfbuzz.opt_include}/harfbuzz
       -I#{include}/vte-2.91
       -I#{libepoxy.opt_include}
       -I#{libpng.opt_include}/libpng16
@@ -105,3 +116,50 @@ class Vte3 < Formula
     system "./test"
   end
 end
+
+__END__
+diff --git a/meson.build b/meson.build
+index 82266cf7..2e49d669 100644
+--- a/meson.build
++++ b/meson.build
+@@ -72,6 +72,8 @@ lt_age = vte_minor_version * 100 + vte_micro_version - lt_revision
+ lt_current = vte_major_version + lt_age
+
+ libvte_gtk3_soversion = '@0@.@1@.@2@'.format(libvte_soversion, lt_current, lt_revision)
++osx_version_current = lt_current + 1
++libvte_gtk3_osxversions = [osx_version_current, '@0@.@1@.0'.format(osx_version_current, lt_revision)]
+ libvte_gtk4_soversion = libvte_soversion.to_string()
+
+ # i18n
+diff --git a/src/meson.build b/src/meson.build
+index 1481c089..b9590d26 100644
+--- a/src/meson.build
++++ b/src/meson.build
+@@ -178,6 +178,7 @@ if get_option('gtk3')
+     vte_gtk3_api_name,
+     sources: libvte_gtk3_sources,
+     version: libvte_gtk3_soversion,
++    darwin_versions: libvte_gtk3_osxversions,
+     include_directories: incs,
+     dependencies: libvte_gtk3_deps,
+     cpp_args: libvte_common_cppflags,
+
+diff --git a/meson.build b/meson.build
+index 2e49d669..ed8c2ab4 100644
+--- a/meson.build
++++ b/meson.build
+@@ -359,13 +359,8 @@ linker_flags = [
+   '-Wl,-Bsymbolic-functions'
+ ]
+
+-foreach flag: linker_flags
+-  assert(cc.has_link_argument(flag), flag + ' is required but not supported')
+-  add_project_link_arguments(flag, language: 'c')
+-
+-  assert(cxx.has_link_argument(flag), flag + ' is required but not supported')
+-  add_project_link_arguments(flag, language: 'cpp')
+-endforeach
++add_project_link_arguments(cc.get_supported_link_arguments(linker_flags), language: 'c')
++add_project_link_arguments(cxx.get_supported_link_arguments(linker_flags), language: 'cpp')
+
+ # Dependencies

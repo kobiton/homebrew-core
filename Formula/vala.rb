@@ -1,13 +1,13 @@
 class Vala < Formula
   desc "Compiler for the GObject type system"
   homepage "https://wiki.gnome.org/Projects/Vala"
-  url "https://download.gnome.org/sources/vala/0.42/vala-0.42.2.tar.xz"
-  sha256 "9e89aa42152b1cef551568f827aa2deea2a9b5487d78c91474c8617b618e5f07"
+  url "https://download.gnome.org/sources/vala/0.46/vala-0.46.4.tar.xz"
+  sha256 "4bb9b60fc0230b0db2c8a0e2a80ec29f1c10b43dc78355abba78adedbc2e03a1"
 
   bottle do
-    sha256 "e901a77a3ae7ec135562e57ddcaba96d41572487ee405009ebbb969ec07ede62" => :mojave
-    sha256 "c534ae2bf694890851ac84eab6256b6239f89f9c41ba190f059449d28376b92d" => :high_sierra
-    sha256 "66e977ba42959cac5921a1a8a75af1afaacb69340e2e35b713b6d0b38899112b" => :sierra
+    sha256 "aafe529673cf27ac6f99efd0f1764b8b9c5d9a9b6bfe0571c31978d1504b84e7" => :catalina
+    sha256 "b0e4b699b7de352c39bdca7666dae60b9524fc83d2fa651c22a427fbf9823780" => :mojave
+    sha256 "2e800031b4e9e2310ec616c845f1fdcf72cd741da873acb21b9eccbd967c07ad" => :high_sierra
   end
 
   depends_on "gettext"
@@ -24,6 +24,7 @@ class Vala < Formula
   end
 
   test do
+    ENV.prepend_path "PKG_CONFIG_PATH", Formula["libffi"].opt_lib/"pkgconfig"
     test_string = "Hello Homebrew\n"
     path = testpath/"hello.vala"
     path.write <<~EOS

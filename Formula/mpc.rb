@@ -1,14 +1,15 @@
 class Mpc < Formula
   desc "Command-line music player client for mpd"
   homepage "https://www.musicpd.org/clients/mpc/"
-  url "https://www.musicpd.org/download/mpc/0/mpc-0.30.tar.xz"
-  sha256 "65fc5b0a8430efe9acbe6e261127960682764b20ab994676371bdc797d867fce"
+  url "https://www.musicpd.org/download/mpc/0/mpc-0.31.tar.xz"
+  sha256 "62373e83a8a165b2ed43967975efecd3feee530f4557d6b861dd08aa89d52b2d"
 
   bottle do
+    cellar :any
     rebuild 1
-    sha256 "f8aacc306782434f8f8a681701a1180cec977c687f599f9c575ec2bd5b68c581" => :mojave
-    sha256 "59b14683a0acd8f11bb1e7b56e9f5e5c604b055a111c0f8e6ad48089248ef6f2" => :high_sierra
-    sha256 "e606214d00ed9c69c1877efa543d8e5120fef6f1df238de48776aacb59af00de" => :sierra
+    sha256 "4453dae7764d8c2f94fe581f1f35646e159c6483c2db7b0aa79b862ca6c8d627" => :catalina
+    sha256 "d7f43be3ae391ec5987cc2b49653b202dfa1798481b32209109b340adf309b29" => :mojave
+    sha256 "cf0a89f4b0e4d419cae88a989daa3ff015cf11d82904817c6fe1a3c08ca287db" => :high_sierra
   end
 
   depends_on "meson" => :build

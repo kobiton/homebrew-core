@@ -6,6 +6,7 @@ class Winexe < Formula
 
   bottle do
     cellar :any_skip_relocation
+    sha256 "4706b05f203ecaf3a56fc453d3c6588fd151d9ce4b8be0f6973725f70379dad3" => :catalina
     sha256 "43444e53e90a4f739a533e4a865952369874d9386460205e501631fa2b3ad2bb" => :mojave
     sha256 "765ad670de08f86b8c9b11ec43493148d1368e6c3ffa5e65d1bca898480996c2" => :high_sierra
     sha256 "e9594f927f9ef58608951175c0bd118b82cf7b25d5b829453195b66f45c2cbc1" => :sierra
@@ -31,13 +32,11 @@ class Winexe < Formula
   patch :DATA
 
   def install
-    if MacOS.version >= :mavericks
-      ENV.prepend_create_path "PERL5LIB", libexec+"lib/perl5"
-      resource("Perl4::CoreLibs").stage do
-        system "perl", "Makefile.PL", "INSTALL_BASE=#{libexec}"
-        system "make"
-        system "make", "install"
-      end
+    ENV.prepend_create_path "PERL5LIB", libexec/"lib/perl5"
+    resource("Perl4::CoreLibs").stage do
+      system "perl", "Makefile.PL", "INSTALL_BASE=#{libexec}"
+      system "make"
+      system "make", "install"
     end
 
     cd "source4" do

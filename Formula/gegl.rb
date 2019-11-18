@@ -1,14 +1,15 @@
 class Gegl < Formula
   desc "Graph based image processing framework"
   homepage "http://www.gegl.org/"
-  url "https://download.gimp.org/pub/gegl/0.4/gegl-0.4.8.tar.bz2"
-  sha256 "719468eec56ac5b191626a0cb6238f3abe9117e80594890c246acdc89183ae49"
+  url "https://download.gimp.org/pub/gegl/0.4/gegl-0.4.16.tar.bz2"
+  sha256 "0112df690301d9eb993cc48965fc71b7751c9021a4f4ee08fcae366c326b5e5a"
+  revision 2
 
   bottle do
-    sha256 "ac42f2a90467b4f7dbbbfb97a22d5a732c8f1533a5dc9c7e210bb72bbbf90038" => :mojave
-    sha256 "ed9407e3b8786f1840bde01d52a0c590b4a2a9c3ca0f4b91070a7ccdc7320f2f" => :high_sierra
-    sha256 "acd3639be39b4ab8c32e1045fe1da34ba6a9ed2629f088f6e77d591aa434bf7a" => :sierra
-    sha256 "b750b42ab0c76b316bfe9e247764d5c6a1fdb47584c9408a1e989c0d2b0ce850" => :el_capitan
+    sha256 "c85c022cbec147dc1c206c6efaaab0ad1cc9db52b90706a3e131b6918eed7f89" => :catalina
+    sha256 "9a94a1bfa65fc2aab0076a2dc5bdd8f78607c735b6043c5ce8d9aad192e9818f" => :mojave
+    sha256 "b12c213159d53df0bf6777fb81d13bb93ba90683da3142bb38d250d7dfc00d05" => :high_sierra
+    sha256 "22fd034b398955586ff07868178a930858d428e1af957c1921260ff679fea672" => :sierra
   end
 
   head do
@@ -39,7 +40,8 @@ class Gegl < Formula
                           "--disable-docs",
                           "--without-cairo",
                           "--without-jasper",
-                          "--without-umfpack"
+                          "--without-umfpack",
+                          "--without-libspiro"
     system "make", "install"
   end
 

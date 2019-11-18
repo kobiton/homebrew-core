@@ -1,14 +1,14 @@
 class Hbase < Formula
   desc "Hadoop database: a distributed, scalable, big data store"
   homepage "https://hbase.apache.org"
-  url "https://www.apache.org/dyn/closer.cgi?path=hbase/1.2.6.1/hbase-1.2.6.1-bin.tar.gz"
-  sha256 "3bfa55c0b2b1327cb4382c1a51dddd21a536ccbbfdbcc31e9b6f403fe21230ad"
+  url "https://www.apache.org/dyn/closer.cgi?path=hbase/1.3.5/hbase-1.3.5-bin.tar.gz"
+  sha256 "71837369f67c98afd978256ae4012b774fed27dcfbefc30293311e534a376c93"
 
   bottle do
-    sha256 "ad2f8a6edee755254654904724c08c05bc9f05f82432b0b69022723624b13de8" => :mojave
-    sha256 "3c4084898091f6b811062aff85f2d5dcef422d720b21e60b0554a24ac611e0d9" => :high_sierra
-    sha256 "e2102bd08b2d94f5ac4d33938cdc76166bd085c9657f6f2ebcff47bbf3d3fd85" => :sierra
-    sha256 "72240c500dda738b40241eba7c157bdcb4e1a5cdec79b85fb74cbccebb02bef3" => :el_capitan
+    sha256 "a177355b8ce34287e500aeabb66b78ade4ada4b529166e686dc354a4edee6830" => :catalina
+    sha256 "29ee8f76f61fe2f63fdedf9ea134102f0ee81ac845def37b4d2a981dd8bdcbbc" => :mojave
+    sha256 "2a742f55e213f602128e8b706636ea5020b4771bd0cb3b49bd0370aba09ff840" => :high_sierra
+    sha256 "a3b8e770d3410633bc19be0f41d0c2e4e9702e922d7688069663595769c80702" => :sierra
   end
 
   depends_on "ant" => :build
@@ -19,7 +19,6 @@ class Hbase < Formula
   depends_on :arch => :x86_64
   depends_on :java => "1.8"
   depends_on "lzo"
-  depends_on "hadoop" => :optional
 
   resource "hadoop-lzo" do
     url "https://github.com/cloudera/hadoop-lzo/archive/0.4.14.tar.gz"
@@ -76,7 +75,7 @@ class Hbase < Formula
         <configuration>
           <property>
             <name>hbase.rootdir</name>
-            <value>#{build.with?("hadoop") ? "hdfs://localhost:9000" : "file://"+var}/hbase</value>
+            <value>file://#{var}/hbase</value>
           </property>
           <property>
             <name>hbase.zookeeper.property.clientPort</name>
@@ -114,7 +113,7 @@ class Hbase < Formula
     <plist version="1.0">
     <dict>
       <key>KeepAlive</key>
-      #{build.without?("hadoop") ? "<true/>" : "<dict>\n        <key>OtherJobEnabled</key>\n        <string>"+Formula["hadoop"].plist_name+"</string>\n      </dict>"}
+      <true/>
       <key>Label</key>
       <string>#{plist_name}</string>
       <key>EnvironmentVariables</key>

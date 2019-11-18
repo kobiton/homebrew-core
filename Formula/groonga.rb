@@ -1,14 +1,13 @@
 class Groonga < Formula
   desc "Fulltext search engine and column store"
   homepage "http://groonga.org/"
-  url "https://packages.groonga.org/source/groonga/groonga-8.0.5.tar.gz"
-  sha256 "763bdfd2ea1de57110815f5d912959cd31e4addf90e76e7fac332170f1f3fef0"
+  url "https://packages.groonga.org/source/groonga/groonga-9.0.8.tar.gz"
+  sha256 "85b63eb25e675f1b213c3ae8d30eab036f78a152f03b95ec9689ba0f417d8ab9"
 
   bottle do
-    sha256 "17be506e20179e3211f5c9d379601ed475625e30bf9b57064643b2ab0ac688a0" => :mojave
-    sha256 "c90ce281c566184a1deafbf78d0b62694ddc9e33bd19e5488999a56b0f469b90" => :high_sierra
-    sha256 "6702ed199953048e627754a14ee831912adaf4a7ba93db957bdcb120af59cebf" => :sierra
-    sha256 "920ce31a60645f983cb15548d8dd8b0454a77a38b11f8744926a18d7e20d1e1b" => :el_capitan
+    sha256 "3be9193ac72090e18a536fe800ba5fed68ca61d2e7b1525d1063fc244ca223cf" => :catalina
+    sha256 "fa0c41c495ba22a1b10bdf951b86c695f47bdabf983b5af769c41d4b787db208" => :mojave
+    sha256 "bb711b3ec82dcd56f4dbb0cef66b767b3f7fe601c424b7f7dfd4d03b773fb50b" => :high_sierra
   end
 
   head do
@@ -19,19 +18,19 @@ class Groonga < Formula
   end
 
   depends_on "pkg-config" => :build
+  depends_on "mecab"
+  depends_on "mecab-ipadic"
   depends_on "msgpack"
-  depends_on "openssl"
+  depends_on "openssl@1.1"
   depends_on "pcre"
-  depends_on "mecab" => :optional
-  depends_on "mecab-ipadic" if build.with? "mecab"
 
   link_overwrite "lib/groonga/plugins/normalizers/"
   link_overwrite "share/doc/groonga-normalizer-mysql/"
   link_overwrite "lib/pkgconfig/groonga-normalizer-mysql.pc"
 
   resource "groonga-normalizer-mysql" do
-    url "https://packages.groonga.org/source/groonga-normalizer-mysql/groonga-normalizer-mysql-1.1.3.tar.gz"
-    sha256 "e4534c725de244f5da72b2b05ddcbf1cfb4e56e71ac40f01acae817adf90d72c"
+    url "https://packages.groonga.org/source/groonga-normalizer-mysql/groonga-normalizer-mysql-1.1.4.tar.gz"
+    sha256 "084a74742ba7cf396c617354fa58d691b0c22e1c5d1ddfc3722123d7161fcd96"
   end
 
   def install
@@ -42,9 +41,8 @@ class Groonga < Formula
       --with-ssl
       --with-zlib
       --without-libstemmer
+      --with-mecab
     ]
-
-    args << "--with-mecab" if build.with? "mecab"
 
     if build.head?
       args << "--with-ruby"

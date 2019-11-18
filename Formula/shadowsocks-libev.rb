@@ -1,16 +1,22 @@
 class ShadowsocksLibev < Formula
   desc "Libev port of shadowsocks"
   homepage "https://github.com/shadowsocks/shadowsocks-libev"
-  url "https://github.com/shadowsocks/shadowsocks-libev/releases/download/v3.2.0/shadowsocks-libev-3.2.0.tar.gz"
-  sha256 "5521cf623a07fd1e393528516a83acd2b66c5d4bb4535a52662806a6a060c606"
-  revision 1
+  url "https://github.com/shadowsocks/shadowsocks-libev/releases/download/v3.3.3/shadowsocks-libev-3.3.3.tar.gz"
+  sha256 "677356a5ed6b5ae9e32a898061db2587158ff27e245db03f4bde9b006ef12dc9"
 
   bottle do
     cellar :any
-    sha256 "e654f0ca835ad618255bfb430491abfbe5254d496b79765729b1e0f212679d3c" => :mojave
-    sha256 "5b9bb640113ecfd9426b55339404d1c064ffbbaefaf2678d9c2dd2f17f4aac36" => :high_sierra
-    sha256 "6945b5311692ffefa6fac0fd421e83067d90eec3bf5d13e0b33878789392aa80" => :sierra
-    sha256 "226e9842234e7a323a3264cef3f7141fd99e8b71f06374a573cc21751c0815dd" => :el_capitan
+    sha256 "be5c6b0ee030a71916cb8eaa46c5661f1ab92a382556d2e45b748ad6d05b1ec1" => :catalina
+    sha256 "7698e2260405590b827b65a1d2e2db18cdb62973021af8207bca803ff8f0bcad" => :mojave
+    sha256 "ffd307be32d7040633103eabab039b856df5e99f4e2512386c954dde32262c19" => :high_sierra
+  end
+
+  head do
+    url "https://github.com/shadowsocks/shadowsocks-libev.git"
+
+    depends_on "autoconf" => :build
+    depends_on "automake" => :build
+    depends_on "libtool" => :build
   end
 
   depends_on "asciidoc" => :build
@@ -23,6 +29,7 @@ class ShadowsocksLibev < Formula
 
   def install
     ENV["XML_CATALOG_FILES"] = etc/"xml/catalog"
+    system "./autogen.sh" if build.head?
 
     system "./configure", "--prefix=#{prefix}"
     system "make"

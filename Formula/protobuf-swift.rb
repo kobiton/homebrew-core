@@ -3,23 +3,22 @@ class ProtobufSwift < Formula
   homepage "https://github.com/alexeyxo/protobuf-swift"
   url "https://github.com/alexeyxo/protobuf-swift/archive/4.0.6.tar.gz"
   sha256 "598d9e459b4ac74bfbcf22857c7e8fda8f5219c10caac0aa18aea7d8710cce22"
+  revision 2
 
   bottle do
     cellar :any
-    sha256 "64c6b817c6d228fc67069f71b02c22c417ab78c5a9af5852cbc97288a5c68359" => :mojave
-    sha256 "c6c9d9b4d5297302f46c61815f8dc312daa18038462efb3a5678406732ebbebe" => :high_sierra
-    sha256 "94a30e32d24bb183e2b27a5fb6f47204b563b579e0d1e2daecb3c615052bc072" => :sierra
+    sha256 "25b96487d0f0d21de51d379e8d81e2dcc9eaf0252e779c9b340de0d089918f26" => :mojave
+    sha256 "33f57aa9d49598a5101de975b92507964493da967b7a3738e91a64dd8a663180" => :high_sierra
+    sha256 "42327634f717f0f9276d61af56df6a4595eea57f17d779f405703fdecae55bed" => :sierra
   end
 
   depends_on "autoconf" => :build
   depends_on "automake" => :build
   depends_on "libtool" => :build
-  depends_on "protobuf"
+  depends_on "protobuf@3.7"
 
   conflicts_with "swift-protobuf",
     :because => "both install `protoc-gen-swift` binaries"
-
-  needs :cxx11
 
   def install
     ENV.cxx11

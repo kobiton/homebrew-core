@@ -1,20 +1,21 @@
 class Genact < Formula
   desc "Nonsense activity generator"
   homepage "https://github.com/svenstaro/genact"
-  url "https://github.com/svenstaro/genact/archive/0.6.0.tar.gz"
-  sha256 "ab20d1c9c20f3b25d0be62fdb8aba74c0e2f046e647327d85a0ecc84d40f8a94"
+  url "https://github.com/svenstaro/genact/archive/0.7.0.tar.gz"
+  sha256 "9bfb241d8d3e77dae63fa3f5c84ef67e459a03a8fc18ed4661e53765264288ce"
 
   bottle do
-    sha256 "4cdc64c4dd871ae661146692db42cbbb11985e5c33f2ebe5972a7b8f947911ae" => :mojave
-    sha256 "d0e5347b24fbd59bf0ca8119c9a4c9a5790e552bf076e8d9a0f986877b6da1f0" => :high_sierra
-    sha256 "c387de211ad08b4e5f1b071683bda99886a810327cdcf141d8868fcb68ea95e8" => :sierra
-    sha256 "e30beb8e8f46f2a4f53b6c6e74252ed88b9b141594afb978384efbab00ea12f8" => :el_capitan
+    cellar :any_skip_relocation
+    rebuild 1
+    sha256 "38ba680b756939cbf698a3bb4e135613663e5d7778f15cf03c8cd2fb19abdad7" => :catalina
+    sha256 "da6e18f5cbe7a84c8ad3c4a3d079d7ca0deaded383d98ce72afed4f770a02aed" => :mojave
+    sha256 "2c962de62551fce95f18b2e46cc9b1140256daa10fcd5555d5cfc2e3999df340" => :high_sierra
   end
 
   depends_on "rust" => :build
 
   def install
-    system "cargo", "install", "--root", prefix, "--path", "."
+    system "cargo", "install", "--locked", "--root", prefix, "--path", "."
   end
 
   test do

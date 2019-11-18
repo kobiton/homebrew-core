@@ -1,24 +1,16 @@
 class Gcc < Formula
   desc "GNU compiler collection"
   homepage "https://gcc.gnu.org/"
+  url "https://ftp.gnu.org/gnu/gcc/gcc-9.2.0/gcc-9.2.0.tar.xz"
+  mirror "https://ftpmirror.gnu.org/gcc/gcc-9.2.0/gcc-9.2.0.tar.xz"
+  sha256 "ea6ef08f121239da5695f76c9b33637a118dcf63e24164422231917fa61fb206"
+  revision 1
   head "https://gcc.gnu.org/git/gcc.git"
 
-  stable do
-    url "https://ftp.gnu.org/gnu/gcc/gcc-8.2.0/gcc-8.2.0.tar.xz"
-    mirror "https://ftpmirror.gnu.org/gcc/gcc-8.2.0/gcc-8.2.0.tar.xz"
-    sha256 "196c3c04ba2613f893283977e6011b2345d1cd1af9abeac58e916b1aab3e0080"
-
-    # isl 0.20 compatibility
-    # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=86724
-    patch :DATA
-  end
-
   bottle do
-    rebuild 1
-    sha256 "362ece7c7a43571fce42243890d7fd4df21c453e5997bf72165d7855aa48f254" => :mojave
-    sha256 "f65f583746746494db1b02bb8a8d53ef54089ff8564d88d886527148794e9eef" => :high_sierra
-    sha256 "0fa57f7f5dbbc6360c5894b987a37d829b4984dfe51a91ba26f48d6c97d1f370" => :sierra
-    sha256 "5a51d9f6ab8d14a0b2a37783225cc356f3d68a074f1b814124f00c739475c655" => :el_capitan
+    sha256 "e1a6cd0d52fb715431063657cec4e3578170079168b612a6998d321d778330b1" => :catalina
+    sha256 "12951cda5ca32814387a1106fdaea9c4d4dd55e9c27f0dc7c044ab5e00dca695" => :mojave
+    sha256 "fd0945c648c9a6672892a9b17ce3108dd6b8319aaf67c2718290ea0d13e22f1b" => :high_sierra
   end
 
   # The bottles are built on systems with the CLT installed, and do not work
@@ -28,9 +20,6 @@ class Gcc < Formula
     satisfy { MacOS::CLT.installed? }
   end
 
-  option "with-jit", "Build just-in-time compiler"
-  option "with-nls", "Build with native language support (localization)"
-
   depends_on "gmp"
   depends_on "isl"
   depends_on "libmpc"
@@ -38,6 +27,15 @@ class Gcc < Formula
 
   # GCC bootstraps itself, so it is OK to have an incompatible C++ stdlib
   cxxstdlib_check :skip
+
+  # Fix system headers for Catalina SDK
+  # (otherwise __OSX_AVAILABLE_STARTING ends up undefined)
+  if DevelopmentTools.clang_build_version >= 1100
+    patch do
+      url "https://raw.githubusercontent.com/Homebrew/formula-patches/b8b8e65e/gcc/9.2.0-catalina.patch"
+      sha256 "0b8d14a7f3c6a2f0d2498526e86e088926671b5da50a554ffa6b7f73ac4f132b"
+    end
+  end
 
   def version_suffix
     if build.head?
@@ -57,30 +55,25 @@ class Gcc < Formula
     #  - BRIG
     languages = %w[c c++ objc obj-c++ fortran]
 
-    # JIT compiler is off by default, enabling it has performance cost
-    languages << "jit" if build.with? "jit"
+    osmajor = `uname -r`.split(".").first
+    pkgversion = "Homebrew GCC #{pkg_version} #{build.used_options*" "}".strip
 
-    osmajor = `uname -r`.chomp
-
-    args = [
-      "--build=x86_64-apple-darwin#{osmajor}",
-      "--prefix=#{prefix}",
-      "--libdir=#{lib}/gcc/#{version_suffix}",
-      "--enable-languages=#{languages.join(",")}",
-      # Make most executables versioned to avoid conflicts.
-      "--program-suffix=-#{version_suffix}",
-      "--with-gmp=#{Formula["gmp"].opt_prefix}",
-      "--with-mpfr=#{Formula["mpfr"].opt_prefix}",
-      "--with-mpc=#{Formula["libmpc"].opt_prefix}",
-      "--with-isl=#{Formula["isl"].opt_prefix}",
-      "--with-system-zlib",
-      "--enable-checking=release",
-      "--with-pkgversion=Homebrew GCC #{pkg_version} #{build.used_options*" "}".strip,
-      "--with-bugurl=https://github.com/Homebrew/homebrew-core/issues",
+    args = %W[
+      --build=x86_64-apple-darwin#{osmajor}
+      --prefix=#{prefix}
+      --libdir=#{lib}/gcc/#{version_suffix}
+      --disable-nls
+      --enable-checking=release
+      --enable-languages=#{languages.join(",")}
+      --program-suffix=-#{version_suffix}
+      --with-gmp=#{Formula["gmp"].opt_prefix}
+      --with-mpfr=#{Formula["mpfr"].opt_prefix}
+      --with-mpc=#{Formula["libmpc"].opt_prefix}
+      --with-isl=#{Formula["isl"].opt_prefix}
+      --with-system-zlib
+      --with-pkgversion=#{pkgversion}
+      --with-bugurl=https://github.com/Homebrew/homebrew-core/issues
     ]
-
-    args << "--disable-nls" if build.without? "nls"
-    args << "--enable-host-shared" if build.with?("jit")
 
     # Xcode 10 dropped 32-bit support
     args << "--disable-multilib" if DevelopmentTools.clang_build_version >= 1000
@@ -102,15 +95,10 @@ class Gcc < Formula
 
       system "../configure", *args
 
-      make_args = []
       # Use -headerpad_max_install_names in the build,
       # otherwise updated load commands won't fit in the Mach-O header.
       # This is needed because `gcc` avoids the superenv shim.
-      if build.bottle?
-        make_args << "BOOT_LDFLAGS=-Wl,-headerpad_max_install_names"
-      end
-
-      system "make", *make_args
+      system "make", "BOOT_LDFLAGS=-Wl,-headerpad_max_install_names"
       system "make", "install"
 
       bin.install_symlink bin/"gfortran-#{version_suffix}" => "gfortran"
@@ -169,17 +157,3 @@ class Gcc < Formula
     assert_equal "Done\n", `./test`
   end
 end
-
-__END__
-diff --git a/gcc/graphite.h b/gcc/graphite.h
-index 4e0e58c..be0a22b 100644
---- a/gcc/graphite.h
-+++ b/gcc/graphite.h
-@@ -37,6 +37,8 @@ along with GCC; see the file COPYING3.  If not see
- #include <isl/schedule.h>
- #include <isl/ast_build.h>
- #include <isl/schedule_node.h>
-+#include <isl/id.h>
-+#include <isl/space.h>
-
- typedef struct poly_dr *poly_dr_p;

@@ -1,23 +1,21 @@
 class Pagmo < Formula
   desc "Scientific library for massively parallel optimization"
   homepage "https://esa.github.io/pagmo2/"
-  url "https://github.com/esa/pagmo2/archive/v2.9.tar.gz"
-  sha256 "d482650e0c79a49ce0312c7e9e5722f3a1b24327e08af11daa66c59374bed3b4"
+  url "https://github.com/esa/pagmo2/archive/v2.11.4.tar.gz"
+  sha256 "7756cf4b4a427a856137c40c3fdf27422fcf546249b70f9ba4c213ef1fbee051"
 
   bottle do
-    cellar :any_skip_relocation
-    sha256 "dbafe3f25a46bc9393034034e3c4ec0d646e0f05156d0c40f9e18dfca4cbb36b" => :mojave
-    sha256 "1dc34d7efa473a43c7edb99a2bd2c2cc827eb2562ff9ffc28cc66043e9f91680" => :high_sierra
-    sha256 "1dc34d7efa473a43c7edb99a2bd2c2cc827eb2562ff9ffc28cc66043e9f91680" => :sierra
-    sha256 "1dc34d7efa473a43c7edb99a2bd2c2cc827eb2562ff9ffc28cc66043e9f91680" => :el_capitan
+    cellar :any
+    sha256 "bf7266791644988179506f3c89dd7f671ea36b2262a1d1daaf9b51f81f28e962" => :catalina
+    sha256 "fadbf1dddee642198a8e4b0f1ca2c55785137cb7eadda7136e09a7475d8eec75" => :mojave
+    sha256 "ff1dccd341a12f21c16979dcc1a6fd63eb764997e975d2bd720e4957693a118a" => :high_sierra
   end
 
   depends_on "cmake" => :build
   depends_on "boost"
   depends_on "eigen"
   depends_on "nlopt"
-
-  needs :cxx11
+  depends_on "tbb"
 
   def install
     ENV.cxx11
@@ -64,8 +62,8 @@ class Pagmo < Formula
           return 0;
       }
     EOS
-    system ENV.cxx, "test.cpp", "-I#{Formula["eigen"].include}/eigen3",
-                    "-I#{include}", "-std=c++11", "-o", "test"
+    system ENV.cxx, "test.cpp", "-I#{include}", "-L#{lib}", "-lpagmo",
+                    "-std=c++11", "-o", "test"
     system "./test"
   end
 end

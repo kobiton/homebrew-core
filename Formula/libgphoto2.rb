@@ -1,14 +1,14 @@
 class Libgphoto2 < Formula
   desc "Gphoto2 digital camera library"
   homepage "http://www.gphoto.org/proj/libgphoto2/"
-  url "https://downloads.sourceforge.net/project/gphoto/libgphoto/2.5.19/libgphoto2-2.5.19.tar.bz2"
-  sha256 "62523e52e3b8542301e072635b518387f2bd0948347775cf10cb2da9a6612c63"
+  url "https://downloads.sourceforge.net/project/gphoto/libgphoto/2.5.23/libgphoto2-2.5.23.tar.bz2"
+  sha256 "d8af23364aa40fd8607f7e073df74e7ace05582f4ba13f1724d12d3c97e8852d"
 
   bottle do
-    sha256 "5cea8f07629664424ffd28806d8bec974c1a30debaa630568254edda97e6b469" => :mojave
-    sha256 "f65f60da6f1493be05fd58fb66126056d8ba81eca4d4c56d752cd3a9601b5b5c" => :high_sierra
-    sha256 "dbba065cb5cdf62a30dcf31f04524b0f2a99d3c28290f7d77523c0fcfbf92314" => :sierra
-    sha256 "e11334f3d377befc92347c9c073ad43c82a8de1b57d7749411affb7333ff77a4" => :el_capitan
+    sha256 "d5e55b07bcb538aed536da66d79c6366a58e0e106b5835846cf5d8bd06aa02b7" => :catalina
+    sha256 "b758f4caa384721d7593bec1314dd9e05fa05f69a74e7edd702dc3e9fabb4377" => :mojave
+    sha256 "efb624c0e1495dce73b72b24868a5fab80836aa162b37951c2ad04eba093b5c5" => :high_sierra
+    sha256 "21dc9f114533994fbeedd7893a8c40b2ec42f2a46bd14d2c40d463e397e9c69b" => :sierra
   end
 
   head do
@@ -23,7 +23,6 @@ class Libgphoto2 < Formula
   depends_on "gd"
   depends_on "libtool"
   depends_on "libusb-compat"
-  depends_on "libexif" => :optional
 
   def install
     system "autoreconf", "-fvi" if build.head?

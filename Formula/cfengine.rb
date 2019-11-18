@@ -1,24 +1,24 @@
 class Cfengine < Formula
   desc "Help manage and understand IT infrastructure"
   homepage "https://cfengine.com/"
-  url "https://cfengine-package-repos.s3.amazonaws.com/tarballs/cfengine-3.12.0.tar.gz"
-  sha256 "d71ba98a272390c6fa8bc20e8ea27f0050a0a72a3e6b206a4762b4646be332ec"
+  url "https://cfengine-package-repos.s3.amazonaws.com/tarballs/cfengine-3.14.0.tar.gz"
+  sha256 "738d9ade96817c26123046281b6dc8d3c325a2f0f3662e9b23a8e572a4cf4267"
 
   bottle do
-    sha256 "b1e2079b0bd8aa12ab6232d555c4707f4ccb0cb5ec8f771dffcc29d7bc900f6a" => :mojave
-    sha256 "6d17d250d32a04ba47bd234abb1c5ee8d7fd69df1dfc517b1ab95c3995a270f3" => :high_sierra
-    sha256 "67ee78d55c3b1e1877f0e03954dc270ff1874e0151d05d9a402365d118aa2bfa" => :sierra
-    sha256 "468f1d8fc3726456fe25f14af8795e0410aa7bc558f7e841ce99082e738de149" => :el_capitan
+    rebuild 1
+    sha256 "b931d7b1f10909c4d2cdb362497203213d84d26df5e5071707f341f85b4df27d" => :catalina
+    sha256 "4eaaf194545c426f58117c2518f7a5db49b8265cd4000abec839bd70f4a9062c" => :mojave
+    sha256 "a221af5677518fd309917b61878dc8ba571a3f364e872c7e0c672449d5429ba1" => :high_sierra
+    sha256 "9a1aa88f5a4b42ad4a5d2df2439cd3a49aa272c26746f4ae25a810291aecbdcc" => :sierra
   end
 
-  depends_on "libxml2" if MacOS.version < :mountain_lion
   depends_on "lmdb"
-  depends_on "openssl"
+  depends_on "openssl@1.1"
   depends_on "pcre"
 
   resource "masterfiles" do
-    url "https://cfengine-package-repos.s3.amazonaws.com/tarballs/cfengine-masterfiles-3.12.0.tar.gz"
-    sha256 "1c50e3d8c702097e13a21258626d936d6ff2e6492e893dfe286ff0d6204d7a65"
+    url "https://cfengine-package-repos.s3.amazonaws.com/tarballs/cfengine-masterfiles-3.14.0.tar.gz"
+    sha256 "1afea1fbeb8aae24541d62b0f8ed7633540b2a5eec99561fa1318dc171ff1c7c"
   end
 
   def install

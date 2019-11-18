@@ -1,21 +1,24 @@
 class Httpd < Formula
   desc "Apache HTTP server"
   homepage "https://httpd.apache.org/"
-  url "https://www.apache.org/dyn/closer.cgi?path=httpd/httpd-2.4.35.tar.bz2"
-  sha256 "2607c6fdd4d12ac3f583127629291e9432b247b782396a563bec5678aae69b56"
+  url "https://www.apache.org/dyn/closer.cgi?path=/httpd/httpd-2.4.41.tar.bz2"
+  sha256 "133d48298fe5315ae9366a0ec66282fa4040efa5d566174481077ade7d18ea40"
+  revision 1
 
   bottle do
-    sha256 "9056baef0b95a004147020b23099102d88bf477ce0eac8ea6f28734213000f71" => :mojave
-    sha256 "c4799839ef633e76339b9a595d7bafcc83a5747affec314ee921d1987d07297c" => :high_sierra
-    sha256 "98a4c47ff83d3992d7b832bac17d67350130ebc1b293c8d632e6aa14dbd82fb8" => :sierra
+    sha256 "c532f46853817d18cfaeadecf1ec4e7b47a57b80eee3d01272aaa99a16c93bf6" => :catalina
+    sha256 "9f9969abde4a61949b0279f68d6fcc616d1546dd2c1b4fd61012bde1f5d27ee8" => :mojave
+    sha256 "143af690fd1f26f07e79009da6e674a0cb56c190f6fb486f9e61f82a5ab36a0a" => :high_sierra
+    sha256 "9a085a0b728b5bc75bda265d7d4c5360187038eb339c43a681d789599b814dcf" => :sierra
   end
 
   depends_on "apr"
   depends_on "apr-util"
   depends_on "brotli"
   depends_on "nghttp2"
-  depends_on "openssl"
+  depends_on "openssl@1.1"
   depends_on "pcre"
+  uses_from_macos "zlib"
 
   def install
     # fixup prefix references in favour of opt_prefix references
@@ -58,10 +61,12 @@ class Httpd < Formula
                           "--with-apr=#{Formula["apr"].opt_prefix}",
                           "--with-apr-util=#{Formula["apr-util"].opt_prefix}",
                           "--with-brotli=#{Formula["brotli"].opt_prefix}",
+                          "--with-libxml2=#{MacOS.sdk_path_if_needed}/usr",
                           "--with-mpm=prefork",
                           "--with-nghttp2=#{Formula["nghttp2"].opt_prefix}",
-                          "--with-ssl=#{Formula["openssl"].opt_prefix}",
+                          "--with-ssl=#{Formula["openssl@1.1"].opt_prefix}",
                           "--with-pcre=#{Formula["pcre"].opt_prefix}",
+                          "--with-z=#{MacOS.sdk_path_if_needed}/usr",
                           "--disable-lua",
                           "--disable-luajit"
     system "make"
@@ -138,6 +143,11 @@ class Httpd < Formula
   end
 
   test do
+    # Ensure modules depending on zlib and xml2 have been compiled
+    assert_predicate lib/"httpd/modules/mod_deflate.so", :exist?
+    assert_predicate lib/"httpd/modules/mod_proxy_html.so", :exist?
+    assert_predicate lib/"httpd/modules/mod_xml2enc.so", :exist?
+
     begin
       require "socket"
 

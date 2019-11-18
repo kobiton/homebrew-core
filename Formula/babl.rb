@@ -1,29 +1,25 @@
 class Babl < Formula
   desc "Dynamic, any-to-any, pixel format translation library"
   homepage "http://www.gegl.org/babl/"
-  url "https://download.gimp.org/pub/babl/0.1/babl-0.1.56.tar.bz2"
-  sha256 "8ad26ca717ec3c74e261f454dd6bb316333a39fd1f87db4ac44706a860dc4d28"
+  url "https://download.gimp.org/pub/babl/0.1/babl-0.1.68.tar.xz"
+  sha256 "412dc8356b1e200e0f3aaa41bc6c317b9e489936c17c4e92cc5db9d34ca1e94c"
+  # Use GitHub instead of GNOME's git. The latter is unreliable.
+  head "https://github.com/GNOME/babl.git"
 
   bottle do
-    sha256 "d4919702e5918f9f47b76cf9dbff294efbd26c909eea3084e0ca6991f212738e" => :mojave
-    sha256 "be17bcd75c569fe2b90f81c2b7dd8e051c07ead256eb8665c739b4abd1b86b40" => :high_sierra
-    sha256 "225d7ef87fe7dcfe9ba9134531b9d5420afc9354bf8fe7bde11bb7bbf4ecf2f0" => :sierra
-    sha256 "6aadd8934b96132fd208f0526a0caacb4df6e7c13f3507ea8078a070d5914ea6" => :el_capitan
+    sha256 "e00f9ef31c286109f9f6cbbfb819876306e40c67380338c684b3c63759a94c94" => :catalina
+    sha256 "298f41a91ed4b93bbc29254f40691537ffd14bee7322d862b1b96f5996cfd865" => :mojave
+    sha256 "0d8bf0f5aea427b7d9ca8b05cdf49b0a2bce4c3f41b9d148f42103e2454de667" => :high_sierra
+    sha256 "3cd4d6d3cc86dc1bc2b8411bf4ffb911df58458d54fc938730fdede11587c624" => :sierra
   end
 
-  head do
-    # Use Github instead of GNOME's git. The latter is unreliable.
-    url "https://github.com/GNOME/babl.git"
-
-    depends_on "autoconf" => :build
-    depends_on "automake" => :build
-    depends_on "libtool" => :build
-  end
-
+  depends_on "autoconf" => :build
+  depends_on "automake" => :build
+  depends_on "libtool" => :build
   depends_on "pkg-config" => :build
 
   def install
-    system "./autogen.sh" if build.head?
+    system "./autogen.sh"
     system "./configure", "--disable-dependency-tracking",
                           "--prefix=#{prefix}"
     system "make", "install"

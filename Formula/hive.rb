@@ -1,8 +1,8 @@
 class Hive < Formula
   desc "Hadoop-based data summarization, query, and analysis"
   homepage "https://hive.apache.org"
-  url "https://www.apache.org/dyn/closer.cgi?path=hive/hive-3.1.0/apache-hive-3.1.0-bin.tar.gz"
-  sha256 "f90b5988d4d81dafa97fa3059cfbb89ac6c8c1015b34b20f1e72902ddbb9927e"
+  url "https://www.apache.org/dyn/closer.cgi?path=hive/hive-3.1.2/apache-hive-3.1.2-bin.tar.gz"
+  sha256 "d75dcf36908b4e7b9b0ec9aec57a46a6628b97b276c233cb2c2f1a3e89b13462"
 
   bottle :unneeded
 
@@ -15,6 +15,7 @@ class Hive < Formula
 
     Pathname.glob("#{libexec}/bin/*") do |file|
       next if file.directory?
+
       (bin/file.basename).write_env_script file,
         Language::Java.java_home_env("1.7+").merge(:HIVE_HOME => libexec)
     end

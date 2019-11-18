@@ -1,18 +1,15 @@
 class GitlabGem < Formula
   desc "Ruby client and CLI for GitLab API"
   homepage "https://github.com/NARKOZ/gitlab"
-  url "https://github.com/NARKOZ/gitlab/archive/v4.5.0.tar.gz"
-  sha256 "d273ea69e35ca0a3bdc795fbb29bb0c1a9b91f875c5ac296d2ab77965a5d616d"
+  url "https://github.com/NARKOZ/gitlab/archive/v4.11.0.tar.gz"
+  sha256 "c709833c28781b995ea141349d7b67735e27e4ae19ccfecf7d0ba27be50f3d4e"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "3eca674d3f0c8c9bd87bc329ca342d0c94a5fcb42d1ab9ace15713a9b313a9d2" => :mojave
-    sha256 "73b3d86b32fe46c9e1e343175ea27ddf475a58cecf46a7a9801f82b9dd65114a" => :high_sierra
-    sha256 "fefa2c48ce82227f1b6f6754fa40a3cbbf7d8429eb469637a3f63697701b77a1" => :sierra
-    sha256 "967488b9481bf99a3f60353a80f292236ad00984b1f5a10ae52e0c4602bbad77" => :el_capitan
+    sha256 "0c9ab14dc657aa6ed5e546fc1669ef43de7877744aff96db2d191d9f02742ad8" => :catalina
+    sha256 "3674be8dfcebf52fcf079822ebdcfc1afa9783105edc25571006a5e6169e912d" => :mojave
+    sha256 "5ad1f4241fa031436247c4923446f9621a7e4af452d3c2a4c65ba6663416ec89" => :high_sierra
   end
-
-  depends_on "ruby" if MacOS.version <= :mountain_lion
 
   resource "httparty" do
     url "https://rubygems.org/gems/httparty-0.16.2.gem"
@@ -37,7 +34,7 @@ class GitlabGem < Formula
   def install
     ENV["GEM_HOME"] = libexec
     resources.each do |r|
-      r.verify_download_integrity(r.fetch)
+      r.fetch
       system "gem", "install", r.cached_download, "--ignore-dependencies",
              "--no-document", "--install-dir", libexec
     end

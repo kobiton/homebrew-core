@@ -1,14 +1,15 @@
 class Sleuthkit < Formula
   desc "Forensic toolkit"
   homepage "https://www.sleuthkit.org/"
-  url "https://github.com/sleuthkit/sleuthkit/releases/download/sleuthkit-4.6.3/sleuthkit-4.6.3.tar.gz"
-  sha256 "d38af0da39969fea1baea6eaf37e1fe8b1de830783f08a044157f82e095ed4e4"
+  url "https://github.com/sleuthkit/sleuthkit/releases/download/sleuthkit-4.6.7/sleuthkit-4.6.7.tar.gz"
+  sha256 "525fced79117929621fb583ed4a554a01a07e8739e9c000507acfa793f8d6915"
 
   bottle do
     cellar :any
-    sha256 "51b30c280b302dd9d7ccc27778abf71d02a32d9b4095254737a8b278e45c8cd3" => :mojave
-    sha256 "8ecc20e35a77e102b6ed5d45ad8dd707887d0bf47737323a5758205fd6d90ed4" => :high_sierra
-    sha256 "ce8de5ba1d0be98895c2265a6927a93b1a99156e483517370c7ac42e2e457370" => :sierra
+    sha256 "7cbf955a3df686e370616256ce35b7f4c6734c32b4446a3c7af3fdb6ec843569" => :catalina
+    sha256 "edd55849d72f35c2f7210d0760b5f21e6204e900a4da977a8c19fa6db3d5cf7b" => :mojave
+    sha256 "1938217697347d823ca2d915c9ab2046843d675b9d07dea38c1c452637a6db1e" => :high_sierra
+    sha256 "c8ce9b0639eb21ea41344bc117df1dda8ac103400be32dd412f79b6d18ebb50f" => :sierra
   end
 
   depends_on "ant" => :build
@@ -18,7 +19,6 @@ class Sleuthkit < Formula
   depends_on "libpq"
   depends_on "sqlite"
 
-  conflicts_with "irods", :because => "both install `ils`"
   conflicts_with "ffind",
     :because => "both install a 'ffind' executable."
 

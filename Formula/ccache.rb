@@ -1,15 +1,17 @@
 class Ccache < Formula
   desc "Object-file caching compiler wrapper"
-  homepage "https://ccache.samba.org/"
-  url "https://www.samba.org/ftp/ccache/ccache-3.4.3.tar.xz"
-  sha256 "297e55a7622578395c1d5cfa163cc61e345ed69c52aaf94a9583634046c15f4a"
+  homepage "https://ccache.dev/"
+  url "https://github.com/ccache/ccache/releases/download/v3.7.5/ccache-3.7.5.tar.xz"
+  sha256 "e51c611a3da865754cb0ff1ddd95bd7a6acac603576c0bd39583f8cc30af28d2"
 
   bottle do
-    sha256 "f45cac85de62e43832892ff640b15013ef80d856542685cf411e870979ab1b50" => :mojave
-    sha256 "82dad86b047849d5f6429c531e8818e9d6145061fb0c46e3f3498615340491c6" => :high_sierra
-    sha256 "8c3e1826de75956c9dd9d5a9a848dec82a37506af4e38d29e72bc085ed2a0f53" => :sierra
-    sha256 "1c17963f848a72d7d43e3c995d062e8a5ccae935d4dd36a734471e77159537d7" => :el_capitan
+    cellar :any_skip_relocation
+    sha256 "47c87ab2d54734b828dd01cc0ce441e865c380ea86b15afe92dbfbcb8d408e69" => :catalina
+    sha256 "ccd4dd2132bb29e0c54317c3fa2076da2987b2f9c3d741f63a24857b02497077" => :mojave
+    sha256 "7b8bbcfd474efecc2c179414c17d17da55b6d8897d8f219c012d093709f4e6c1" => :high_sierra
   end
+
+  uses_from_macos "zlib"
 
   head do
     url "https://github.com/ccache/ccache.git"
@@ -34,9 +36,9 @@ class Ccache < Formula
       clang
       clang++
       cc
-      gcc gcc2 gcc3 gcc-3.3 gcc-4.0 gcc-4.2 gcc-4.3 gcc-4.4 gcc-4.5 gcc-4.6 gcc-4.7 gcc-4.8 gcc-4.9 gcc-5 gcc-6 gcc-7
-      c++ c++3 c++-3.3 c++-4.0 c++-4.2 c++-4.3 c++-4.4 c++-4.5 c++-4.6 c++-4.7 c++-4.8 c++-4.9 c++-5 c++-6 c++-7
-      g++ g++2 g++3 g++-3.3 g++-4.0 g++-4.2 g++-4.3 g++-4.4 g++-4.5 g++-4.6 g++-4.7 g++-4.8 g++-4.9 g++-5 g++-6 g++-7
+      gcc gcc2 gcc3 gcc-3.3 gcc-4.0 gcc-4.2 gcc-4.3 gcc-4.4 gcc-4.5 gcc-4.6 gcc-4.7 gcc-4.8 gcc-4.9 gcc-5 gcc-6 gcc-7 gcc-8 gcc-9
+      c++ c++3 c++-3.3 c++-4.0 c++-4.2 c++-4.3 c++-4.4 c++-4.5 c++-4.6 c++-4.7 c++-4.8 c++-4.9 c++-5 c++-6 c++-7 c++-8 c++-9
+      g++ g++2 g++3 g++-3.3 g++-4.0 g++-4.2 g++-4.3 g++-4.4 g++-4.5 g++-4.6 g++-4.7 g++-4.8 g++-4.9 g++-5 g++-6 g++-7 g++-8 g++-9
     ].each do |prog|
       libexec.install_symlink bin/"ccache" => prog
     end

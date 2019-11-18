@@ -1,37 +1,43 @@
 class Isync < Formula
   desc "Synchronize a maildir with an IMAP server"
   homepage "https://isync.sourceforge.io/"
-  url "https://downloads.sourceforge.net/project/isync/isync/1.3.0/isync-1.3.0.tar.gz"
-  sha256 "8d5f583976e3119705bdba27fa4fc962e807ff5996f24f354957178ffa697c9c"
+  revision 1
+  head "https://git.code.sf.net/p/isync/isync.git"
+
+  stable do
+    url "https://downloads.sourceforge.net/project/isync/isync/1.3.1/isync-1.3.1.tar.gz"
+    sha256 "68cb4643d58152097f01c9b3abead7d7d4c9563183d72f3c2a31d22bc168f0ea"
+    # Patch to fix detection of OpenSSL 1.1
+    # https://sourceforge.net/p/isync/bugs/51/
+    patch :DATA
+  end
 
   bottle do
     cellar :any
-    rebuild 1
-    sha256 "5ca6cc97dfcd4ddc10cd9f6425c5f917425e7c7fb2584e909974423f09b7b90b" => :mojave
-    sha256 "4804cd78586b11ba9316db5522fd7d91c171ec3c6936f74f3c8cbbd8f8b27d56" => :high_sierra
-    sha256 "01d975dae7bf0b92d9fb4bb92846b45e1d60a1c5b16421f051f9212ba6ac1959" => :sierra
-    sha256 "6a0679dee26c5534d12801897339b1d0fb8cd82f907917900ffb632a42b0c8e0" => :el_capitan
+    sha256 "d4ea3fd276458ae669596cc955beee0d2cb38ab217fc51c5c6c2acb6c73de260" => :catalina
+    sha256 "7863e1861cc119853fadc35ff6afe7f13bf1e420f22b70e77d0bb32997943329" => :mojave
+    sha256 "2da1bd2fef7c6eb9af331a0536e02df8dd0bc9b0fc42eb534ec8499a87f8c197" => :high_sierra
+    sha256 "a19f503aa9490146a19a4197e8e0190cffad685c7fdba0582544c44ee96f1fe5" => :sierra
   end
 
-  head do
-    url "https://git.code.sf.net/p/isync/isync.git"
-
-    depends_on "autoconf" => :build
-    depends_on "automake" => :build
-  end
-
-  depends_on "openssl"
-  depends_on "berkeley-db" => :optional
+  depends_on "autoconf" => :build
+  depends_on "automake" => :build
+  depends_on "berkeley-db"
+  depends_on "openssl@1.1"
 
   def install
-    system "./autogen.sh" if build.head?
+    # Regenerated for HEAD, and because of our patch
+    if build.head?
+      system "./autogen.sh"
+    else
+      system "autoreconf", "-fiv"
+    end
 
     args = %W[
       --disable-dependency-tracking
       --prefix=#{prefix}
       --disable-silent-rules
     ]
-    args << "ac_cv_berkdb4=no" if build.without? "berkeley-db"
 
     system "./configure", *args
     system "make", "install"
@@ -57,7 +63,6 @@ class Isync < Formula
         <array>
           <string>#{opt_bin}/mbsync</string>
           <string>-a</string>
-          <string>Periodic</string>
         </array>
         <key>StartInterval</key>
         <integer>300</integer>
@@ -76,3 +81,16 @@ class Isync < Formula
     system bin/"mbsync-get-cert", "duckduckgo.com:443"
   end
 end
+__END__
+diff -pur isync-1.3.1/configure.ac isync-1.3.1-fixed/configure.ac
+--- isync-1.3.1/configure.ac	2019-05-28 15:44:13.000000000 +0200
++++ isync-1.3.1-fixed/configure.ac	2019-09-07 15:39:55.000000000 +0200
+@@ -94,7 +94,7 @@ if test "x$ob_cv_with_ssl" != xno; then
+     sav_LDFLAGS=$LDFLAGS
+     LDFLAGS="$LDFLAGS $SSL_LDFLAGS"
+     AC_CHECK_LIB(dl, dlopen, [LIBDL=-ldl])
+-    AC_CHECK_LIB(crypto, CRYPTO_lock, [LIBCRYPTO=-lcrypto])
++    AC_CHECK_LIB(crypto, HMAC_Update, [LIBCRYPTO=-lcrypto])
+     AC_CHECK_LIB(ssl, SSL_connect,
+                  [SSL_LIBS="-lssl $LIBCRYPTO $LIBDL" have_ssl_paths=yes])
+     LDFLAGS=$sav_LDFLAGS

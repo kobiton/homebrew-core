@@ -4,28 +4,19 @@ class GitSecret < Formula
   head "https://github.com/sobolevn/git-secret.git"
 
   stable do
-    url "https://github.com/sobolevn/git-secret/archive/v0.2.4.tar.gz"
-    sha256 "dd9962935f242a94bb00af6a31171de0fdba357171a6c626efc2635751d52bc4"
-
-    # Remove for > 0.2.4
-    # Upstream PR from 12 Jun 2018 "Revert 'migrate from bats to bats-core'"
-    patch do
-      url "https://github.com/sobolevn/git-secret/pull/203.patch?full_index=1"
-      sha256 "ee4e263b9725aee59f8b52196d4749a09791dbb4c745a9e81da523d27fcf3f09"
-    end
+    url "https://github.com/sobolevn/git-secret/archive/v0.3.2.tar.gz"
+    sha256 "07b32b096e5ff5b4818096b1858c1f69df4684bb0f256e620514cf88f44ded85"
   end
 
   bottle do
     cellar :any_skip_relocation
-    rebuild 1
-    sha256 "0fb8db338cf111c40a9ddd2a4d02dcb7779c2f50c88364b118d7cb9442bdfb22" => :mojave
-    sha256 "d7a78350338c3f42505215eb1c4d7e48309bf8e5495d1bb91b8517c05ba6398c" => :high_sierra
-    sha256 "d7a78350338c3f42505215eb1c4d7e48309bf8e5495d1bb91b8517c05ba6398c" => :sierra
-    sha256 "d7a78350338c3f42505215eb1c4d7e48309bf8e5495d1bb91b8517c05ba6398c" => :el_capitan
+    sha256 "2fb53e4162baa1e614c3d73dbb24257604cf8b7864f73deeba21c784c6434193" => :catalina
+    sha256 "2fb53e4162baa1e614c3d73dbb24257604cf8b7864f73deeba21c784c6434193" => :mojave
+    sha256 "2fb53e4162baa1e614c3d73dbb24257604cf8b7864f73deeba21c784c6434193" => :high_sierra
   end
 
   depends_on "gawk"
-  depends_on "gnupg" => :recommended
+  depends_on "gnupg"
 
   def install
     system "make", "build"

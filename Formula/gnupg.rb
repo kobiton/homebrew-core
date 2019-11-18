@@ -1,14 +1,14 @@
 class Gnupg < Formula
   desc "GNU Pretty Good Privacy (PGP) package"
   homepage "https://gnupg.org/"
-  url "https://gnupg.org/ftp/gcrypt/gnupg/gnupg-2.2.10.tar.bz2"
-  sha256 "799dd37a86a1448732e339bd20440f4f5ee6e69755f6fd7a73ee8af30840c915"
+  url "https://gnupg.org/ftp/gcrypt/gnupg/gnupg-2.2.17.tar.bz2"
+  sha256 "afa262868e39b651a2db4c071fba90415154243e83a830ca00516f9a807fd514"
 
   bottle do
-    sha256 "7190eeef3372dec0d663f29f59fdc192b4f2b684b00b684405a3fd086b3fddcf" => :mojave
-    sha256 "a6c89bd1575cd29b96454f64f782b321105725a6e35228724f3654403c9a47f4" => :high_sierra
-    sha256 "2ec723b779f410e4facb11c0523fe3ce1a1b31514228d348857e06ae02d70188" => :sierra
-    sha256 "92b34de0e0713e1a5179a5c82ee4aec1579d798a6a2e5772db2716f30d791d9b" => :el_capitan
+    sha256 "4d6dcc2800fd42235849fec27fe13843abbe0f6a35dc1a33c8477325ecd10037" => :catalina
+    sha256 "1644ab52baf4e89ad3eb5423e67bef8f316edb02dac68879a92a72515b8de594" => :mojave
+    sha256 "131b7346fb893388dac5db6d20943a6f2a03f123568fa8495a4faeb354a7b394" => :high_sierra
+    sha256 "ffb619c7cd3b5e9cd11444b17eea2e2b0d63da2f8cc3d2fbd3a1d834ff428a8b" => :sierra
   end
 
   depends_on "pkg-config" => :build
@@ -41,17 +41,6 @@ class Gnupg < Formula
   def post_install
     (var/"run").mkpath
     quiet_system "killall", "gpg-agent"
-  end
-
-  def caveats; <<~EOS
-    Once you run this version of gpg you may find it difficult to return to using
-    a prior 1.4.x or 2.0.x. Most notably the prior versions will not automatically
-    know about new secret keys created or imported by this version. We recommend
-    creating a backup of your `~/.gnupg` prior to first use.
-
-    For full details on each change and how it could impact you please see
-      https://www.gnupg.org/faq/whats-new-in-2.1.html
-  EOS
   end
 
   test do

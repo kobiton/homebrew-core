@@ -1,28 +1,21 @@
 class Cgal < Formula
   desc "Computational Geometry Algorithm Library"
   homepage "https://www.cgal.org/"
-  url "https://github.com/CGAL/cgal/releases/download/releases%2FCGAL-4.13/CGAL-4.13.tar.xz"
-  sha256 "3e3dd7a64febda58be54c3cbeba329ab6a73b72d4d7647ba4931ecd1fad0e3bc"
+  url "https://github.com/CGAL/cgal/releases/download/releases%2FCGAL-4.14.1/CGAL-4.14.1.tar.xz"
+  sha256 "d4ec2528b88a7c3a07b0b86db96c216822f85b951bf4bc7f9d1f26bf6c369afe"
 
   bottle do
     cellar :any
-    sha256 "d969597f4c3fb993bf19363e4e92f0f74427e25f6f855fa28d1f9792084aea9b" => :mojave
-    sha256 "e6978f966bdd5a050f80185d8e506a38016a8adad6010b039b9ef42558ed14eb" => :high_sierra
-    sha256 "349890c9c6f40272b3173c15412701f6588003047e5ebc3e0cd2a03c870ba83d" => :sierra
+    sha256 "d9b8e3f6b52853ac92f6eaa4023a074dc8ce317ceea9e9be8b98e5a9eb06aa88" => :catalina
+    sha256 "d5899f80357aaf49b2c318813ea6c39fd4c02b354495d9a5f488452808af0ccf" => :mojave
+    sha256 "f7354a832cf0eb5ec2558a288ca21b9e5d4664370597d2a079ec35bce80e7ff7" => :high_sierra
   end
 
-  option "with-qt", "Build ImageIO and Qt components of CGAL"
-
-  deprecated_option "imaging" => "with-qt"
-  deprecated_option "with-imaging" => "with-qt"
-  deprecated_option "with-qt5" => "with-qt"
-
-  depends_on "cmake" => :build
+  depends_on "cmake" => [:build, :test]
   depends_on "boost"
   depends_on "eigen"
   depends_on "gmp"
   depends_on "mpfr"
-  depends_on "qt" => :optional
 
   def install
     args = std_cmake_args + %W[
@@ -30,13 +23,9 @@ class Cgal < Formula
       -DCMAKE_INSTALL_NAME_DIR=#{HOMEBREW_PREFIX}/lib
       -DWITH_Eigen3=ON
       -DWITH_LAPACK=ON
+      -DWITH_CGAL_Qt5=OFF
+      -DWITH_CGAL_ImageIO=OFF
     ]
-
-    if build.without? "qt"
-      args << "-DWITH_CGAL_Qt5=OFF" << "-DWITH_CGAL_ImageIO=OFF"
-    else
-      args << "-DWITH_CGAL_Qt5=ON" << "-DWITH_CGAL_ImageIO=ON"
-    end
 
     system "cmake", ".", *args
     system "make", "install"
@@ -62,8 +51,14 @@ class Cgal < Formula
           return 0;
       }
     EOS
-    system ENV.cxx, "-I#{include}", "-L#{lib}", "-lCGAL",
-                    "surprise.cpp", "-o", "test"
-    assert_equal "15\n15", shell_output("./test").chomp
+    (testpath/"CMakeLists.txt").write <<~EOS
+      cmake_minimum_required(VERSION 3.1...3.13)
+      find_package(CGAL)
+      add_executable(surprise surprise.cpp)
+      target_link_libraries(surprise PRIVATE CGAL::CGAL)
+    EOS
+    system "cmake", "-L", "-DCMAKE_BUILD_RPATH=#{HOMEBREW_PREFIX}/lib", "-DCMAKE_PREFIX_PATH=#{prefix}", "."
+    system "cmake", "--build", ".", "-v"
+    assert_equal "15\n15", shell_output("./surprise").chomp
   end
 end

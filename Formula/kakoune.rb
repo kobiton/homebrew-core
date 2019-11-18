@@ -1,27 +1,21 @@
 class Kakoune < Formula
   desc "Selection-based modal text editor"
   homepage "https://github.com/mawww/kakoune"
-  url "https://github.com/mawww/kakoune/releases/download/v2018.09.04/kakoune-2018.09.04.tar.bz2"
-  sha256 "7a31c9f08c261c5128d1753762721dd7b7fe4bb4e9a3c368c9d768c72a1472e1"
+  url "https://github.com/mawww/kakoune/releases/download/v2019.07.01/kakoune-2019.07.01.tar.bz2"
+  sha256 "8cf978499000bd71a78736eaee5663bd996f53c4e610c62a9bd97502a3ed6fd3"
+  head "https://github.com/mawww/kakoune.git"
 
   bottle do
-    cellar :any_skip_relocation
-    sha256 "7580f7a2fd238383ce36bdc887714e7b445f0128c140387d4fccd5a3c2b6ead9" => :mojave
-    sha256 "28627f60d6207db2bf610dcd63ea9c9ed719742a321f24e942a72417d6063aea" => :high_sierra
-    sha256 "9531f7402473a184da3fe11c6b540f07eba5e2969aca02131ec9921b8f8d7049" => :sierra
-    sha256 "7b1d503559b3ebcf5a2e5a8c34db77391ebd5c47b8cf9fcf47ecb0893fbda2f3" => :el_capitan
+    cellar :any
+    sha256 "0cd60b373efe3e4b89576295a374405c4a3819a945c091b18e18d18de316879c" => :catalina
+    sha256 "7cc097196707ad5f212b825b66f9de7f128240295fa7ccd097314c5a1145b358" => :mojave
+    sha256 "755433189f53b8a410ea4659e8d9c20b26c657c4983ebd882d297118856428db" => :high_sierra
   end
 
   depends_on "asciidoc" => :build
   depends_on "docbook-xsl" => :build
-
-  if MacOS.version <= :el_capitan
-    depends_on "gcc"
-    fails_with :clang do
-      build 800
-      cause "New C++ features"
-    end
-  end
+  depends_on :macos => :high_sierra # needs C++17
+  depends_on "ncurses"
 
   def install
     ENV["XML_CATALOG_FILES"] = "#{etc}/xml/catalog"

@@ -2,52 +2,43 @@ class Erlang < Formula
   desc "Programming language for highly scalable real-time systems"
   homepage "https://www.erlang.org/"
   # Download tarball from GitHub; it is served faster than the official tarball.
-  url "https://github.com/erlang/otp/archive/OTP-21.1.1.tar.gz"
-  sha256 "a6588243e9659960e184083f49b15ea37890e4cd9bb8aef84ba4180db68befc3"
+  url "https://github.com/erlang/otp/archive/OTP-22.1.7.tar.gz"
+  sha256 "f0f8ad265121e4170598d0339ebba4e77f04d31db894d5e70c5a953544f62a47"
   head "https://github.com/erlang/otp.git"
 
   bottle do
     cellar :any
-    sha256 "b0b554155bc73bc2df80ce9f4e9199bb2566b48d22dc530c80918ff304b02100" => :mojave
-    sha256 "a64a56a302a7f34041bf8f7d1261dc22bd6d4c9a1da64a7eaaef008250c5d431" => :high_sierra
-    sha256 "8ccabeeadad800fbcc2f36da40ad68fedaf738158065b26bc0320fc8272448e3" => :sierra
+    sha256 "1f80d00eb9d980c6185affa0abcc1ebbeac8017482429ccd563fdbe2710f8bff" => :catalina
+    sha256 "04670a040a93b7adbe131aeb56d12c77e5ac0e12d54abd3b055ad059e8762584" => :mojave
+    sha256 "56a9b706f61ff1378f0dd2cfaf8343077b79905ba9c8b1ee482ccd1c3907df59" => :high_sierra
   end
-
-  option "without-hipe", "Disable building hipe; fails on various macOS systems"
-  option "with-native-libs", "Enable native library compilation"
-  option "with-dirty-schedulers", "Enable experimental dirty schedulers"
-  option "with-java", "Build jinterface application"
-  option "without-docs", "Do not install documentation"
-
-  deprecated_option "disable-hipe" => "without-hipe"
-  deprecated_option "no-docs" => "without-docs"
 
   depends_on "autoconf" => :build
   depends_on "automake" => :build
   depends_on "libtool" => :build
-  depends_on "openssl"
-  depends_on "wxmac" => :recommended # for GUI apps like observer
-  depends_on "fop" => :optional # enables building PDF docs
-  depends_on :java => :optional
+  depends_on "openssl@1.1"
+  depends_on "wxmac" # for GUI apps like observer
 
   resource "man" do
-    url "https://www.erlang.org/download/otp_doc_man_21.1.tar.gz"
-    mirror "https://fossies.org/linux/misc/otp_doc_man_21.1.tar.gz"
-    sha256 "021e47b5036eaa4671b6d87a910403b775c967bfcb79b56a87f2183ddc5a5df5"
+    url "https://www.erlang.org/download/otp_doc_man_22.1.tar.gz"
+    mirror "https://fossies.org/linux/misc/otp_doc_man_22.1.tar.gz"
+    sha256 "64f45909ed8332619055d424c32f8cc8987290a1ac4079269572fba6ef9c74d9"
   end
 
   resource "html" do
-    url "https://www.erlang.org/download/otp_doc_html_21.1.tar.gz"
-    mirror "https://fossies.org/linux/misc/otp_doc_html_21.1.tar.gz"
-    sha256 "85333f77ad12c2065be4dc40dc7057d1d192f7cf15c416513f0b595583f820ce"
+    url "https://www.erlang.org/download/otp_doc_html_22.1.tar.gz"
+    mirror "https://fossies.org/linux/misc/otp_doc_html_22.1.tar.gz"
+    sha256 "3864ac1aa30084738d783d12c241c0a4943cf22a6d1d0f6c7bb9ba0a45ecb9eb"
   end
 
   def install
+    # Work around Xcode 11 clang bug
+    # https://bitbucket.org/multicoreware/x265/issues/514/wrong-code-generated-on-macos-1015
+    ENV.append_to_cflags "-fno-stack-check" if DevelopmentTools.clang_build_version >= 1010
+
     # Unset these so that building wx, kernel, compiler and
     # other modules doesn't fail with an unintelligable error.
     %w[LIBS FLAGS AFLAGS ZFLAGS].each { |k| ENV.delete("ERL_#{k}") }
-
-    ENV["FOP"] = "#{HOMEBREW_PREFIX}/bin/fop" if build.with? "fop"
 
     # Do this if building from a checkout to generate configure
     system "./otp_build", "autoconf" if File.exist? "otp_build"
@@ -56,44 +47,27 @@ class Erlang < Formula
       --disable-debug
       --disable-silent-rules
       --prefix=#{prefix}
-      --enable-threads
-      --enable-sctp
       --enable-dynamic-ssl-lib
-      --with-ssl=#{Formula["openssl"].opt_prefix}
+      --enable-hipe
+      --enable-sctp
       --enable-shared-zlib
       --enable-smp-support
+      --enable-threads
+      --enable-wx
+      --with-ssl=#{Formula["openssl@1.1"].opt_prefix}
+      --without-javac
+      --enable-darwin-64bit
     ]
 
-    args << "--enable-darwin-64bit" if MacOS.prefer_64_bit?
-    args << "--enable-native-libs" if build.with? "native-libs"
-    args << "--enable-dirty-schedulers" if build.with? "dirty-schedulers"
-    args << "--enable-wx" if build.with? "wxmac"
-    args << "--with-dynamic-trace=dtrace" if MacOS::CLT.installed?
     args << "--enable-kernel-poll" if MacOS.version > :el_capitan
-
-    if build.without? "hipe"
-      # HIPE doesn't strike me as that reliable on macOS
-      # https://syntatic.wordpress.com/2008/06/12/macports-erlang-bus-error-due-to-mac-os-x-1053-update/
-      # https://www.erlang.org/pipermail/erlang-patches/2008-September/000293.html
-      args << "--disable-hipe"
-    else
-      args << "--enable-hipe"
-    end
-
-    if build.with? "java"
-      args << "--with-javac"
-    else
-      args << "--without-javac"
-    end
+    args << "--with-dynamic-trace=dtrace" if MacOS::CLT.installed?
 
     system "./configure", *args
     system "make"
     system "make", "install"
 
-    if build.with? "docs"
-      (lib/"erlang").install resource("man").files("man")
-      doc.install resource("html")
-    end
+    (lib/"erlang").install resource("man").files("man")
+    doc.install resource("html")
   end
 
   def caveats; <<~EOS

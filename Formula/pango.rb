@@ -1,26 +1,22 @@
 class Pango < Formula
   desc "Framework for layout and rendering of i18n text"
   homepage "https://www.pango.org/"
-  url "https://download.gnome.org/sources/pango/1.42/pango-1.42.4.tar.xz"
-  sha256 "1d2b74cd63e8bd41961f2f8d952355aa0f9be6002b52c8aa7699d9f5da597c9d"
+  url "https://download.gnome.org/sources/pango/1.44/pango-1.44.7.tar.xz"
+  sha256 "66a5b6cc13db73efed67b8e933584509f8ddb7b10a8a40c3850ca4a985ea1b1f"
 
   bottle do
-    sha256 "2e0b04d458fc0c856d41d14642af4cde2da7e98c241c40ed5188a803710d3921" => :mojave
-    sha256 "724efe4176988ca7dd3d5668929064d0a1ec9ed95de56cea5050c4b349a509b8" => :high_sierra
-    sha256 "707e4f73f2cb17cf3584312a7f768de4b2b7b1868b1620826f0ed93072b0a321" => :sierra
-    sha256 "63181347fdcedd1a797121b93126ed3e4a45907c39efa693b2803da112487f73" => :el_capitan
+    sha256 "38a8cab63ed7ea37fc5448b74dae21b7f935d4f4ea9c08b658f3553f20ec8f28" => :catalina
+    sha256 "643284e68fcb4699572e7ab327a16ae3eb1c242527a96cb404cd98f14f22a893" => :mojave
+    sha256 "42552a9d26655f006f2361c9a1773d56bd5c5cabcd4f6ad5861fec29bd27c2cc" => :high_sierra
   end
 
   head do
     url "https://gitlab.gnome.org/GNOME/pango.git"
-
-    depends_on "autoconf" => :build
-    depends_on "automake" => :build
-    depends_on "gtk-doc" => :build
-    depends_on "libtool" => :build
   end
 
   depends_on "gobject-introspection" => :build
+  depends_on "meson" => :build
+  depends_on "ninja" => :build
   depends_on "pkg-config" => :build
   depends_on "cairo"
   depends_on "fontconfig"
@@ -28,25 +24,16 @@ class Pango < Formula
   depends_on "glib"
   depends_on "harfbuzz"
 
-  # This fixes a font-size problem in gtk
-  # For discussion, see https://bugzilla.gnome.org/show_bug.cgi?id=787867
-  patch do
-    url "https://raw.githubusercontent.com/Homebrew/formula-patches/e0aa10/pango/pango_font_size.patch"
-    sha256 "d5ece753cf393ef507dd2b0415721b4381159da5e2f40793c6d85741b1b163bc"
-  end
-
   def install
-    system "./autogen.sh" if build.head?
-    system "./configure", "--disable-dependency-tracking",
-                          "--disable-silent-rules",
-                          "--prefix=#{prefix}",
-                          "--with-html-dir=#{share}/doc",
-                          "--enable-introspection=yes",
-                          "--enable-static",
-                          "--without-xft"
-
-    system "make"
-    system "make", "install"
+    mkdir "build" do
+      system "meson", "--prefix=#{prefix}",
+                      "-Ddefault_library=both",
+                      "-Dintrospection=true",
+                      "-Duse_fontconfig=true",
+                      ".."
+      system "ninja", "-v"
+      system "ninja", "install", "-v"
+    end
   end
 
   test do
@@ -69,6 +56,7 @@ class Pango < Formula
     freetype = Formula["freetype"]
     gettext = Formula["gettext"]
     glib = Formula["glib"]
+    harfbuzz = Formula["harfbuzz"]
     libpng = Formula["libpng"]
     pixman = Formula["pixman"]
     flags = %W[
@@ -78,6 +66,7 @@ class Pango < Formula
       -I#{gettext.opt_include}
       -I#{glib.opt_include}/glib-2.0
       -I#{glib.opt_lib}/glib-2.0/include
+      -I#{harfbuzz.opt_include}/harfbuzz
       -I#{include}/pango-1.0
       -I#{libpng.opt_include}/libpng16
       -I#{pixman.opt_include}/pixman-1

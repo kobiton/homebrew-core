@@ -1,16 +1,15 @@
 class Libvisio < Formula
   desc "Interpret and import Visio diagrams"
   homepage "https://wiki.documentfoundation.org/DLP/Libraries/libvisio"
-  url "https://dev-www.libreoffice.org/src/libvisio/libvisio-0.1.6.tar.xz"
-  sha256 "fe1002d3671d53c09bc65e47ec948ec7b67e6fb112ed1cd10966e211a8bb50f9"
-  revision 4
+  url "https://dev-www.libreoffice.org/src/libvisio/libvisio-0.1.7.tar.xz"
+  sha256 "8faf8df870cb27b09a787a1959d6c646faa44d0d8ab151883df408b7166bea4c"
 
   bottle do
     cellar :any
-    sha256 "f2452ad2cffef7398c26285df513e2d38de8d1f6f12c5443e12f79787a8f2fce" => :mojave
-    sha256 "9c0a1efadd14b528b227c78e156ca1bb73fa7f3bd17ae4a5be8ec393a6ff2109" => :high_sierra
-    sha256 "ca50d80acd651fc9ed48dbe8849f9cb9b9746eadd4d7f73fb5f402ed8a3d1a7d" => :sierra
-    sha256 "c2132d94aceadaa37f518681b517e656b42ad6134476cc2b76862c4ec41c55a4" => :el_capitan
+    sha256 "2eb8a748fa58bcd991bcf433d78895d54082f1634999b51b8eef0a6c7108509e" => :catalina
+    sha256 "eceb874ef98ff8e83b1459b946c4a5d2da805107555e31c4b9b6421fa6afcfa5" => :mojave
+    sha256 "21bf0ad3a0c856356491eec3eed8ed9daf739089597ce4649183bd0be4255266" => :high_sierra
+    sha256 "12f6114e5d146f54b3faba8015ac5d85b94a72b52898b975145d410aa7bb49db" => :sierra
   end
 
   depends_on "cppunit" => :build

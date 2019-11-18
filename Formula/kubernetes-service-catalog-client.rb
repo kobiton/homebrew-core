@@ -1,15 +1,15 @@
 class KubernetesServiceCatalogClient < Formula
   desc "Consume Services in k8s using the OSB API"
   homepage "https://svc-cat.io/"
-  url "https://github.com/kubernetes-incubator/service-catalog.git",
-      :tag => "v0.1.35",
-      :revision => "f3a7a072ac60d9ccb7bd55b05ada0de18db3cab1"
+  url "https://github.com/kubernetes-sigs/service-catalog.git",
+      :tag      => "v0.2.2",
+      :revision => "f3e67cc3e70d266e643d391e43b1bdd31cdad448"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "514107a39e522c7013d6e4d7e5f611fff2224b909afeb7e9231a37d8671c98c5" => :mojave
-    sha256 "d47d2d1258b3b7fa467ec71dc2ee3e725445909017b470c61110663bba525265" => :high_sierra
-    sha256 "d90fbe717dd5486dda805ad916e735172339ada0d7fc31c735e10a7dc2716104" => :sierra
+    sha256 "2e45d39e10ea6755692a2a8726ea318375319a558957401b36e725acf03dc9c3" => :mojave
+    sha256 "875af8928b5818e3951b25e1d6d05c6b491163f11036770c1cc290e8bbe82fe2" => :high_sierra
+    sha256 "7d06fe9962debc87dbf3112b17c18d81002ef0c4b71ecc8844df53b827210500" => :sierra
   end
 
   depends_on "go" => :build
@@ -18,13 +18,13 @@ class KubernetesServiceCatalogClient < Formula
     ENV["GOPATH"] = buildpath
     ENV["NO_DOCKER"] = "1"
 
-    dir = buildpath/"src/github.com/kubernetes-incubator/service-catalog"
+    dir = buildpath/"src/github.com/kubernetes-sigs/service-catalog"
     dir.install buildpath.children
 
     cd dir do
       ldflags = %W[
         -s -w -X
-        github.com/kubernetes-incubator/service-catalog/pkg.VERSION=v#{version}
+        github.com/kubernetes-sigs/service-catalog/pkg.VERSION=v#{version}
       ]
       system "go", "build", "-ldflags", ldflags.join(" "), "-o",
              bin/"svcat", "./cmd/svcat"

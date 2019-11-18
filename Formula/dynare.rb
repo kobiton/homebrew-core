@@ -1,15 +1,15 @@
 class Dynare < Formula
   desc "Platform for economic models, particularly DSGE and OLG models"
   homepage "https://www.dynare.org/"
-  url "https://www.dynare.org/release/source/dynare-4.5.6.tar.xz"
-  sha256 "a4ff0ee5892a044d169ead2778e96fefcf617535fab28d25b977d8d008c7fe87"
-  revision 2
+  url "https://www.dynare.org/release/source/dynare-4.5.7.tar.xz"
+  sha256 "9224ec5279d79d55d91a01ed90022e484f66ce93d56ca6d52933163f538715d4"
+  revision 7
 
   bottle do
-    sha256 "e8299ed426fd1c4f86cdee4e949ccb3fdf8f73a6235b7341b3dc1c915fc32eab" => :mojave
-    sha256 "6cf762c2012e024092600c8d7c58b31af4de4957ffbab8415d93457a7b1261a7" => :high_sierra
-    sha256 "1ed33a698beaa1a7e1e31f5e1310e0f2d5a92d9ca88ceb8777534f535aff8f74" => :sierra
-    sha256 "552cfa5ba8a3b22a422915ac3034c4f3bdc3cb2e04170ee27b2c1b7970d1d9a2" => :el_capitan
+    cellar :any
+    sha256 "1099b6c5697d797b8e0d9e6464e5cf31c625fbbe0fd1642ea10c05d4bb3f9bc0" => :catalina
+    sha256 "52558399745d3774b47395b96fa891408421f86db422fe6ea0cb33b287a47075" => :mojave
+    sha256 "0a743dfda6443744fed3aae2068746c73b8eb4a489107c105b8c98b8bb9942d8" => :high_sierra
   end
 
   head do
@@ -30,16 +30,13 @@ class Dynare < Formula
   depends_on "libmatio"
   depends_on "metis"
   depends_on "octave"
+  depends_on "openblas"
   depends_on "suite-sparse"
-  depends_on "veclibfort"
 
   resource "slicot" do
-    url "https://mirrors.ocf.berkeley.edu/debian/pool/main/s/slicot/slicot_5.0+20101122.orig.tar.gz"
-    mirror "https://mirrorservice.org/sites/ftp.debian.org/debian/pool/main/s/slicot/slicot_5.0+20101122.orig.tar.gz"
+    url "https://deb.debian.org/debian/pool/main/s/slicot/slicot_5.0+20101122.orig.tar.gz"
     sha256 "fa80f7c75dab6bfaca93c3b374c774fd87876f34fba969af9133eeaea5f39a3d"
   end
-
-  needs :cxx11
 
   def install
     ENV.cxx11

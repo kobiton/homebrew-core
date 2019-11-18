@@ -4,17 +4,16 @@ class Khal < Formula
   desc "CLI calendar application"
   homepage "https://lostpackets.de/khal/"
   url "https://github.com/pimutils/khal.git",
-      :tag => "v0.9.9",
-      :revision => "edce128b42401fb89ca18f501ae2be1449cdc6b2"
-  revision 1
+      :tag      => "v0.10.1",
+      :revision => "a6d7d62388d33459e85dfb5cf57a31c46f120769"
   head "https://github.com/pimutils/khal.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "f2dbe080fc3975b8df1c9cad0223f0b384a0a99dd2d0376949a424b34d2f40b3" => :mojave
-    sha256 "cec23d72db2f369b1f15a71f41d14fa1aead740ee5ad91e5de0eb44489136c6d" => :high_sierra
-    sha256 "2bc31c6c111017cae6b597d8c924fe07d00c798d98c31359b7890af848a4b693" => :sierra
-    sha256 "a30259be22d2c8c95bd8ba9617846e38ea29d1f8b7cc859094db6f242bac570e" => :el_capitan
+    sha256 "7a5ff88f863f07170a7ac8244c7bbec213690ed09b5b6d47a0d38f757230f790" => :catalina
+    sha256 "65c0e242110629b9aba6fc3fb7dcdd0b48c256465cbf8e4bdce6eca10ef791b0" => :mojave
+    sha256 "e64129f4743de673ab7ecadf45943cf920e1f263a943e13f4bb2c138cc542855" => :high_sierra
+    sha256 "f3fc8e90d8d5e5f452a56954563d2c5e40f17cbda7f1552ad9ad2bd5e8bda30a" => :sierra
   end
 
   depends_on "python"

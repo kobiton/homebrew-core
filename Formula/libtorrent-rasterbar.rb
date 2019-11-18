@@ -1,14 +1,16 @@
 class LibtorrentRasterbar < Formula
-  desc "C++ bittorrent library by Rasterbar Software"
+  desc "C++ bittorrent library with Python bindings"
   homepage "https://www.libtorrent.org/"
-  url "https://github.com/arvidn/libtorrent/releases/download/libtorrent-1_1_10/libtorrent-rasterbar-1.1.10.tar.gz"
-  sha256 "07b2b391e0d16bc693d793e352338488a0e41f3130b70884bb2e0270ea00b8c2"
+  url "https://github.com/arvidn/libtorrent/releases/download/libtorrent-1_2_1/libtorrent-rasterbar-1.2.1.tar.gz"
+  sha256 "cceba9842ec7d87549cee9e39d95fd5ce68b0eb9b314a2dd0d611cfa9798762d"
+  revision 1
 
   bottle do
     cellar :any
-    sha256 "c9d318a90481b9563cc4242ff347dfc0c8740ae126e839a3aa68e06eff669e05" => :mojave
-    sha256 "a962771be1c8be8f58caee767b91f99641a2a22197a023b8248d9b325342b7c4" => :high_sierra
-    sha256 "1f5445cf2679669f90d9f7c604ba8cc4adea252303c660d48d877f3374a6aff8" => :sierra
+    sha256 "8b244067c5402516ed9430fb06fb007bd8895de3b7fb8c48e88af1fce992849a" => :catalina
+    sha256 "f93dc11cc55befe32f43c6ade5dbc6eb5b65e9f70442b80d26e948306e1964f8" => :mojave
+    sha256 "bb13af8b8c7495fb1fb3c07a38c690687a78af3164d26681ca3f81511f0c3277" => :high_sierra
+    sha256 "842c4c7e9a5e50ceb7bdc74149933e8ae79c41ca2e0c6e867b4450046221dc92" => :sierra
   end
 
   head do
@@ -21,12 +23,10 @@ class LibtorrentRasterbar < Formula
   depends_on "pkg-config" => :build
   depends_on "boost"
   depends_on "boost-python3"
-  depends_on "openssl"
+  depends_on "openssl@1.1"
   depends_on "python"
 
   def install
-    ENV.cxx11
-
     args = %W[
       --disable-debug
       --disable-dependency-tracking
@@ -50,10 +50,12 @@ class LibtorrentRasterbar < Formula
   end
 
   test do
-    system ENV.cxx, "-L#{lib}", "-ltorrent-rasterbar",
-           "-I#{Formula["boost"].include}/boost",
-           "-L#{Formula["boost"].lib}", "-lboost_system",
-           libexec/"examples/make_torrent.cpp", "-o", "test"
+    system ENV.cxx, "-std=c++11", "-I#{Formula["boost"].include}/boost",
+                    "-L#{lib}", "-ltorrent-rasterbar",
+                    "-L#{Formula["boost"].lib}", "-lboost_system",
+                    "-framework", "SystemConfiguration",
+                    "-framework", "CoreFoundation",
+                    libexec/"examples/make_torrent.cpp", "-o", "test"
     system "./test", test_fixtures("test.mp3"), "-o", "test.torrent"
     assert_predicate testpath/"test.torrent", :exist?
   end

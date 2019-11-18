@@ -1,26 +1,26 @@
 class Unbound < Formula
   desc "Validating, recursive, caching DNS resolver"
   homepage "https://www.unbound.net"
-  url "https://www.unbound.net/downloads/unbound-1.7.3.tar.gz"
-  sha256 "c11de115d928a6b48b2165e0214402a7a7da313cd479203a7ce7a8b62cba602d"
-  head "https://nlnetlabs.nl/svn/unbound/trunk/", :using => :svn
+  url "https://nlnetlabs.nl/downloads/unbound/unbound-1.9.4.tar.gz"
+  sha256 "3d3e25fb224025f0e732c7970e5676f53fd1764c16d6a01be073a13e42954bb0"
+  head "https://github.com/NLnetLabs/unbound.git"
 
   bottle do
-    rebuild 2
-    sha256 "05d20ee709aaa08166007a9602b21a72d4c3fbd7b00f3d832e37a48d5423137e" => :mojave
-    sha256 "c87c9cde683c23c0512626c58655e36416bb3249a0a3f4fd41b4c6c22e95c43b" => :high_sierra
-    sha256 "7f8c5a827a566bbf5e664f434c97a57eb772c79f497d4fe419418fbbc74ec449" => :sierra
+    sha256 "1334db025dbafd779ecd8ae1e331c2bc4cc0a75e82e483941270210bf397c5a5" => :catalina
+    sha256 "b43a4d47b31d91ab1b51db34c600e2772f059a00cd24a0e5541bf9ebdfe036be" => :mojave
+    sha256 "84f88888deb8015640d57cc2ed551f04949f999c09b2398bdc39270559d2d997" => :high_sierra
   end
 
   depends_on "libevent"
-  depends_on "openssl"
+  depends_on "openssl@1.1"
 
   def install
     args = %W[
       --prefix=#{prefix}
       --sysconfdir=#{etc}
       --with-libevent=#{Formula["libevent"].opt_prefix}
-      --with-ssl=#{Formula["openssl"].opt_prefix}
+      --with-ssl=#{Formula["openssl@1.1"].opt_prefix}
+      --enable-event-api
     ]
 
     args << "--with-libexpat=#{MacOS.sdk_path}/usr" if MacOS.sdk_path_if_needed
@@ -36,6 +36,7 @@ class Unbound < Formula
     conf = etc/"unbound/unbound.conf"
     return unless conf.exist?
     return unless conf.read.include?('username: "@@HOMEBREW-UNBOUND-USER@@"')
+
     inreplace conf, 'username: "@@HOMEBREW-UNBOUND-USER@@"',
                     "username: \"#{ENV["USER"]}\""
   end
@@ -44,7 +45,7 @@ class Unbound < Formula
 
   def plist; <<~EOS
     <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE plist PUBLIC "-/Apple/DTD PLIST 1.0/EN" "http:/www.apple.com/DTDs/PropertyList-1.0.dtd">
+    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
     <plist version="1.0">
       <dict>
         <key>Label</key>

@@ -1,28 +1,27 @@
 class Rocksdb < Formula
   desc "Embeddable, persistent key-value store for fast storage"
   homepage "https://rocksdb.org/"
-  url "https://github.com/facebook/rocksdb/archive/rocksdb-5.14.3.tar.gz"
-  sha256 "ef3cbbb764344e5778db8f3f54d080f02783c3c94deff42d5822dfeb9b014c65"
+  url "https://github.com/facebook/rocksdb/archive/v6.4.6.tar.gz"
+  sha256 "540bbf9369a31e0891fcb4056a36ffa439c59fc179aa0b1f46e3478417f97643"
 
   bottle do
     cellar :any
-    sha256 "df69fa36b2b025f62cc0d30da46e072512d424cc66c242834fcfba7a60cb913c" => :mojave
-    sha256 "b4dd4f1c3324876dcf7a9524d6440a0891f162db3c19b97284100aa4b13cabbe" => :high_sierra
-    sha256 "8d3515c91f5eecb1828af7825ddadb0169720b47b2cd76411ad7ca3792699e20" => :sierra
-    sha256 "e07d5748ec17ea316d7b669bf22e69db5b5c12c488030abbc164d17f004ace44" => :el_capitan
+    sha256 "bdc1dfc33bac8fd7dccb4cc509fbf72a7862e9bcd185c97b527cf582730a3ffa" => :catalina
+    sha256 "c78058e32338dfbc80d2edc43598d959640ae26f82b8998cbf21531de8f923c0" => :mojave
+    sha256 "ae2484553609e262a0090c5e84007c574b2a43e9e349e826f7a7489dd46f62a9" => :high_sierra
   end
 
   depends_on "gflags"
   depends_on "lz4"
   depends_on "snappy"
-
-  needs :cxx11
+  depends_on "zstd"
 
   def install
     ENV.cxx11
-    ENV["PORTABLE"] = "1" if build.bottle?
+    ENV["PORTABLE"] = "1"
     ENV["DEBUG_LEVEL"] = "0"
     ENV["USE_RTTI"] = "1"
+    ENV["ROCKSDB_DISABLE_ALIGNED_NEW"] = "1" if MacOS.version <= :sierra
     ENV["DISABLE_JEMALLOC"] = "1" # prevent opportunistic linkage
 
     # build regular rocksdb
@@ -67,7 +66,8 @@ class Rocksdb < Formula
                                 "-lz", "-lbz2",
                                 "-L#{lib}", "-lrocksdb_lite",
                                 "-L#{Formula["snappy"].opt_lib}", "-lsnappy",
-                                "-L#{Formula["lz4"].opt_lib}", "-llz4"
+                                "-L#{Formula["lz4"].opt_lib}", "-llz4",
+                                "-L#{Formula["zstd"].opt_lib}", "-lzstd"
     system "./db_test"
 
     assert_match "sst_dump --file=", shell_output("#{bin}/rocksdb_sst_dump --help 2>&1", 1)

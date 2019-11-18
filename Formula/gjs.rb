@@ -1,13 +1,13 @@
 class Gjs < Formula
   desc "JavaScript Bindings for GNOME"
-  homepage "https://wiki.gnome.org/Projects/Gjs"
-  url "https://download.gnome.org/sources/gjs/1.54/gjs-1.54.1.tar.xz"
-  sha256 "b197fe5812a0449f73f7a93ac85a4ee4941916bcf071ea39a67ddd231dc868bc"
+  homepage "https://gitlab.gnome.org/GNOME/gjs/wikis/Home"
+  url "https://download.gnome.org/sources/gjs/1.58/gjs-1.58.1.tar.xz"
+  sha256 "b4df16ea87dc78c0df5412f9134efb14f7c510773aee117d5ad4cda75646c6f5"
 
   bottle do
-    sha256 "d17a8581b8e79f44e15af2a69acbd75b268d84dde766410c6181728c63c23aaa" => :mojave
-    sha256 "e20baa30965a75e132b45e1967752af02d310babc24c4297b77e3de496875c56" => :high_sierra
-    sha256 "b8e13232408988f346e97410332247819a0f8697dcd22049777d19faa9894157" => :sierra
+    sha256 "4138dc2352633c4f69b4642c698c60f61afff72edf0fd4dc56ace53d9f31398a" => :catalina
+    sha256 "b256f7388d0ea2cbb10c2abda97b192bf2377e7cbf47f16f0eebd0385aa24045" => :mojave
+    sha256 "c2f5ed90b642182fcb8fa2cb359a8cc9ea3a6cbfe97d2a0435f0c4108d056376" => :high_sierra
   end
 
   depends_on "autoconf@2.13" => :build
@@ -21,8 +21,6 @@ class Gjs < Formula
     url "https://archive.mozilla.org/pub/firefox/releases/60.1.0esr/source/firefox-60.1.0esr.source.tar.xz"
     sha256 "a4e7bb80e7ebab19769b2b8940966349136a99aabd497034662cffa54ea30e40"
   end
-
-  needs :cxx11
 
   def install
     ENV.cxx11
@@ -68,14 +66,21 @@ class Gjs < Formula
                           "--disable-silent-rules",
                           "--without-dbus-tests",
                           "--disable-profiler",
+                          "--disable-schemas-compile",
                           "--prefix=#{prefix}"
     system "make", "install"
+  end
+
+  def post_install
+    system "#{Formula["glib"].opt_bin}/glib-compile-schemas", "#{HOMEBREW_PREFIX}/share/glib-2.0/schemas"
   end
 
   test do
     (testpath/"test.js").write <<~EOS
       #!/usr/bin/env gjs
       const GLib = imports.gi.GLib;
+      if (31 != GLib.Date.get_days_in_month(GLib.DateMonth.JANUARY, 2000))
+        imports.system.exit(1)
     EOS
     system "#{bin}/gjs", "test.js"
   end

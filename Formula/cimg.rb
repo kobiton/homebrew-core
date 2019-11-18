@@ -1,8 +1,8 @@
 class Cimg < Formula
   desc "C++ toolkit for image processing"
   homepage "http://cimg.eu/"
-  url "http://cimg.eu/files/CImg_2.3.6.zip"
-  sha256 "8d7e1a07ae8d2500d1512a214c529c8860f41e371c83931698b30f057f94e146"
+  url "http://cimg.eu/files/CImg_2.7.5.zip"
+  sha256 "8f99b1a98a07452cec1730ee1044cd374859d9682c31e6ae4a9646578f041af6"
 
   bottle :unneeded
 
@@ -16,7 +16,7 @@ class Cimg < Formula
     cp_r pkgshare/"examples", testpath
     cp_r pkgshare/"plugins", testpath
     cp include/"CImg.h", testpath
-    system "make", "-C", "examples", "mmacosx"
+    system "make", "-C", "examples", "image2ascii"
     system "examples/image2ascii"
   end
 end

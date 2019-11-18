@@ -1,16 +1,16 @@
 class GitExtras < Formula
   desc "Small git utilities"
   homepage "https://github.com/tj/git-extras"
-  url "https://github.com/tj/git-extras/archive/4.6.0.tar.gz"
-  sha256 "e3baa3a54cb3d8f2e09409e9dec22c76c0e4802e44e108b6cc0b4b0245e4e5ca"
+  url "https://github.com/tj/git-extras/archive/5.0.0.tar.gz"
+  sha256 "7fb70af14c12119d184fe33f5f86046b7ad175ee81fa89e75fb54a5b3aff609a"
   head "https://github.com/tj/git-extras.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "da1a027041941fd5dda4c7c0c94f6b539c72ae24136781e4e46ded6ab412e7c5" => :mojave
-    sha256 "ea6415e13bd9a84dfbfdd6dbd439180370d52fb7662daa2f7ab22e05d848a9fc" => :high_sierra
-    sha256 "ea6415e13bd9a84dfbfdd6dbd439180370d52fb7662daa2f7ab22e05d848a9fc" => :sierra
-    sha256 "ea6415e13bd9a84dfbfdd6dbd439180370d52fb7662daa2f7ab22e05d848a9fc" => :el_capitan
+    sha256 "a59d6c7f60ed7a2904f855bb32cc66f21cd91f03c84c7d85803343cff21c942d" => :catalina
+    sha256 "5bd122f438ebe8d623169f24a5add6a4609a7e33782f15f09e98a9e8e4c5a5fc" => :mojave
+    sha256 "5bd122f438ebe8d623169f24a5add6a4609a7e33782f15f09e98a9e8e4c5a5fc" => :high_sierra
+    sha256 "3e50176046daa936eded6a4f5ac27d56fd05375c145c61889a050fdb3797d596" => :sierra
   end
 
   conflicts_with "git-utils",

@@ -2,31 +2,22 @@ class Buildifier < Formula
   desc "Format bazel BUILD files with a standard convention"
   homepage "https://github.com/bazelbuild/buildtools"
   url "https://github.com/bazelbuild/buildtools.git",
-      :tag => "0.15.0",
-      :revision => "4a7914a1466ff7388c934bfcd43a3852928536f6"
+      :tag      => "0.29.0",
+      :revision => "5bcc31df55ec1de770cb52887f2e989e7068301f"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "f65e357cd34f1105fc721ceff67b386eb0e83fc7e6c1271cfeb4d0af56ee5435" => :mojave
-    sha256 "e92d3cbd94d67add3af2c92c5eba11d7636206803f3ecc13df545c63f3615462" => :high_sierra
-    sha256 "72dcd4638b5b093eb1342b53f0429f31eaef8b5213ef3e0c88baf2f0129bf6e8" => :sierra
-    sha256 "cda4c2d96781f5c2d03a0d2c27c53ac0ec863a85e483326a0f369095c001e600" => :el_capitan
+    sha256 "14bf8461c8167aaa68020acb9c7ad939caa0c1979aa8eff0fb76b65131582ca0" => :catalina
+    sha256 "9a2e2e7f8035bca4452c0a1bb5ebf640434e1773f509d8f270970f20dec21110" => :mojave
+    sha256 "9a2e2e7f8035bca4452c0a1bb5ebf640434e1773f509d8f270970f20dec21110" => :high_sierra
+    sha256 "1442768c1f74aeca76a6d288d8f2b210ca70e03ba0bf1b85e40345b389e67e9f" => :sierra
   end
 
-  depends_on "go" => :build
+  depends_on "bazel" => :build
 
   def install
-    ENV["GOPATH"] = buildpath
-    (buildpath/"src/github.com/bazelbuild").mkpath
-    ln_sf buildpath, buildpath/"src/github.com/bazelbuild/buildtools"
-
-    commit = Utils.popen_read("git", "rev-parse", "HEAD").chomp
-    inreplace "buildifier/buildifier.go" do |s|
-      s.gsub! /^(var buildifierVersion = ")redacted/, "\\1#{version}"
-      s.gsub! /^(var buildScmRevision = ")redacted/, "\\1#{commit}"
-    end
-
-    system "go", "build", "-o", bin/"buildifier", "buildifier/buildifier.go"
+    system "bazel", "build", "--workspace_status_command=#{buildpath}/status.py", "buildifier:buildifier"
+    bin.install "bazel-bin/buildifier/darwin_amd64_stripped/buildifier"
   end
 
   test do

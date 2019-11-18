@@ -1,24 +1,22 @@
 class Kubecfg < Formula
   desc "Manage complex enterprise Kubernetes environments as code"
-  homepage "https://github.com/ksonnet/kubecfg"
-  url "https://github.com/ksonnet/kubecfg/archive/v0.9.0.tar.gz"
-  sha256 "f7be1abb89ac830d3cd7cfb33e1ac1f861ba25133a2c66e597953dd7a20d1b77"
+  homepage "https://github.com/bitnami/kubecfg"
+  url "https://github.com/bitnami/kubecfg/archive/v0.13.1.tar.gz"
+  sha256 "1ebed3c7d815bbc8fcfcd3b49f7dd75f725167f7129f5acd9b66f9eb8a98ac5d"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "74b6a842325a2c17866bfe74c7183c34bddb53cfa0af4d56ea0bc972f4d8cfbe" => :mojave
-    sha256 "c70bb19117bf8fc90b8d6ca73beb6606dc2be4078c48168d574358298e70f43a" => :high_sierra
-    sha256 "04fc44f3869f25d396791233ffae3ae50a172adc4fc2ef4b70fe70931f54f454" => :sierra
-    sha256 "b1e86a9bd8512770cf754280962870643d370f06e7eb962babbe15290bacb6e3" => :el_capitan
+    sha256 "2556f6cf6d6e24cb1f4fd3880d65cba6560eeefd08260b9a3fd19cf342abef69" => :catalina
+    sha256 "97a6a726693bdb3bee47f9cc4c05f23818a11b7e9b8beb99a668b651bf033b57" => :mojave
+    sha256 "600eaae96e6557e8c12df62ffee784635fc5def233e98ac6b850c4077473cfe2" => :high_sierra
   end
 
   depends_on "go" => :build
 
   def install
-    ENV["GOPATH"] = buildpath
-    (buildpath/"src/github.com/ksonnet/kubecfg").install buildpath.children
+    (buildpath/"src/github.com/bitnami/kubecfg").install buildpath.children
 
-    cd "src/github.com/ksonnet/kubecfg" do
+    cd "src/github.com/bitnami/kubecfg" do
       system "make", "VERSION=v#{version}"
       bin.install "kubecfg"
       pkgshare.install Dir["examples/*"], "testdata/kubecfg_test.jsonnet"

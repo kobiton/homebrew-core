@@ -1,24 +1,21 @@
 class GribApi < Formula
   desc "Encode and decode grib messages (editions 1 and 2)"
   homepage "https://software.ecmwf.int/wiki/display/GRIB/Home"
-  url "https://mirrors.ocf.berkeley.edu/debian/pool/main/g/grib-api/grib-api_1.27.0.orig.tar.xz"
-  mirror "https://mirrorservice.org/sites/ftp.debian.org/debian/pool/main/g/grib-api/grib-api_1.27.0.orig.tar.xz"
-  sha256 "81078fb9946c38cd292c4eaa50f0acf0093f709a247e83493b3181955177ba09"
+  url "https://deb.debian.org/debian/pool/main/g/grib-api/grib-api_1.28.0.orig.tar.xz"
+  sha256 "6afd09feede94faf353b71caa2567b985ab214331d58e8c3f303ea01f387777d"
 
   bottle do
-    sha256 "cd972852461b2d0fd723e47bcef574a6701f71177d1aaa5f7b66844c9f86b602" => :mojave
-    sha256 "158fccf39188a5abd7281866f1d89f8c91c2b0885d85e92d207dfa40678d57c9" => :high_sierra
-    sha256 "79a6e75196027e6d8310f12dac756776ed8f422268aa0623b6f28b400feeba93" => :sierra
-    sha256 "923b9062ff3f34b4517c52def1831b0bd0b4debd555f12655fdf6776be965521" => :el_capitan
+    sha256 "2e7e35349c2e2d5111af0ef8700988fb71cd97099efb750276543f61bf0b0c53" => :catalina
+    sha256 "c47b2b6a977a73b010707e6190d0dde94499615913f88ef7eb4aedc4804768d0" => :mojave
+    sha256 "1a0749fb9fa2f5b66ab7230920806f3dddcfb1a7b0cd3cd090e506c3f7e0e9af" => :high_sierra
+    sha256 "e556a07e1d8a1ef6bd7f4c5f0c3770ffab42c897b3213d05d65e3ec9b386912b" => :sierra
   end
-
-  option "with-static", "Build static instead of shared library."
 
   depends_on "cmake" => :build
   depends_on "gcc" # for gfortran
+  depends_on "jasper"
+  depends_on "libpng"
   depends_on "numpy"
-  depends_on "jasper" => :recommended
-  depends_on "libpng" => :optional
 
   conflicts_with "eccodes",
     :because => "grib-api and eccodes install the same binaries."
@@ -30,15 +27,9 @@ class GribApi < Formula
     inreplace "CMakeLists.txt", "find_package( OpenJPEG )", ""
 
     mkdir "build" do
-      args = std_cmake_args
-      args << "-DBUILD_SHARED_LIBS=OFF" if build.with? "static"
-
-      if build.with? "libpng"
-        args << "-DPNG_PNG_INCLUDE_DIR=#{Formula["libpng"].opt_include}"
-        args << "-DENABLE_PNG=ON"
-      end
-
-      system "cmake", "..", "-DENABLE_NETCDF=OFF", *args
+      system "cmake", "..", *std_cmake_args, "-DENABLE_NETCDF=OFF",
+                            "-DENABLE_PNG=ON",
+                            "-DPNG_PNG_INCLUDE_DIR=#{Formula["libpng"].opt_include}"
       system "make", "install"
     end
   end

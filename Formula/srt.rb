@@ -1,24 +1,24 @@
 class Srt < Formula
   desc "Secure Reliable Transport"
   homepage "https://www.srtalliance.org/"
-  url "https://github.com/Haivision/srt/archive/v1.3.1.tar.gz"
-  sha256 "f202801d9e53cd8854fccc1ca010272076c32c318396c8f61fb9a61807c3dbea"
+  url "https://github.com/Haivision/srt/archive/v1.4.0.tar.gz"
+  sha256 "c2ba0bb9382ab42f9eebac831dc021e7da26b2971aaeb30a891dd24297bd929c"
   head "https://github.com/Haivision/srt.git"
 
   bottle do
     cellar :any
-    sha256 "ca1d4f269452d216938ca7617f83eeab8c47ea51d3cd4bcb5a9fedf514a4aa3c" => :mojave
-    sha256 "848cb1edeaa90be70ddd2000c79f42432d881de53f4a47e00876c728b45f4fb8" => :high_sierra
-    sha256 "18ada4492fb671487fca41eeaaa8dcae9ebf7d096f2becb7894b8d215c7615ea" => :sierra
-    sha256 "52267ab27bbc19a52285505d7f9630c990cb6ed3ef5abd233bfc1a8c92b864e6" => :el_capitan
+    sha256 "4677542efa6b3f2ed07342dcfd7c02594ec47f7789f6b1dbdbe0bcc17f4d3b68" => :catalina
+    sha256 "f0c82082de31196e38d8d9b93dd991ec57ed020b50739d447e27496555575f01" => :mojave
+    sha256 "cb53f2eb06f79bdb840af4396220303c4c9279c9bea90076fe13f23949dff89a" => :high_sierra
+    sha256 "6075ef4880615220e11550c6bf60d87ee426eaaac0bb4e65e1f6a65a34ad1f55" => :sierra
   end
 
   depends_on "cmake" => :build
   depends_on "pkg-config" => :build
-  depends_on "openssl"
+  depends_on "openssl@1.1"
 
   def install
-    openssl = Formula["openssl"]
+    openssl = Formula["openssl@1.1"]
     system "cmake", ".", "-DWITH_OPENSSL_INCLUDEDIR=#{openssl.opt_include}",
                          "-DWITH_OPENSSL_LIBDIR=#{openssl.opt_lib}",
                          *std_cmake_args
@@ -26,7 +26,7 @@ class Srt < Formula
   end
 
   test do
-    cmd = "#{bin}/stransmit file:///dev/null file://con/ 2>&1"
+    cmd = "#{bin}/srt-live-transmit file:///dev/null file://con/ 2>&1"
     assert_match "Unsupported source type", shell_output(cmd, 1)
   end
 end

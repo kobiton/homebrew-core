@@ -5,15 +5,14 @@ class Idris < Formula
 
   desc "Pure functional programming language with dependent types"
   homepage "https://www.idris-lang.org/"
-  url "https://github.com/idris-lang/Idris-dev/archive/v1.3.0.tar.gz"
-  sha256 "8cce6c8bd24daf18b18f2f270354c711529bef6231b3c9016c3dcb98de6bca99"
+  url "https://github.com/idris-lang/Idris-dev/archive/v1.3.2.tar.gz"
+  sha256 "48429b8ed80980f9a4d38c29e51fcbb51ea511640806cd3cb7752bfdbb4644d2"
   head "https://github.com/idris-lang/Idris-dev.git"
 
   bottle do
-    sha256 "19ff83f8e1bebf3bd2d3be5bac98903bc26b2f964e5ae1349b9df6ddaf72c7fa" => :mojave
-    sha256 "c40c05247f24827d330cf56e5bdb7d1c4e6359e1b7a7d413b069947332464792" => :high_sierra
-    sha256 "b050ef7399b75ce62c3894017d8db251f815180dea1a9081a18dfa9a29e883e6" => :sierra
-    sha256 "1a44245d15fe570ac53fa8ec18cd4bce345ee8c5539dd18fd09376fb90402c12" => :el_capitan
+    sha256 "2b3108c6e19675138e12ea5a3056c5d29d3abba503367333070fd68c94cd9253" => :mojave
+    sha256 "8dba0d753d7f4abc9e5289cc3247be93ae7f3bd2f3f630b02f9b1dbe7b23c240" => :high_sierra
+    sha256 "1830f2619e1497e8fff33ad94d23704410e52fbaf5a8b6062e2053f939961477" => :sierra
   end
 
   depends_on "cabal-install" => :build
@@ -37,17 +36,15 @@ class Idris < Formula
     system bin/"idris", "hello.idr", "-o", "hello"
     assert_equal "Hello, Homebrew!", shell_output("./hello").chomp
 
-    if build.with? "libffi"
-      (testpath/"ffi.idr").write <<~EOS
-        module Main
-        puts: String -> IO ()
-        puts x = foreign FFI_C "puts" (String -> IO ()) x
-        main : IO ()
-        main = puts "Hello, interpreter!"
-      EOS
+    (testpath/"ffi.idr").write <<~EOS
+      module Main
+      puts: String -> IO ()
+      puts x = foreign FFI_C "puts" (String -> IO ()) x
+      main : IO ()
+      main = puts "Hello, interpreter!"
+    EOS
 
-      system bin/"idris", "ffi.idr", "-o", "ffi"
-      assert_equal "Hello, interpreter!", shell_output("./ffi").chomp
-    end
+    system bin/"idris", "ffi.idr", "-o", "ffi"
+    assert_equal "Hello, interpreter!", shell_output("./ffi").chomp
   end
 end

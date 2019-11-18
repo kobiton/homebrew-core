@@ -1,14 +1,14 @@
 class Scrcpy < Formula
   desc "Display and control your Android device"
   homepage "https://github.com/Genymobile/scrcpy"
-  url "https://github.com/Genymobile/scrcpy/archive/v1.3.tar.gz"
-  sha256 "e0e157341f6c052dc2e50ee6e912cf94df0bdda039759f19abb1eece37345f75"
+  url "https://github.com/Genymobile/scrcpy/archive/v1.10.tar.gz"
+  sha256 "71bd3b01f26233d73b91c0953ce004bd3195bcfd0c83b76c269094fb06e5ffa5"
 
   bottle do
-    sha256 "d3276d256dc6e91693f8be9e29919030a48bfce19d5e5b8aef0560f4ade1651e" => :mojave
-    sha256 "9ff0449c75627c66a8f3ff460d2f29d82c3c0b5dd8683505e5b31fe71046998f" => :high_sierra
-    sha256 "3ae88ade610e35876b445d4e131d45f5ab749f9609f249622e7e5b18d6bbe999" => :sierra
-    sha256 "ce7cb275debd8c8b47287ba87bac562705b8660985822c22aaff4f1140374b9e" => :el_capitan
+    sha256 "f5035dbe7c166ce1cc471328f5a811e67da9bf00002d5ce73bf622c1aed5c449" => :catalina
+    sha256 "3424b91b362905cb2140fde701a4a89107d9ea65919d5b9b04f22b136400fe5c" => :mojave
+    sha256 "5a82192ee21b66b11f726db20857f386ba75ece9fae6796363ff02f604a53dd6" => :high_sierra
+    sha256 "ddf29ffdf4e935f86de8a2ee5ff2c434a1472414624f48cf71aefc62557e0b03" => :sierra
   end
 
   depends_on "meson" => :build
@@ -18,13 +18,19 @@ class Scrcpy < Formula
   depends_on "sdl2"
 
   resource "prebuilt-server" do
-    url "https://github.com/Genymobile/scrcpy/releases/download/v1.3/scrcpy-server-v1.3.jar"
-    sha256 "0f9a5a217f33f0ed7a1498ceb3c0cccf31c53533893aa952e674c1571d2740c1"
+    url "https://github.com/Genymobile/scrcpy/releases/download/v1.10/scrcpy-server-v1.10.jar"
+    sha256 "cbeb1a4e046f1392c1dc73c3ccffd7f86dec4636b505556ea20929687a119390"
+  end
+
+  # fix build (https://github.com/Genymobile/scrcpy/pull/695)
+  patch do
+    url "https://github.com/Genymobile/scrcpy/commit/c05056343b56be65ae887f8b7ead61a8072622b9.patch?full_index=1"
+    sha256 "dc6019d262884b9d925c7b6c5f9cad56f73f12ecc6291d052764b658e56c0fb4"
   end
 
   def install
     r = resource("prebuilt-server")
-    r.verify_download_integrity(r.fetch)
+    r.fetch
     cp r.cached_download, buildpath/"prebuilt-server.jar"
 
     mkdir "build" do

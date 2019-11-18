@@ -1,24 +1,28 @@
 class Icu4c < Formula
   desc "C/C++ and Java libraries for Unicode and globalization"
-  homepage "https://ssl.icu-project.org/"
-  url "https://ssl.icu-project.org/files/icu4c/62.1/icu4c-62_1-src.tgz"
-  mirror "https://downloads.sourceforge.net/project/icu/ICU4C/62.1/icu4c-62_1-src.tgz"
-  version "62.1"
-  sha256 "3dd9868d666350dda66a6e305eecde9d479fb70b30d5b55d78a1deffb97d5aa3"
+  homepage "http://site.icu-project.org/home"
+  url "https://github.com/unicode-org/icu/releases/download/release-64-2/icu4c-64_2-src.tgz"
+  version "64.2"
+  sha256 "627d5d8478e6d96fc8c90fed4851239079a561a6a8b9e48b0892f24e82d31d6c"
 
   bottle do
     cellar :any
-    sha256 "29ee03c6a5c0754ff90f1618c75a851193e0a8a003b6f18c5673aa0003c2a313" => :mojave
-    sha256 "d1c24fa3df7e89935554ebcdbc6de6363cab0d264f01902db17eda35d8df0333" => :high_sierra
-    sha256 "a4d77bbdd2613440a8a49f1091c82cbcad6ba6538a72ffd1765c104a23b84f32" => :sierra
-    sha256 "6936900be3acec316cc0d05c5fa0a07d727a2b7a3fd736bc5fd1db2be9798cb8" => :el_capitan
+    sha256 "e9ae7bb5a76b48e82f56bc744eaaa1e9bdb5ca49ea6b5a2e4d52f57ad331f063" => :catalina
+    sha256 "e858556120acc0c2d52b8fb572b677856724cc28d24a7e1b2762d458a2977c8e" => :mojave
+    sha256 "02afdd6a472c31351e46a3b2a38c1c77354f0cc9199c3dbd7e06bc171b3638a2" => :high_sierra
+    sha256 "4270a558e2709b7cee1be047a8e890ee15bdb379825fd6dc81fdba74cd438c01" => :sierra
   end
 
   keg_only :provided_by_macos, "macOS provides libicucore.dylib (but nothing else)"
 
   def install
-    args = %W[--prefix=#{prefix} --disable-samples --disable-tests --enable-static]
-    args << "--with-library-bits=64" if MacOS.prefer_64_bit?
+    args = %W[
+      --prefix=#{prefix}
+      --disable-samples
+      --disable-tests
+      --enable-static
+      --with-library-bits=64
+    ]
 
     cd "source" do
       system "./configure", *args

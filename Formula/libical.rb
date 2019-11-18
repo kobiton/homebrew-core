@@ -1,14 +1,14 @@
 class Libical < Formula
   desc "Implementation of iCalendar protocols and data formats"
   homepage "https://libical.github.io/libical/"
-  url "https://github.com/libical/libical/releases/download/v3.0.4/libical-3.0.4.tar.gz"
-  sha256 "72b216e10233c3f60cb06062facf41f3b0f70615e5a60b47f9853341a0d5d145"
+  url "https://github.com/libical/libical/archive/v3.0.6.tar.gz"
+  sha256 "fd2404a3df42390268e9fb804ef9f235e429b6f0da8992a148cbb3614946d99b"
 
   bottle do
-    sha256 "205026b787a55ff63c648c35f9d1de0236fc699ee7498bc2b09ab3899431b170" => :mojave
-    sha256 "edc96595f6d0d8ca5c7c42b6ed8eda3435d5f3a6f4c6673890ecc1ee79243529" => :high_sierra
-    sha256 "05033e4e3adb9b269a69061cf8b3b62d21095f4bd7a724a34a6966b7c814f9a9" => :sierra
-    sha256 "d313668570afe5b0eb40c5f7f1037d181596b1d172975e5ceaa69cbeaced87b2" => :el_capitan
+    cellar :any
+    sha256 "71bd098bc73c1dbd57d0453dd297e71cbb9b9400ef4680a6cf5ed3e622a9e897" => :catalina
+    sha256 "5a59126f6b2a6fc0febc7dc71cb72e09d4e7c789eaee3502aa38ac3ee4b3ca4f" => :mojave
+    sha256 "dceec75d740489e95eb73088cb8de2fc9dd080d6ea4a88844ad06fa2d980668e" => :high_sierra
   end
 
   depends_on "cmake" => :build
@@ -18,6 +18,7 @@ class Libical < Formula
 
   def install
     system "cmake", ".", "-DBDB_LIBRARY=BDB_LIBRARY-NOTFOUND",
+                         "-DENABLE_GTK_DOC=OFF",
                          "-DSHARED_ONLY=ON",
                          *std_cmake_args
     system "make", "install"
@@ -25,6 +26,7 @@ class Libical < Formula
 
   test do
     (testpath/"test.c").write <<~EOS
+      #define LIBICAL_GLIB_UNSTABLE_API 1
       #include <libical-glib/libical-glib.h>
       int main(int argc, char *argv[]) {
         ICalParser *parser = i_cal_parser_new();
@@ -32,8 +34,8 @@ class Libical < Formula
       }
     EOS
     system ENV.cc, "test.c", "-o", "test", "-L#{lib}", "-lical-glib",
-           "-I#{Formula["glib"].opt_include}/glib-2.0",
-           "-I#{Formula["glib"].opt_lib}/glib-2.0/include"
+                   "-I#{Formula["glib"].opt_include}/glib-2.0",
+                   "-I#{Formula["glib"].opt_lib}/glib-2.0/include"
     system "./test"
   end
 end

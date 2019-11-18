@@ -1,14 +1,15 @@
 class CollectorSidecar < Formula
   desc "Manage log collectors through Graylog"
   homepage "https://github.com/Graylog2/collector-sidecar"
-  url "https://github.com/Graylog2/collector-sidecar/archive/0.1.6.tar.gz"
-  sha256 "a0eefbdea42376c76f337a10283317fa413934ab9f4d6d90e6248f333809b0b5"
+  url "https://github.com/Graylog2/collector-sidecar/archive/1.0.2.tar.gz"
+  sha256 "ee7ddb725d3475656df0bb08476e64c7f919acfc011a338b4532249363778130"
 
   bottle do
-    sha256 "2eaffde8fe15dc7bee69a6970d39ac063ae48e3a956464358d1a48a206770bb0" => :mojave
-    sha256 "8774401834aff935ed79ef5d65e21d6ab03b4299c00c614230744c842017cfa7" => :high_sierra
-    sha256 "845b6ccf3ede4996063c05520db19ef557dcff38d876ab16fc1b7265daf7a25a" => :sierra
-    sha256 "db9ca13f2826c4ee0fe93e88ce705bc2131dc1706667edfd87a8a5158253c0e4" => :el_capitan
+    cellar :any_skip_relocation
+    sha256 "a246ba4b742f4813ea11488b1b958806d0852af192381b686326d28339651014" => :catalina
+    sha256 "c5df7e3fe89d27da283cba2d44c8d9bfd4edd686167b8d4acf0c6f0387154fef" => :mojave
+    sha256 "267c985605ca057bff286bc111fc6ac84dfc0d4bb391da19c044ddef381c7a74" => :high_sierra
+    sha256 "6e09f805d30b96d2650a6541fddbda8a55d6ef74d7de7e96c642df5d2cd7d18b" => :sierra
   end
 
   depends_on "glide" => :build
@@ -24,7 +25,7 @@ class CollectorSidecar < Formula
     cd "src/github.com/Graylog2/collector-sidecar" do
       inreplace "main.go", "/etc", etc
 
-      inreplace "collector_sidecar.yml" do |s|
+      inreplace "sidecar-example.yml" do |s|
         s.gsub! "/usr", HOMEBREW_PREFIX
         s.gsub! "/etc", etc
         s.gsub! "/var", var
@@ -32,13 +33,13 @@ class CollectorSidecar < Formula
 
       system "glide", "install"
       system "make", "build"
-      (etc/"graylog/collector-sidecar").install "collector_sidecar.yml"
-      bin.install "graylog-collector-sidecar"
+      (etc/"graylog/sidecar/sidecar.yml").install "sidecar-example.yml"
+      bin.install "graylog-sidecar"
       prefix.install_metafiles
     end
   end
 
-  plist_options :manual => "graylog-collector-sidecar"
+  plist_options :manual => "graylog-sidecar"
 
   def plist; <<~EOS
     <?xml version="1.0" encoding="UTF-8"?>
@@ -49,7 +50,7 @@ class CollectorSidecar < Formula
         <key>Label</key>
         <string>#{plist_name}</string>
         <key>Program</key>
-        <string>#{opt_bin}/graylog-collector-sidecar</string>
+        <string>#{opt_bin}/graylog-sidecar</string>
         <key>RunAtLoad</key>
         <true/>
       </dict>
@@ -58,6 +59,6 @@ class CollectorSidecar < Formula
   end
 
   test do
-    assert_match version.to_s, shell_output("#{bin}/graylog-collector-sidecar -version")
+    assert_match version.to_s, shell_output("#{bin}/graylog-sidecar -version")
   end
 end

@@ -1,20 +1,22 @@
 class AircrackNg < Formula
   desc "Next-generation aircrack with lots of new features"
   homepage "https://aircrack-ng.org/"
-  url "https://download.aircrack-ng.org/aircrack-ng-1.4.tar.gz"
-  sha256 "96092a8af7af27cdc1923cd5167dfca4a17e9f5fd866973b7b6eb6d3b479e13b"
+  url "https://download.aircrack-ng.org/aircrack-ng-1.5.2.tar.gz"
+  sha256 "9e592fe7658046220e0ac0a6d05c4026903f3077b248893e0056ccbe4ee88241"
+  revision 1
 
   bottle do
-    sha256 "62ed831240300adfc48f02eb00d06108374d8e3b3b6ceeae32a32fe7fd267095" => :mojave
-    sha256 "8971b9a64b607fe31b5022a3cd5a024e1ef94fc2f3a131bc6e7912038f91530d" => :high_sierra
-    sha256 "cf6c2c6d7fdde1ef7c699acd31ff25f7c9c82a01dcf9e4820bd54b64181c4b9c" => :sierra
+    sha256 "17ef7ba95457338d0baab61ce6592211ff231417f37fb2b9b75b1f11e11be780" => :catalina
+    sha256 "772e69403efdced2c6482abb1d118bb848d5d033156f64d6d5807e4205028399" => :mojave
+    sha256 "ef9b3527b33cfdff40e21e8b678921dfbd411d0be586b5fede62a039a0d50d1f" => :high_sierra
+    sha256 "620b3b925934f2a9fdeee038d9f00983c413ae098a65d26552bb61b4411c434c" => :sierra
   end
 
   depends_on "autoconf" => :build
   depends_on "automake" => :build
   depends_on "libtool" => :build
   depends_on "pkg-config" => :build
-  depends_on "openssl"
+  depends_on "openssl@1.1"
   depends_on "pcre"
   depends_on "sqlite"
 

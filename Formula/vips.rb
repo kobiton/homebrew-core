@@ -1,53 +1,46 @@
 class Vips < Formula
   desc "Image processing library"
   homepage "https://github.com/libvips/libvips"
-  url "https://github.com/libvips/libvips/releases/download/v8.7.0/vips-8.7.0.tar.gz"
-  sha256 "c4473ea3fd90654a39076f896828fc67c9c9800d77ba643ea58454f31a340898"
+  url "https://github.com/libvips/libvips/releases/download/v8.8.3/vips-8.8.3.tar.gz"
+  sha256 "c5e4dd5a5c6a777c129037d19ca606769b3f1d405fcc9c8eeda906a61491f790"
+  revision 2
 
   bottle do
-    sha256 "6f082f98d6c3e30f9c843146e02e9894862900226cb78644d82083beb62ebab6" => :mojave
-    sha256 "9ad940df6592e4395833a035cf0b3b0efe0a1af80a1d581ed1fe705630b11887" => :high_sierra
-    sha256 "cee84df2c6fc8cf4217e54f463bea8df1b20598c27732d78059b7dfdb4c0ba7c" => :sierra
-    sha256 "071679f42687bcaedfd2ff398afd7e2bd96e66c8eb48ab5b1b00c7d96c97450f" => :el_capitan
+    sha256 "8c31d6738b85b66511af4c73ffb3cfe5ea28c795fa953a55498f717722f69b81" => :catalina
+    sha256 "e47f5605d1838c9d7733bacda4fe0b6755e94a8431b9fd190d37a669997d9e08" => :mojave
+    sha256 "46df8329d0438446b0da1cf17fec608627c33bf3ad3d13abd597ecb955e75ec7" => :high_sierra
   end
 
   depends_on "pkg-config" => :build
+  depends_on "cfitsio"
+  depends_on "fftw"
   depends_on "fontconfig"
   depends_on "gettext"
   depends_on "giflib"
   depends_on "glib"
+  depends_on "imagemagick"
   depends_on "jpeg"
   depends_on "libexif"
   depends_on "libgsf"
+  depends_on "libheif"
+  depends_on "libmatio"
   depends_on "libpng"
   depends_on "librsvg"
   depends_on "libtiff"
   depends_on "little-cms2"
+  depends_on "openexr"
+  depends_on "openslide"
   depends_on "orc"
   depends_on "pango"
+  depends_on "poppler"
   depends_on "webp"
-  depends_on "fftw" => :recommended
-  depends_on "graphicsmagick" => :recommended
-  depends_on "poppler" => :recommended
-  depends_on "imagemagick" => :optional
-  depends_on "openexr" => :optional
-  depends_on "openslide" => :optional
-
-  if build.with?("graphicsmagick") && build.with?("imagemagick")
-    odie "vips: --with-imagemagick requires --without-graphicsmagick"
-  end
 
   def install
     args = %W[
       --disable-dependency-tracking
       --prefix=#{prefix}
+      --with-magick
     ]
-
-    if build.with? "graphicsmagick"
-      args << "--with-magick" << "--with-magickpackage=GraphicsMagick"
-    elsif build.with? "imagemagick"
-      args << "--with-magick"
-    end
 
     system "./configure", *args
     system "make", "install"

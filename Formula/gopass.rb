@@ -1,16 +1,16 @@
 class Gopass < Formula
   desc "The slightly more awesome Standard Unix Password Manager for Teams"
-  homepage "https://www.justwatch.com/gopass"
-  url "https://github.com/gopasspw/gopass/releases/download/v1.8.2/gopass-1.8.2.tar.gz"
-  sha256 "ca6d24db014a760f71fbf0edaad0c97c283a670b260275a78eda3a7456fbea93"
+  homepage "https://github.com/gopasspw/gopass"
+  url "https://github.com/gopasspw/gopass/releases/download/v1.8.6/gopass-1.8.6.tar.gz"
+  sha256 "fbffe0f72e51d9e30a10103f00dd12f04bca6572f55976c6dc7049c73c65b715"
   head "https://github.com/gopasspw/gopass.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "2300e1baf820c6dbfb7de68274ac1dc9582da30239cfdffe15d5a462e5f0d9fa" => :mojave
-    sha256 "21354925ae75528e4b828a3bd8576bbfc0b87a5d32f7fba3390239c2195bd93b" => :high_sierra
-    sha256 "d3ffc286bdd3aea88c21a34aeba0dcbdb648648ad7c7bae81ef8c5544bbdcb61" => :sierra
-    sha256 "ba11c53440e647a9b16bb90722387e408c6d728592a455a1a99d3de71654d91c" => :el_capitan
+    sha256 "156881b1bcc49f61b6224d5c52eca6ac19432623a0ab8202dff08f965cb48c4d" => :catalina
+    sha256 "b52d40f659774f56428959c273fd9118f0387d7859fe15067233687dfcd9d421" => :mojave
+    sha256 "288b95912064115d781f45500c99ca3c4ef9de5cc207e10ef3e9ceeda5a144c7" => :high_sierra
+    sha256 "3e048b47d532f1d530c1396a5776564815625232b717eb6ed39f73741b1b5c05" => :sierra
   end
 
   depends_on "go" => :build

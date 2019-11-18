@@ -1,30 +1,30 @@
 class Libdazzle < Formula
   desc "GNOME companion library to GObject and Gtk+"
   homepage "https://gitlab.gnome.org/GNOME/libdazzle"
-  url "https://download.gnome.org/sources/libdazzle/3.30/libdazzle-3.30.1.tar.xz"
-  sha256 "dcc96520e76692aa442206c2bb5971fa28f1279290b7e520e4078ba603d41fb3"
+  url "https://download.gnome.org/sources/libdazzle/3.34/libdazzle-3.34.1.tar.xz"
+  sha256 "3d981cbb9d9bb87bfaff7bfd44d9847223b3ef81e69225e4d1f6ac725a669505"
 
   bottle do
-    sha256 "21821ca106c5ea71ef85048fd515571c290dd3e25079469589f57dc9248a9d2f" => :mojave
-    sha256 "3f89b36910978c4256dac35ded6c74560db29844aeea484bbd0c0ab2a302c4d1" => :high_sierra
-    sha256 "aeb14f028c4a682ee2b8712dab294d67291dc6a4e19cbec2705fb4c72d76bd28" => :sierra
+    cellar :any
+    sha256 "dabdfe35df5b7ffe01e6e89818fbeee63c4f2dd861e7f0091587480f91614908" => :catalina
+    sha256 "3853e35d4389a5db4ed3f403d8dd161c67935aaf17d524bc2dd878675ea4aaea" => :mojave
+    sha256 "5830058a3a0e84af35143d052dacaf41e04229e5ba31847e31982e2b9fdaed7b" => :high_sierra
   end
 
   depends_on "gobject-introspection" => :build
-  depends_on "meson-internal" => :build
+  depends_on "meson" => :build
   depends_on "ninja" => :build
   depends_on "pkg-config" => :build
   depends_on "python" => :build
+  depends_on "vala" => :build
   depends_on "glib"
   depends_on "gtk+3"
 
   def install
-    ENV.refurbish_args
-
     mkdir "build" do
-      system "meson", "--prefix=#{prefix}", "-Dwith_vapi=false", ".."
-      system "ninja"
-      system "ninja", "install"
+      system "meson", "--prefix=#{prefix}", "-Dwith_vapi=true", ".."
+      system "ninja", "-v"
+      system "ninja", "install", "-v"
     end
   end
 

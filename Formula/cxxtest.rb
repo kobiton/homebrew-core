@@ -2,12 +2,13 @@ class Cxxtest < Formula
   desc "xUnit-style unit testing framework for C++"
   homepage "https://cxxtest.com/"
   url "https://github.com/CxxTest/cxxtest/releases/download/4.4/cxxtest-4.4.tar.gz"
-  mirror "https://mirrors.kernel.org/debian/pool/main/c/cxxtest/cxxtest_4.4.orig.tar.gz"
+  mirror "https://deb.debian.org/debian/pool/main/c/cxxtest/cxxtest_4.4.orig.tar.gz"
   sha256 "1c154fef91c65dbf1cd4519af7ade70a61d85a923b6e0c0b007dc7f4895cf7d8"
 
   bottle do
     cellar :any_skip_relocation
     rebuild 1
+    sha256 "35c64fe6d91097fa9aabfc63a145e6e9e6f27411e589b69f0da77895045dc128" => :catalina
     sha256 "0c97b74f6bc2cee5e0683fcec6bd07da544b5f3e9cd25b9631b6291b86490392" => :mojave
     sha256 "4ef0fbb78839714da6108883475dce9536df2e59dd9dc7bf42677a86d00f4356" => :high_sierra
     sha256 "4ef0fbb78839714da6108883475dce9536df2e59dd9dc7bf42677a86d00f4356" => :sierra

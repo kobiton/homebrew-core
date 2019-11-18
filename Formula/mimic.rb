@@ -2,15 +2,16 @@ class Mimic < Formula
   desc "Lightweight text-to-speech engine based on CMU Flite"
   homepage "https://mimic.mycroft.ai"
   url "https://github.com/MycroftAI/mimic/archive/1.2.0.2.tar.gz"
-  sha256 "6adcc9911b09d6e9513add41ad9dfc0893ece277f556419869520a0f0708c102"
-  revision 4
+  sha256 "619f3864d8ff599c1fa47424b7d87059236fcd51db3c0c311eb3635c80174b5a"
+  revision 6
 
   bottle do
     cellar :any
-    sha256 "b88a35a402c068c4efa17d9ca35a502292ff3d0ee162dfbe4fe3b48e192d76cb" => :mojave
-    sha256 "20fc7273db85a315903304d758aa74edf0f7bfc5947a9ee261661fc2b38e699f" => :high_sierra
-    sha256 "8072f200df17d949891fce6fec60489527a3ae4e9f4f3a59cae6b42f86e19b0c" => :sierra
-    sha256 "e91d1999945a78d5f88d20c47702585630e61d010ba52742bec6af159d1ca47c" => :el_capitan
+    rebuild 1
+    sha256 "b61d117b7325e15063e282a223cf9040f8a5b6653cc0d1b2335dbb292e984dca" => :catalina
+    sha256 "5637b3526827e1e32d2010ca9a4b1aa2bea53a5a1c5f8f5a1000e74be96b1884" => :mojave
+    sha256 "6de781e65c88a019639614c87bd38b59227a2d085b136cf8a63e3d62a7cd0437" => :high_sierra
+    sha256 "e10c327921ef68c64fc76915fdec61d3ea210f8874fab2af5ffac14bef8ccdb8" => :sierra
   end
 
   depends_on "autoconf" => :build

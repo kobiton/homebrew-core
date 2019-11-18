@@ -1,17 +1,16 @@
 class Libbi < Formula
   desc "Bayesian state-space modelling on parallel computer hardware"
   homepage "https://libbi.org/"
-  url "https://github.com/libbi/LibBi/archive/1.4.2.tar.gz"
-  sha256 "17824f6b466777a02d6bc6bb4704749fb64ce56ec4468b936086bc9901b5bf78"
-  revision 1
-  head "https://github.com/libbi/LibBi.git"
+  url "https://github.com/lawmurray/LibBi/archive/1.4.5.tar.gz"
+  sha256 "af2b6d30e1502f99a3950d63ceaf7d7275a236f4d81eff337121c24fbb802fbe"
+  head "https://github.com/lawmurray/LibBi.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "eac0034e849157b555d5874f995135178dd1da353f0a713572f59d16d72c16af" => :mojave
-    sha256 "c9188f7283ff75930ce98c042df60151daf553d904f18bceb5c042c702c86978" => :high_sierra
-    sha256 "2f519a8e7b1b62fb5f6d29d7cee26788891ca658af8aff33f963e75a9c0a59f0" => :sierra
-    sha256 "32b7b3f955ce2aff321b2ba6ba43e03e11102bb799b7e73c400c2fe3513547bf" => :el_capitan
+    sha256 "9375c903bf9980fa04fe6ab1a08fc174dbfdbc60cbf6bf33a4f85c135b4ba356" => :catalina
+    sha256 "9e3385af760fa9d77122311be8cc0da4993e5dbf514fd7449ddc45fef328e31f" => :mojave
+    sha256 "f4777d1ce91c8e1b4a7b56db70ed1a15a605e3817ae063cdd7187ab40167bfed" => :high_sierra
+    sha256 "d1916249f2268c6015852f177d0198b3a96dad65c406e867ab73fbb837e8fa39" => :sierra
   end
 
   depends_on "automake"
@@ -101,8 +100,8 @@ class Libbi < Formula
   end
 
   resource "thrust" do
-    url "https://github.com/thrust/thrust/releases/download/1.8.2/thrust-1.8.2.zip"
-    sha256 "00925daee4d9505b7f33d0ed42ab0de0f9c68c4ffbe2a41e6d04452cdee77b2d"
+    url "https://github.com/thrust/thrust/archive/1.8.2.tar.gz"
+    sha256 "83bc9e7b769daa04324c986eeaf48fcb53c2dda26bcc77cb3c07f4b1c359feb8"
   end
 
   def install
@@ -111,6 +110,7 @@ class Libbi < Formula
     resources.each do |r|
       r.stage do
         next if r.name == "thrust"
+
         # need to set TT_ACCEPT=y for Template library for non-interactive install
         perl_flags = "TT_ACCEPT=y" if r.name == "Template"
         system "perl", "Makefile.PL", "INSTALL_BASE=#{libexec}", perl_flags
@@ -119,7 +119,7 @@ class Libbi < Formula
       end
     end
 
-    (include/"thrust").install resource("thrust")
+    resource("thrust").stage { (include/"thrust").install Dir["thrust/*"] }
 
     system "perl", "Makefile.PL", "INSTALL_BASE=#{libexec}", "INSTALLSITESCRIPT=#{bin}"
 

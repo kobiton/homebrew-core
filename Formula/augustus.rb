@@ -1,18 +1,20 @@
 class Augustus < Formula
   desc "Predict genes in eukaryotic genomic sequences"
   homepage "http://bioinf.uni-greifswald.de/augustus/"
-  url "http://bioinf.uni-greifswald.de/augustus/binaries/augustus-3.3.1.tar.gz"
-  sha256 "e0249bff0345f6a790b5c56432f292040254457da22f1a2c212f42d7d2104087"
+  url "https://github.com/Gaius-Augustus/Augustus/releases/download/v3.3.3/augustus-3.3.3.tar.gz"
+  sha256 "4cc4d32074b18a8b7f853ebaa7c9bef80083b38277f8afb4d33c755be66b7140"
+  head "https://github.com/Gaius-Augustus/Augustus.git"
 
   bottle do
-    sha256 "0017873906f79182fe69668e5652d0c837e867b847f5abde31678c5bee915369" => :mojave
-    sha256 "8ddcf0271ba6204c052ee9cb0d7e71fc68a2e5351e1b3dd6f09e74d6962fa1c3" => :high_sierra
-    sha256 "79f8c3a53d545cd2be18e2581e8d66bb83f3643a2eb4a62553f24000c4c50f81" => :sierra
-    sha256 "b8fd08dcad3d8a29d2615076a6a3603cfcec6526524db18269df7c62a8925e8e" => :el_capitan
+    cellar :any
+    sha256 "397da54388ec9d56ee891b021fe313e0e4cfa2e46e80ef177ddd6d24723abec3" => :catalina
+    sha256 "67298cd2aa811dfa953f8d0c9019df12fe2f7aec6cd35ebf1cf27e38fb39e858" => :mojave
+    sha256 "030d9fced4d6863a77e5058f145e2d13560ef0b9aedd1cb01e96c593c9e3cbc6" => :high_sierra
   end
 
+  depends_on "boost" => :build
   depends_on "bamtools"
-  depends_on "boost"
+  depends_on "gcc"
 
   def install
     # Avoid "fatal error: 'sam.h' file not found" by not building bam2wig
@@ -31,10 +33,20 @@ class Augustus < Formula
 
     # Compile executables for macOS. Tarball ships with executables for Linux.
     system "make", "clean"
-    system "make"
 
+    # Clang breaks proteinprofile on macOS. This issue has been first reported
+    # to upstream in 2016 (see https://github.com/nextgenusfs/funannotate/issues/3).
+    # See also https://github.com/Gaius-Augustus/Augustus/issues/64
+    cd "src" do
+      with_env("HOMEBREW_CC" => "gcc-9") do
+        system "make"
+      end
+    end
+
+    system "make"
     system "make", "install", "INSTALLDIR=#{prefix}"
     bin.env_script_all_files libexec/"bin", :AUGUSTUS_CONFIG_PATH => prefix/"config"
+    pkgshare.install "examples"
   end
 
   test do
@@ -44,5 +56,10 @@ class Augustus < Formula
     EOS
     cmd = "#{bin}/augustus --species=human test.fasta"
     assert_match "Predicted genes", shell_output(cmd)
+
+    cp pkgshare/"examples/example.fa", testpath
+    cp pkgshare/"examples/profile/HsDHC.prfl", testpath
+    cmd = "#{bin}/augustus --species=human --proteinprofile=HsDHC.prfl example.fa 2> /dev/null"
+    assert_match "HS04636	AUGUSTUS	gene	966	6903	1	+	.	g1", shell_output(cmd)
   end
 end

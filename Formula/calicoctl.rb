@@ -2,28 +2,28 @@ class Calicoctl < Formula
   desc "Calico CLI tool"
   homepage "https://www.projectcalico.org"
   url "https://github.com/projectcalico/calicoctl.git",
-      :tag => "v3.1.3",
-      :revision => "231083c2ce934b7946ebed3ed96f4fc1a3ba4f69"
+      :tag      => "v3.10.1",
+      :revision => "4aaff8e910a6cf9f77e3e82f1ef68e91bd5a8e9a"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "f16fc8a7934c3dd46552224353a1a36a5ed1fc9c5265a81e48f1dc4226646b9e" => :mojave
-    sha256 "0a050b4fd951cd8cf7593a436fe99571d6e7ce325a2449a12d6168972a1c714c" => :high_sierra
-    sha256 "1d8f80446c3395ea05dce58b3ff04f9ec9b5bafee6598c0c5704475e00f1786d" => :sierra
-    sha256 "f3c800eb604d967120d6b26897b25a85b2e877d05502baaa17ecd1d8dbbdb24a" => :el_capitan
+    sha256 "5ef71fb66898bba896d6af7e0337b0e8df424f5f1e3bb4fefd30c5b81a83afed" => :catalina
+    sha256 "a4f07320159325cf33ddc2f817ec4aa8169c7a774b01c78141b81d4316be7a26" => :mojave
+    sha256 "0dfcc0d09528ba30ed3b66c5c5a52c8f0b4a94d5c48c41e03344f3fe2ff1869c" => :high_sierra
   end
 
-  depends_on "glide" => :build
   depends_on "go" => :build
 
   def install
     ENV["GOPATH"] = buildpath
-    ENV["GLIDE_HOME"] = HOMEBREW_CACHE/"glide_home/#{name}"
+
     dir = buildpath/"src/github.com/projectcalico/calicoctl"
     dir.install buildpath.children
+
     cd dir do
-      system "glide", "install", "-strip-vendor"
-      system "make", "binary"
+      commands = "github.com/projectcalico/calicoctl/calicoctl/commands"
+      ldflags = "-X #{commands}.VERSION=#{stable.specs[:tag]} -X #{commands}.GIT_REVISION=#{stable.specs[:revision][0, 8]} -s -w"
+      system "go", "build", "-v", "-o", "dist/calicoctl-darwin-amd64", "-ldflags", ldflags, "calicoctl/calicoctl.go"
       bin.install "dist/calicoctl-darwin-amd64" => "calicoctl"
       prefix.install_metafiles
     end

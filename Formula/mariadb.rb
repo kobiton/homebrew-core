@@ -1,20 +1,23 @@
 class Mariadb < Formula
   desc "Drop-in replacement for MySQL"
   homepage "https://mariadb.org/"
-  url "https://downloads.mariadb.org/f/mariadb-10.3.10/source/mariadb-10.3.10.tar.gz"
-  sha256 "57767c048982811c7ab21d8527f6f36aa897386e8c7235f11b5505a924d68eda"
+  url "https://downloads.mariadb.org/f/mariadb-10.4.10/source/mariadb-10.4.10.tar.gz"
+  sha256 "cd50fddf86c2a47405737e342f78ebd40d5716f0fb32b976245de713bed01421"
+  revision 1
 
   bottle do
-    sha256 "eec1102078f2ed74ee9e4f4fdba5a2b1c41d883b4499309034690b1aa7ea303a" => :mojave
-    sha256 "936859611a5206ff3f13cb99ec69eb1344bab3734a14ad8a35ff276dac6f83a4" => :high_sierra
-    sha256 "e946558c449fdb9686df3f82fdb5ce7ab192f2ccf0d88f18ece27a51932a2000" => :sierra
+    sha256 "bda9ed4ea42731ef75094c3e4fa1c4d0ffd9a1607ec49e9377ded2b63f5c3fb6" => :catalina
+    sha256 "e9c976a92174f094a877b30a68bc9237b8551bf1b577f38b529422aba3a39b89" => :mojave
+    sha256 "599e5d146dd6a7c3505d73dd8ac5b96584d16e9083bbfd4fee14690a09f17e3f" => :high_sierra
   end
 
   depends_on "cmake" => :build
-  depends_on "openssl"
+  depends_on "pkg-config" => :build
+  depends_on "groonga"
+  depends_on "openssl@1.1"
 
-  conflicts_with "mysql", "mysql-cluster", "percona-server",
-    :because => "mariadb, mysql, and percona install the same binaries."
+  conflicts_with "mysql", "percona-server",
+    :because => "mariadb, mysql, and percona install the same binaries"
   conflicts_with "mysql-connector-c",
     :because => "both install MySQL client libraries"
   conflicts_with "mytop", :because => "both install `mytop` binaries"
@@ -29,6 +32,9 @@ class Mariadb < Formula
       s.change_make_var! "basedir", "\"#{prefix}\""
       s.change_make_var! "ldata", "\"#{var}/mysql\""
     end
+
+    # Use brew groonga
+    rm_r "storage/mroonga/vendor/groonga"
 
     # -DINSTALL_* are relative to prefix
     args = %W[
@@ -83,8 +89,7 @@ class Mariadb < Formula
     %w[
       wsrep_sst_mysqldump
       wsrep_sst_rsync
-      wsrep_sst_xtrabackup
-      wsrep_sst_xtrabackup-v2
+      wsrep_sst_mariabackup
     ].each do |f|
       inreplace "#{bin}/#{f}", "$(dirname $0)/wsrep_sst_common",
                                "#{libexec}/wsrep_sst_common"
@@ -148,5 +153,7 @@ class Mariadb < Formula
 
   test do
     system bin/"mysqld", "--version"
+    prune_file = etc/"my.cnf.d/.homebrew_dont_prune_me"
+    assert_predicate prune_file, :exist?, "Failed to find #{prune_file}!"
   end
 end

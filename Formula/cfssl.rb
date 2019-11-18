@@ -1,16 +1,15 @@
 class Cfssl < Formula
   desc "CloudFlare's PKI toolkit"
   homepage "https://cfssl.org/"
-  url "https://github.com/cloudflare/cfssl/archive/1.3.2.tar.gz"
-  sha256 "69ddddb25beebe65e6fe316b9ab3472eae1cd21b2f377447ddc104624233e419"
+  url "https://github.com/cloudflare/cfssl/archive/v1.4.1.tar.gz"
+  sha256 "c8a86ef10cbb0c168f3b597db15b31f98b170edb7958f7154edeb29aee41315e"
   head "https://github.com/cloudflare/cfssl.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "a27ed12dd059541da98e774f8ad32351a5936276abda210b92eff5c29f3997de" => :mojave
-    sha256 "fcb0d745472f74dd799bfff8099a2330a8262fb24358a679b4dd417c8ef0552b" => :high_sierra
-    sha256 "046cddc312759ba84d66a0f0242eb32aa54b4015011ce8ebb7d8e0978306e1e9" => :sierra
-    sha256 "c354f5d2b7767ccd9ec5b50901a7be8e541f1ba0eb6c7c3d2ddc3b89ea3fb574" => :el_capitan
+    sha256 "1bc608472f62d2956917b3f4a8677c64e688cb4e44e7373518c0f4dad6fa17c1" => :catalina
+    sha256 "c1e9f1cabe5584928c186fe9221d3565414cf1c04404d040dbc573b38cc3f4fc" => :mojave
+    sha256 "441739623fcb7ae9f1efc43541b9bb5268f12cbfd27005b86cfe24c8e2f7966c" => :high_sierra
   end
 
   depends_on "go" => :build

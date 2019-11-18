@@ -1,7 +1,7 @@
 class Upscaledb < Formula
   desc "Database for embedded devices"
   homepage "https://upscaledb.com/"
-  revision 9
+  revision 13
 
   stable do
     url "http://files.upscaledb.com/dl/upscaledb-2.2.0.tar.gz"
@@ -18,10 +18,10 @@ class Upscaledb < Formula
 
   bottle do
     cellar :any
-    sha256 "f86a6b8e06fd0536e0739c514d38bd4b273c9c4286da6ecbfa37bc1a88a961f6" => :mojave
-    sha256 "2642107106509f9073ffc0ad62f74ab039dacd48be389ea5ff3347dae3a65a5d" => :high_sierra
-    sha256 "43f48b9e6ff66ff42b6e83482aae98c463af219cf818976879903ad696a7367f" => :sierra
-    sha256 "3ae60c268a06e01345d3ac36e704a9033fd3365cd93369531ec3ac65f0a5583b" => :el_capitan
+    rebuild 1
+    sha256 "f43667827810a6aa32195181d4e59141cd6d887cc7b5c5b06cac7a62fbe26c5d" => :catalina
+    sha256 "c4f5569e53aee69de83be670f8d8646b0578d08c81a7f3a1bf6baabcecd634f6" => :mojave
+    sha256 "a69181d755deab2d8b9ea090370416532cd7b2731c03732786c3bc708d383987" => :high_sierra
   end
 
   head do
@@ -35,17 +35,19 @@ class Upscaledb < Formula
   depends_on "boost"
   depends_on "gnutls"
   depends_on :java
-  depends_on "openssl"
+  depends_on "openssl@1.1"
   depends_on "protobuf"
-
-  fails_with :clang do
-    build 503
-    cause "error: member access into incomplete type 'const std::type_info"
-  end
 
   resource "libuv" do
     url "https://github.com/libuv/libuv/archive/v0.10.37.tar.gz"
     sha256 "4c12bed4936dc16a20117adfc5bc18889fa73be8b6b083993862628469a1e931"
+  end
+
+  # Patch for compatibility with OpenSSL 1.1
+  # https://github.com/cruppstahl/upscaledb/issues/124
+  patch do
+    url "https://raw.githubusercontent.com/Homebrew/formula-patches/a7095c61/upscaledb/openssl-1.1.diff"
+    sha256 "c388613c88e856ee64be2b4a72b64a1b998f1f8b835122579e2049e9f01a0f58"
   end
 
   def install

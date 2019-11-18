@@ -1,22 +1,17 @@
 class Exim < Formula
   desc "Complete replacement for sendmail"
   homepage "https://exim.org"
-  url "https://ftp.exim.org/pub/exim/exim4/exim-4.91.tar.xz"
-  sha256 "ec57acb103d5550aca8d60adb57f355c7b3c41b5449290594ed6615ad4b9d118"
+  url "https://ftp.exim.org/pub/exim/exim4/exim-4.92.3.tar.xz"
+  sha256 "c4453bb5ec8e16c4c3353769700466eb9aa48c1b2fcf7f3b0e08954dd727d2fd"
 
   bottle do
-    sha256 "202cd9263540aba1947b9095c5ecf3b91e28fa6da2e5f2f0e58cf63e2c8f4770" => :mojave
-    sha256 "29d984d5bfd7b421c4f8a4aa93155e8ccbc324fa781f0edf5001a90f2996f0dc" => :high_sierra
-    sha256 "078199c3db96e3ca5ffdaac9c6421c67a704814afeb741c0014a457c58bd1a5d" => :sierra
-    sha256 "df47c95efa6bcfe75fb26898845b341be2d9fbc26e1f0ba82d12dc6463ffbcaf" => :el_capitan
+    sha256 "fad2158a04645f41d9633e6ee449b2a9cda95778aebb52fa25a8e8051e032503" => :catalina
+    sha256 "70fcf4491b6806d2bd1767fe06d73a0d4226df907a5570d98ec92a9d7e88d45c" => :mojave
+    sha256 "2daeb847c7b1a3cb47bab3629c9f87437d8f9674b114024ab778f9dadeb21c26" => :high_sierra
   end
 
-  option "with-maildir", "Support delivery in Maildir format"
-
-  deprecated_option "support-maildir" => "with-maildir"
-
   depends_on "berkeley-db@4"
-  depends_on "openssl"
+  depends_on "openssl@1.1"
   depends_on "pcre"
 
   def install
@@ -30,7 +25,6 @@ class Exim < Formula
       s.gsub! "/var/spool/exim", var/"spool/exim"
       # https://trac.macports.org/ticket/38654
       s.gsub! 'TMPDIR="/tmp"', "TMPDIR=/tmp"
-      s << "SUPPORT_MAILDIR=yes\n" if build.with? "maildir"
       s << "AUTH_PLAINTEXT=yes\n"
       s << "SUPPORT_TLS=yes\n"
       s << "TLS_LIBS=-lssl -lcrypto\n"

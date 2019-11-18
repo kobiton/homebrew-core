@@ -1,15 +1,14 @@
 class ShairportSync < Formula
   desc "AirTunes emulator that adds multi-room capability"
   homepage "https://github.com/mikebrady/shairport-sync"
-  url "https://github.com/mikebrady/shairport-sync/archive/3.2.1.tar.gz"
-  sha256 "1fe16856ec828704b086c571038a3b2eb907a3cf0a3847ed1b721b517554659d"
+  url "https://github.com/mikebrady/shairport-sync/archive/3.3.4.tar.gz"
+  sha256 "420089ed165372bc4ff8878d434db2b703d9559a4624227b7abef501375f9eb7"
   head "https://github.com/mikebrady/shairport-sync.git", :branch => "development"
 
   bottle do
-    sha256 "cbfaed8600347d959dbaed883fca89c6086aa5808c647014e5f63fcbec2fc43d" => :mojave
-    sha256 "facc9f1d5d61ddf4779b1c531b392057d5143691af1ed5dc169dbe93fd6be6d6" => :high_sierra
-    sha256 "bf4b79f69209e61d32b9427e072bca48f4089b7de849430b6576d936ba42bf1f" => :sierra
-    sha256 "0bd51322cd1cbd3f2d875061b8382d223817e1bb5de89e8d10c4ff2c0ce2b870" => :el_capitan
+    sha256 "5985728eb209ad46587ae175758932e7ff07fd7efdd68db0f428283f217f5607" => :catalina
+    sha256 "650b4b15cdd7ec954050a0e07fc350ef3403938931b7d13312aab8a0fcc4772b" => :mojave
+    sha256 "af5ab8d96178c59d01d19c1ae49e89a34ca67160b9a0529cff6953c94618b7db" => :high_sierra
   end
 
   depends_on "autoconf" => :build
@@ -19,17 +18,20 @@ class ShairportSync < Formula
   depends_on "libconfig"
   depends_on "libdaemon"
   depends_on "libsoxr"
-  depends_on "openssl"
+  depends_on "openssl@1.1"
   depends_on "popt"
+  depends_on "pulseaudio"
 
   def install
     system "autoreconf", "-fvi"
     args = %W[
       --with-os=darwin
+      --with-libdaemon
       --with-ssl=openssl
       --with-dns_sd
       --with-ao
       --with-stdout
+      --with-pa
       --with-pipe
       --with-soxr
       --with-metadata
@@ -46,7 +48,7 @@ class ShairportSync < Formula
   end
 
   test do
-    output = shell_output("#{bin}/shairport-sync -V", 1)
-    assert_match "OpenSSL-ao-stdout-pipe-soxr-metadata", output
+    output = shell_output("#{bin}/shairport-sync -V")
+    assert_match "libdaemon-OpenSSL-dns_sd-ao-pa-stdout-pipe-soxr-metadata", output
   end
 end

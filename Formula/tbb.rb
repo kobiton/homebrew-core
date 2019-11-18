@@ -1,23 +1,20 @@
 class Tbb < Formula
   desc "Rich and complete approach to parallelism in C++"
   homepage "https://www.threadingbuildingblocks.org/"
-  url "https://github.com/01org/tbb/archive/2018_U5.tar.gz"
-  version "2018_U5"
-  sha256 "c4c2896af527392496c5e01ef8579058a71b6eebbd695924cd138841c13f07be"
+  url "https://github.com/intel/tbb/archive/2019_U9.tar.gz"
+  version "2019_U9"
+  sha256 "15652f5328cf00c576f065e5cd3eaf3317422fe82afb67a9bcec0dc065bd2abe"
 
   bottle do
-    sha256 "588e5c92283a734c352675c207a0e13e05d912c37a90ca8811e83f74296d94d8" => :mojave
-    sha256 "13dee1e36ddfbbdb4cf16da41f58e3dfb01eb93a7f194c2a70515d92e6f6f2f4" => :high_sierra
-    sha256 "49c638cfb12764b0dd121e0c62183bdc28282d44d5363b65d1c4d983ae58aa67" => :sierra
-    sha256 "862a820d1859fa1a1afd8c3528097eeb731d4e24f4253832a9e085676a81ddf1" => :el_capitan
+    cellar :any
+    sha256 "9930012416851dbb157a1abce3a59f26c218619a017f99200bfbc2e370624933" => :catalina
+    sha256 "bec3f4a74f11597bd96a0c3c1fa42613520b24520df2d97aab1c88104262ea9f" => :mojave
+    sha256 "aa922d1192175b983a9c7ba84b5131afd5a7426775e52e4d64521f5f14e2dce9" => :high_sierra
   end
 
   depends_on "cmake" => :build
   depends_on "swig" => :build
-  # requires malloc features first introduced in Lion
-  # https://github.com/Homebrew/homebrew/issues/32274
-  depends_on :macos => :lion
-  depends_on "python@2"
+  depends_on "python"
 
   def install
     compiler = (ENV.compiler == :clang) ? "clang" : "gcc"
@@ -32,13 +29,13 @@ class Tbb < Formula
 
     cd "python" do
       ENV["TBBROOT"] = prefix
-      system "python", *Language::Python.setup_install_args(prefix)
+      system "python3", *Language::Python.setup_install_args(prefix)
     end
 
-    system "cmake", "-DTBB_ROOT=#{prefix}",
-                    "-DTBB_OS=Darwin",
-                    "-DSAVE_TO=lib/cmake/TBB",
-                    "-P", "cmake/tbb_config_generator.cmake"
+    system "cmake", "-DINSTALL_DIR=lib/cmake/TBB",
+                    "-DSYSTEM_NAME=Darwin",
+                    "-DTBB_VERSION_FILE=#{include}/tbb/tbb_stddef.h",
+                    "-P", "cmake/tbb_config_installer.cmake"
 
     (lib/"cmake"/"TBB").install Dir["lib/cmake/TBB/*.cmake"]
   end

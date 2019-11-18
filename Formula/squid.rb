@@ -1,14 +1,13 @@
 class Squid < Formula
   desc "Advanced proxy caching server for HTTP, HTTPS, FTP, and Gopher"
   homepage "http://www.squid-cache.org/"
-  url "http://www.squid-cache.org/Versions/v3/3.5/squid-3.5.28.tar.xz"
-  sha256 "fd41b622e65c661ada9a98b0338c59e6f2d2ffdb367fe5c8c7212c535e298ed8"
+  url "http://www.squid-cache.org/Versions/v4/squid-4.9.tar.xz"
+  sha256 "1cb1838c6683b0568a3a4050f4ea2fc1eaa5cbba6bdf7d57f7258c7cd7b41fa1"
 
   bottle do
-    sha256 "6edf20106047e4b1db2fc4a45a77ebac6bb2f594342857e868f14196fa754fa3" => :mojave
-    sha256 "153519db601c1579c3b845723a7db4ce034a5df6ded7b23e10a33ba886b03893" => :high_sierra
-    sha256 "d112d9cb8fc0de514eb4affaedda4e7df11a6d2927b2e072143860e4dcab74e2" => :sierra
-    sha256 "dc110f871460f553c232e41e62097447ec0ba3da35a6395ff2c521e51ba47c73" => :el_capitan
+    sha256 "eb88a0963a5793de409259e8cb913b9e24bd3d3b536112142426ad1fcef7428f" => :catalina
+    sha256 "ee3a1e05ca15a5505baef58f33ad86d109cf104edeec514de69310a2532eafeb" => :mojave
+    sha256 "6e4b5b7033c57b70fb6f9de126bc5526c4bad7a153151bf80569ec31d77ffc24" => :high_sierra
   end
 
   head do
@@ -19,7 +18,7 @@ class Squid < Formula
     depends_on "libtool" => :build
   end
 
-  depends_on "openssl"
+  depends_on "openssl@1.1"
 
   def install
     # https://stackoverflow.com/questions/20910109/building-squid-cache-on-os-x-mavericks
@@ -77,11 +76,18 @@ class Squid < Formula
   end
 
   test do
-    # This test should start squid and then check it runs correctly.
-    # However currently dies under the sandbox and "Current Directory"
-    # seems to be set hard on HOMEBREW_PREFIX/var/cache/squid.
-    # https://github.com/Homebrew/homebrew/pull/44348#issuecomment-143477353
-    # If you can fix this, please submit a PR. Thank you!
     assert_match version.to_s, shell_output("#{sbin}/squid -v")
+
+    pid = fork do
+      exec "#{sbin}/squid"
+    end
+    sleep 2
+
+    begin
+      system "#{sbin}/squid", "-k", "check"
+    ensure
+      exec "#{sbin}/squid -k interrupt"
+      Process.wait(pid)
+    end
   end
 end

@@ -1,20 +1,21 @@
 class CrystalIcr < Formula
   desc "Interactive console for Crystal programming language"
   homepage "https://github.com/crystal-community/icr"
-  url "https://github.com/crystal-community/icr/archive/v0.5.0.tar.gz"
-  sha256 "f2b5cb971b368085e9c4f607d906e0622aa94d65c0f7c820d9cbdf23fb972c33"
-  revision 2
+  url "https://github.com/crystal-community/icr/archive/v0.6.0.tar.gz"
+  sha256 "970d5ecbde6bb370c8178339db42e7812b7a2f3a5db3eec868cc18c19523c0ea"
+  revision 4
 
   bottle do
-    rebuild 1
-    sha256 "0c4ce6dfda9ab46076fb9c4ad8e0f934559e2ac7ba87579f900ced4d6977a0cb" => :mojave
-    sha256 "f57ef8c0e048007c3d387fd21ad982b6ada957e24b77effa4aea18fe197d59f3" => :high_sierra
-    sha256 "cd5fd88fd935f1481a562e62058c6c8570f56894b757eca01c2dc3d6d171b88e" => :sierra
-    sha256 "bb812144655843a6e3a772467ea7178a9e78ce3352feda83a0107615019eda1f" => :el_capitan
+    sha256 "f040106e20bebbcfea61a12cee83b3cdaaeb484bc3ab3b590206f1897ca6dc99" => :catalina
+    sha256 "bc19b1b359cd9f78137fd11199a87856d727eb6769a38ae8e009613296188fca" => :mojave
+    sha256 "69a0f31e9738fc6eb89364f507e0867b249614845a0b5d734955e29096c8903d" => :high_sierra
+    sha256 "1bd7c503764108164362adfa4530de7629f19293ea1c9052dc5da77dca0b52c0" => :sierra
   end
 
   depends_on "crystal"
-  depends_on "readline"
+  depends_on "libevent"
+  depends_on "libyaml"
+  depends_on "openssl@1.1"
 
   def install
     system "make", "install", "PREFIX=#{prefix}"

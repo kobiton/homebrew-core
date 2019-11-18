@@ -1,13 +1,16 @@
 class Ejabberd < Formula
   desc "XMPP application server"
   homepage "https://www.ejabberd.im"
-  url "https://www.process-one.net/downloads/ejabberd/18.06/ejabberd-18.06.tgz"
-  sha256 "ac9dbe8b58aec5403ecfe48cb90f11e7f55664185094bac94615c6c9323690b0"
+  url "https://www.process-one.net/downloads/ejabberd/19.05/ejabberd-19.05.tgz"
+  sha256 "f03c672bfd3c151a16615f685d1bd340df1f33d9bd30bc0fd56c0173c4649fd1"
+  revision 1
 
   bottle do
-    sha256 "0a4bc49006e4d917c28848056ef3abf54cb9057a6fc953e2caaf9586b5c4aacd" => :high_sierra
-    sha256 "12380faf294c170e1e8475717b8072c3a52388583868366a05000817c6e62584" => :sierra
-    sha256 "e80a35aae6b8109ad5ed4b1f127eb80c03b9c92c10ee104be5ecd24f6d002a4a" => :el_capitan
+    cellar :any
+    sha256 "74925fa100f79428000de8abddeee31a96000111e5465151d080dec5df432353" => :catalina
+    sha256 "ea3f6308213ae4f6cfe575831b61b370106dd13eaed738dabd6c4feb2401bfb7" => :mojave
+    sha256 "d0f7cdb3044fece618d870c6a1c32d35dbed0dd1e38f778bdacdb75f70e0cb6f" => :high_sierra
+    sha256 "3caf4f57d31c2b5d9ccf88339ce2e68bcdf1b383b333591b10055fbff8f062f2" => :sierra
   end
 
   head do
@@ -20,9 +23,7 @@ class Ejabberd < Formula
   depends_on "erlang"
   depends_on "gd"
   depends_on "libyaml"
-  depends_on "openssl"
-  # for CAPTCHA challenges
-  depends_on "imagemagick" => :optional
+  depends_on "openssl@1.1"
 
   def install
     ENV["TARGET_DIR"] = ENV["DESTDIR"] = "#{lib}/ejabberd/erlang/lib/ejabberd-#{version}"
@@ -39,7 +40,10 @@ class Ejabberd < Formula
 
     system "./autogen.sh" if build.head?
     system "./configure", *args
-    system "make"
+
+    # Set CPP to work around cpp shim issue:
+    # https://github.com/Homebrew/brew/issues/5153
+    system "make", "CPP=clang -E"
 
     ENV.deparallelize
     system "make", "install"

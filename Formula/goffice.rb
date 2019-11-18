@@ -1,15 +1,13 @@
 class Goffice < Formula
   desc "Gnumeric spreadsheet program"
   homepage "https://developer.gnome.org/goffice/"
-  url "https://download.gnome.org/sources/goffice/0.10/goffice-0.10.43.tar.xz"
-  sha256 "550fceefa74622b8fe57dd0b030003e31db50edf7f87068ff5e146365108b64e"
+  url "https://download.gnome.org/sources/goffice/0.10/goffice-0.10.46.tar.xz"
+  sha256 "058d6d3a40e1f60525682ec6b857c441d5deb50d0d30a76804f9f36f865a13a9"
 
   bottle do
-    rebuild 1
-    sha256 "3aa7ce0a18a158cf827c10c522d2e9763871cfd8356fa1f8c510ff5b1ddb0388" => :mojave
-    sha256 "eba0611c7b574b806fe4be80e3301c55d4f57bfb05cc42ff3cc1371dc1d7be71" => :high_sierra
-    sha256 "52e5c5738c9a59056e0d016e04f27ac2fdc26a1cff375ea98eccd99573690e9d" => :sierra
-    sha256 "ca9f9afa31c7bcde1d87c20a33cfb773499f94d8da43ced4dc89b628c4d336d2" => :el_capitan
+    sha256 "0fe21687f0305ad07a1accb75eb6235490aae734c2b11262e20b62c7ee4968c3" => :catalina
+    sha256 "5cdf0c352915329f46093c916ec4c5c2adecf6a7c46f695e70a9cb7e4f2fedae" => :mojave
+    sha256 "faf193d186c3a95533149ee9df8a360e83c277687dbf7a43150b7fe299ee190e" => :high_sierra
   end
 
   head do
@@ -31,6 +29,7 @@ class Goffice < Formula
   depends_on "librsvg"
   depends_on "pango"
   depends_on "pcre"
+  uses_from_macos "libxslt"
 
   def install
     args = %W[--disable-dependency-tracking --prefix=#{prefix}]
@@ -57,6 +56,7 @@ class Goffice < Formula
     system ENV.cc, "-I#{include}/libgoffice-0.10",
            "-I#{Formula["glib"].opt_include}/glib-2.0",
            "-I#{Formula["glib"].opt_lib}/glib-2.0/include",
+           "-I#{Formula["harfbuzz"].opt_include}/harfbuzz",
            "-I#{Formula["libgsf"].opt_include}/libgsf-1",
            "-I#{MacOS.sdk_path}/usr/include/libxml2",
            "-I#{Formula["gtk+3"].opt_include}/gtk-3.0",

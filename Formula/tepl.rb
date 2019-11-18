@@ -3,18 +3,18 @@ class Tepl < Formula
   homepage "https://wiki.gnome.org/Projects/Tepl"
   url "https://download.gnome.org/sources/tepl/4.2/tepl-4.2.0.tar.xz"
   sha256 "8839d4428ecdd87fd5abc657ebbe5a9601a57262e9946845e47dec264e669ccd"
+  revision 3
 
   bottle do
-    sha256 "6b809b7405ea082477b7e1831c23556b699e8eb7a810c02db9ff5d7b42d14463" => :mojave
-    sha256 "30acd42fc1301c7fa1799240b2526406028b9f8208a9020b51ce2a88e0712e39" => :high_sierra
-    sha256 "c1bbb1bacd6541f60210a4ba994db42fb8d829944ffe1d1586bd9b2da273e0d3" => :sierra
-    sha256 "ad0b8dfe43a8d18454e92f978636b91d2c0d08164e6e407f29be9ea5320c00d6" => :el_capitan
+    sha256 "f4694d4b2cab35b0b3ae9ab137ca1c7dc5c7204a105adcbc2f1228ebfebbe70e" => :catalina
+    sha256 "c24080049d2ce5a95ac93458444538712169653ee3f73b7d58fa26f22c3e5430" => :mojave
+    sha256 "1a07d0162bdcbae050dfed5529a1e28ab8fbb3054fb6fb6a6f76ce7e0cbe2323" => :high_sierra
   end
 
   depends_on "gobject-introspection" => :build
   depends_on "pkg-config" => :build
   depends_on "amtk"
-  depends_on "gtksourceview@4"
+  depends_on "gtksourceview4"
   depends_on "uchardet"
 
   def install
@@ -43,7 +43,7 @@ class Tepl < Formula
     gettext = Formula["gettext"]
     glib = Formula["glib"]
     gtkx3 = Formula["gtk+3"]
-    gtksourceview4 = Formula["gtksourceview@4"]
+    gtksourceview4 = Formula["gtksourceview4"]
     harfbuzz = Formula["harfbuzz"]
     libepoxy = Formula["libepoxy"]
     libpng = Formula["libpng"]

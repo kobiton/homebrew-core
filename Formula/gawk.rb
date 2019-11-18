@@ -1,16 +1,15 @@
 class Gawk < Formula
   desc "GNU awk utility"
   homepage "https://www.gnu.org/software/gawk/"
-  url "https://ftp.gnu.org/gnu/gawk/gawk-4.2.1.tar.xz"
-  mirror "https://ftpmirror.gnu.org/gawk/gawk-4.2.1.tar.xz"
-  sha256 "d1119785e746d46a8209d28b2de404a57f983aa48670f4e225531d3bdc175551"
+  url "https://ftp.gnu.org/gnu/gawk/gawk-5.0.1.tar.xz"
+  mirror "https://ftpmirror.gnu.org/gawk/gawk-5.0.1.tar.xz"
+  sha256 "8e4e86f04ed789648b66f757329743a0d6dfb5294c3b91b756a474f1ce05a794"
 
   bottle do
     rebuild 1
-    sha256 "bf7cdce224032a58bfaadc3a87024ae7cb6490a5fef6c5f1d4631a1e41585716" => :mojave
-    sha256 "3e915ae4989aaba561315c95923bd70ab2a5eaf661b6003359a50c2add2ee758" => :high_sierra
-    sha256 "df69c7a625a6bf308841a603c80211ed8cb67d57e3d2d13cdc07da50c879de4f" => :sierra
-    sha256 "00053f97981327326623a8adc914b5431e3f8797aaec15342a3c0ebb4bf1eb9d" => :el_capitan
+    sha256 "3bb22749e869048a14e444e738813ba883a719b757d641cf09dbc58ae3dde667" => :catalina
+    sha256 "071ed9be337b30165c619cd6c5ef4204f047b81caaa860288a07d090c1a10d75" => :mojave
+    sha256 "de2f0c453a79a87a9274b6ee71fa47c250783dad46573b168b5cbf71eb777d4f" => :high_sierra
   end
 
   depends_on "gettext"
@@ -21,7 +20,9 @@ class Gawk < Formula
     system "./configure", "--disable-debug",
                           "--disable-dependency-tracking",
                           "--prefix=#{prefix}",
-                          "--without-libsigsegv-prefix"
+                          "--without-libsigsegv-prefix",
+                          "gl_cv_func_ftello_works=yes" # Work around a gnulib issue with macOS Catalina
+
     system "make"
     system "make", "check"
     system "make", "install"

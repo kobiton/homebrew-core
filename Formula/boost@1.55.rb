@@ -8,14 +8,13 @@ class BoostAT155 < Formula
   bottle do
     cellar :any
     rebuild 1
+    sha256 "2db1cc42c4810d7fdbe7dd7778fc51d37b829d8d39a8e5dc34a9867f7f619445" => :catalina
     sha256 "655c9b514a797113af2e4199457ccb9dd8d8e0364f227390f0ca54b254439f2a" => :mojave
     sha256 "15894f998719ef4130d2dea076accadb709a6d5d0809114452f5175585ccd454" => :high_sierra
     sha256 "16a7e98e578adbf8c353bc868b9cd98e80b41928329743dba1b54ee53d76295c" => :sierra
   end
 
   keg_only :versioned_formula
-
-  option :cxx11
 
   # Patches boost::atomic for LLVM 3.4 as it is used on OS X 10.9 with Xcode 5.1
   # https://github.com/Homebrew/homebrew/issues/27396
@@ -74,15 +73,6 @@ class BoostAT155 < Formula
       threading=multi,single
       link=shared,static
     ]
-
-    # Trunk starts using "clang++ -x c" to select C compiler which breaks C++11
-    # handling using ENV.cxx11. Using "cxxflags" and "linkflags" still works.
-    if build.cxx11?
-      args << "cxxflags=-std=c++11"
-      if ENV.compiler == :clang
-        args << "cxxflags=-stdlib=libc++" << "linkflags=-stdlib=libc++"
-      end
-    end
 
     system "./bootstrap.sh", *bargs
     system "./b2", *args

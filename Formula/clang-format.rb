@@ -1,39 +1,43 @@
 class ClangFormat < Formula
   desc "Formatting tools for C, C++, Obj-C, Java, JavaScript, TypeScript"
   homepage "https://clang.llvm.org/docs/ClangFormat.html"
-  version "2018-08-24"
+  version "2019-05-14"
 
   stable do
-    url "http://llvm.org/svn/llvm-project/llvm/tags/google/stable/2018-08-24/", :using => :svn
+    depends_on "subversion" => :build
+    url "https://llvm.org/svn/llvm-project/llvm/tags/google/stable/2019-05-14/", :using => :svn
 
     resource "clang" do
-      url "http://llvm.org/svn/llvm-project/cfe/tags/google/stable/2018-08-24/", :using => :svn
+      url "https://llvm.org/svn/llvm-project/cfe/tags/google/stable/2019-05-14/", :using => :svn
+    end
+
+    resource "libcxx" do
+      url "https://releases.llvm.org/9.0.0/libcxx-9.0.0.src.tar.xz"
+      sha256 "3c4162972b5d3204ba47ac384aa456855a17b5e97422723d4758251acf1ed28c"
     end
   end
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "044c2421bad8b1bf9ea7a46f24ed1d38b17a03026912d11123267a6e21158ccd" => :mojave
-    sha256 "70ef7442789f00efee33a1f8f9f19e0adbdfb7e12043116bb32d96c5fe193183" => :high_sierra
-    sha256 "1e161424469607f99788422ad8f9e85675c8a8842c30c585b0c0630a5da6a7d3" => :sierra
+    sha256 "811e557c5b540317ff532959f3b074d6b9763abfb58186f3a1cbeb10acfb3358" => :catalina
+    sha256 "beb4842dafb9092fe56ba4dc94030b581d3ae85ae914b2c2a37ae872c88dbd34" => :mojave
+    sha256 "dcea54b1734a2385a7275deb7b7fe9970cf06387d9051103476a0082614849f0" => :high_sierra
   end
 
   head do
-    url "http://llvm.org/svn/llvm-project/llvm/trunk/", :using => :svn
+    url "https://git.llvm.org/git/llvm.git"
 
     resource "clang" do
-      url "http://llvm.org/svn/llvm-project/cfe/trunk/", :using => :svn
+      url "https://git.llvm.org/git/clang.git"
+    end
+
+    resource "libcxx" do
+      url "https://git.llvm.org/git/libcxx.git"
     end
   end
 
   depends_on "cmake" => :build
   depends_on "ninja" => :build
-  depends_on "subversion" => :build
-
-  resource "libcxx" do
-    url "https://releases.llvm.org/7.0.0/libcxx-7.0.0.src.tar.xz"
-    sha256 "9b342625ba2f4e65b52764ab2061e116c0337db2179c6bce7f9a0d70c52134f0"
-  end
 
   def install
     (buildpath/"projects/libcxx").install resource("libcxx")
