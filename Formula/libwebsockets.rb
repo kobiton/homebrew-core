@@ -1,40 +1,27 @@
 class Libwebsockets < Formula
   desc "C websockets server library"
   homepage "https://libwebsockets.org"
-  revision 2
+  url "https://github.com/warmcat/libwebsockets/archive/v3.2.0.tar.gz"
+  sha256 "5e731c536a20d9c03ae611631db073f05cd77bf0906a8c30d2a13638d4c8c667"
+  revision 1
   head "https://github.com/warmcat/libwebsockets.git"
 
-  stable do
-    url "https://github.com/warmcat/libwebsockets/archive/v2.4.2.tar.gz"
-    sha256 "73012d7fcf428dedccc816e83a63a01462e27819d5537b8e0d0c7264bfacfad6"
-
-    # Fix compatibility with libuv 1.21.0.
-    # Not in the 3.0.0 release but should be safe to remove on >= 3.0.1.
-    patch do
-      url "https://raw.githubusercontent.com/Homebrew/formula-patches/4d337833/libwebsockets/libwebsockets_libuv_1.21.0_compat.diff"
-      sha256 "d2ef574b7c356573fc4ade2b95f7717e1eac192d8e56748b03588c89b12fdabd"
-    end
-  end
-
   bottle do
-    cellar :any
-    sha256 "420509f7b0e0fa39784b097d74c1d03a3ef1497cca3969b9090011c09e14d3a9" => :mojave
-    sha256 "3f33d8419f44d82d4e926d35a13411991593708495d01bb3a7a6cdfcf7557f32" => :high_sierra
-    sha256 "4e57715db563c9b82a013f9c1adec77a7fb1801c2dc5c696c5269438447cbc9e" => :sierra
-    sha256 "9b031e7948664364f4ab3f31991bcd8d3f528f8c5f5d7ebda9a17b2f344497c7" => :el_capitan
+    sha256 "695623da170149af1510d880554b7f72af10bf07fd2ae1fcabec28a5d4ec6d1c" => :catalina
+    sha256 "3196125ae013d45631b5f28fc60df1545357f98b94b3c45742e177554bec3b9f" => :mojave
+    sha256 "6195a152caa89229651dd1a0834283754ebad277d06755e8b851a0d0471cde61" => :high_sierra
+    sha256 "ff664e498d2cc5d17663d5990d4100c05de251fbb65e5a22ae1209241cb8d3f6" => :sierra
   end
 
   depends_on "cmake" => :build
-  depends_on "libev"
   depends_on "libevent"
   depends_on "libuv"
-  depends_on "openssl"
+  depends_on "openssl@1.1"
 
   def install
     system "cmake", ".", *std_cmake_args,
                     "-DLWS_IPV6=ON",
                     "-DLWS_WITH_HTTP2=ON",
-                    "-DLWS_WITH_LIBEV=ON",
                     "-DLWS_WITH_LIBEVENT=ON",
                     "-DLWS_WITH_LIBUV=ON",
                     "-DLWS_WITH_PLUGINS=ON",
@@ -59,7 +46,7 @@ class Libwebsockets < Formula
         return 0;
       }
     EOS
-    system ENV.cc, "test.c", "-I#{Formula["openssl"].opt_prefix}/include", "-L#{lib}", "-lwebsockets", "-o", "test"
+    system ENV.cc, "test.c", "-I#{Formula["openssl@1.1"].opt_prefix}/include", "-L#{lib}", "-lwebsockets", "-o", "test"
     system "./test"
   end
 end

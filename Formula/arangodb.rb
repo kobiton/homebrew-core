@@ -1,39 +1,57 @@
 class Arangodb < Formula
   desc "The Multi-Model NoSQL Database"
   homepage "https://www.arangodb.com/"
-  url "https://download.arangodb.com/Source/ArangoDB-3.3.17.tar.gz"
-  sha256 "ef37f07758cdaa7ac99c0cb30265b4f23f07f885de214a385080e9b709d8b41b"
-  head "https://github.com/arangodb/arangodb.git", :branch => "unstable"
+  url "https://download.arangodb.com/Source/ArangoDB-3.5.2.tar.gz"
+  sha256 "9331ddb8d745c5d977975591b20a00461bfe11865bfce9f3495dc8bdb9260bf1"
+  head "https://github.com/arangodb/arangodb.git", :branch => "devel"
 
   bottle do
-    sha256 "1c39f5fdc835fbd2cdc51b11d71205de807a6adcb88786b17807b0b8db6a7e5b" => :mojave
-    sha256 "62d5ed7d116965a741100ddd9794e8fc4ed36feb7bc4905b15f54b7a56514c7e" => :high_sierra
-    sha256 "be2fa6c4244a79b5a1c8d5306113b21a8c3b8ef13103b42d8d978330d752aa1a" => :sierra
+    sha256 "5e86cc8536055411a87d0e98329a07edf77b54e5624fab7cb7ae3d0e5a11cc0b" => :catalina
+    sha256 "c37fb40d99c4ade05624bfbe6200be512de4d2f234479ac356d459fde3c1ebd1" => :mojave
   end
 
+  depends_on "ccache" => :build
   depends_on "cmake" => :build
   depends_on "go" => :build
-  depends_on :macos => :yosemite
-  depends_on "openssl"
+  depends_on :macos => :mojave
+  depends_on "openssl@1.1"
 
-  fails_with :clang do
-    build 600
-    cause "Fails with compile errors"
+  # the ArangoStarter is in a separate github repository;
+  # it is used to easily start single server and clusters
+  # with a unified CLI
+  resource "starter" do
+    url "https://github.com/arangodb-helper/arangodb.git",
+      :revision => "bbe29730e70dba609b57c469e8f863f032fabf3e"
   end
 
-  needs :cxx11
-
   def install
-    ENV.cxx11
+    ENV["MACOSX_DEPLOYMENT_TARGET"] = MacOS.version
+
+    resource("starter").stage do
+      ENV.append "GOPATH", Dir.pwd + "/.gobuild"
+      system "make", "deps"
+      # use commit-id as projectBuild
+      commit = `git rev-parse HEAD`.chomp
+      system "go", "build", "-ldflags", "-X main.projectVersion=0.14.12 -X main.projectBuild=#{commit}",
+                            "-o", "arangodb",
+                            "github.com/arangodb-helper/arangodb"
+      bin.install "arangodb"
+    end
 
     mkdir "build" do
       args = std_cmake_args + %W[
         -DHOMEBREW=ON
-        -DUSE_OPTIMIZE_FOR_ARCHITECTURE=OFF
-        -DASM_OPTIMIZATIONS=OFF
-        -DCMAKE_INSTALL_DATADIR=#{share}
-        -DCMAKE_INSTALL_DATAROOTDIR=#{share}
-        -DCMAKE_INSTALL_SYSCONFDIR=#{etc}
+        -DCMAKE_BUILD_TYPE=RelWithDebInfo
+        -DUSE_MAINTAINER_MODE=Off
+        -DUSE_JEMALLOC=Off
+        -DCMAKE_SKIP_RPATH=On
+        -DOPENSSL_USE_STATIC_LIBS=On
+        -DCMAKE_LIBRARY_PATH=#{prefix}/opt/openssl@1.1/lib
+        -DOPENSSL_ROOT_DIR=#{prefix}/opt/openssl@1.1/lib
+        -DCMAKE_OSX_DEPLOYMENT_TARGET=#{MacOS.version}
+        -DTARGET_ARCHITECTURE=nehalem
+        -DUSE_CATCH_TESTS=Off
+        -DUSE_GOOGLE_TESTS=Off
         -DCMAKE_INSTALL_LOCALSTATEDIR=#{var}
       ]
 
@@ -43,10 +61,6 @@ class Arangodb < Formula
 
       system "cmake", "..", *args
       system "make", "install"
-
-      %w[arangod arango-dfdb arangosh foxx-manager].each do |f|
-        inreplace etc/"arangodb3/#{f}.conf", pkgshare, opt_pkgshare
-      end
     end
   end
 
@@ -85,8 +99,29 @@ class Arangodb < Formula
   end
 
   test do
+    require "pty"
+
     testcase = "require('@arangodb').print('it works!')"
     output = shell_output("#{bin}/arangosh --server.password \"\" --javascript.execute-string \"#{testcase}\"")
     assert_equal "it works!", output.chomp
+
+    ohai "#{bin}/arangodb --starter.instance-up-timeout 1m --starter.mode single"
+    PTY.spawn("#{bin}/arangodb", "--starter.instance-up-timeout", "1m",
+              "--starter.mode", "single", "--starter.disable-ipv6",
+              "--server.arangod", "#{sbin}/arangod",
+              "--server.js-dir", "#{share}/arangodb3/js") do |r, _, pid|
+      loop do
+        available = IO.select([r], [], [], 60)
+        assert_not_equal available, nil
+
+        line = r.readline.strip
+        ohai line
+
+        break if line.include?("Your single server can now be accessed")
+      end
+    ensure
+      Process.kill "SIGINT", pid
+      ohai "shuting down #{pid}"
+    end
   end
 end

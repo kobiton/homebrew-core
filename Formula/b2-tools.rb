@@ -3,15 +3,14 @@ class B2Tools < Formula
 
   desc "B2 Cloud Storage Command-Line Tools"
   homepage "https://github.com/Backblaze/B2_Command_Line_Tool"
-  url "https://github.com/Backblaze/B2_Command_Line_Tool/archive/v1.3.6.tar.gz"
-  sha256 "077d5e9b186d4cb0be1fcbeb3b80e1788d8b941b0fcfbf2c7386b8c6a653740c"
-  revision 1
+  url "https://github.com/Backblaze/B2_Command_Line_Tool/archive/v1.4.2.tar.gz"
+  sha256 "2d6382b94af59dcaa44dd546252807e0364d1b61f169584829ebbf82458e7078"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "df2845790b43d3b514adbcb051f56fe2c41c84658a694969f8c28d32495274dc" => :mojave
-    sha256 "8e50af9ea9bcf1824687598a985f9ef203d13d06e23e31def61fe54b88f263c1" => :high_sierra
-    sha256 "eb55c4fc29f5e219ad2ab6336c94407ab936a64206535108ba9e96044820634e" => :sierra
+    sha256 "e21e5a9daf848f8a36850cad7d18073c8b8af9db6bf2e6860549b6e7123e2b00" => :catalina
+    sha256 "6d034a4b3ef822dd53b09a17ff0e924d6ad130cc6b376287425cc0300d425bc6" => :mojave
+    sha256 "450cd0e09c64458f5af99414f523f56b93275c5efa6ed2c0a6a18420917d2a31" => :high_sierra
   end
 
   depends_on "python"

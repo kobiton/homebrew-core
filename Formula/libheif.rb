@@ -1,21 +1,21 @@
 class Libheif < Formula
   desc "ISO/IEC 23008-12:2017 HEIF file format decoder and encoder"
   homepage "https://www.libde265.org/"
-  url "https://github.com/strukturag/libheif/releases/download/v1.3.2/libheif-1.3.2.tar.gz"
-  sha256 "a9e12a693fc172baa16669f427063edd7bf07964a1cb623ee57cd056c06ee3fc"
-  revision 1
+  url "https://github.com/strukturag/libheif/releases/download/v1.6.0/libheif-1.6.0.tar.gz"
+  sha256 "f00ad182cb21aa57218cb7ba222163376e74e3b7de1723fd789508a296c9e868"
 
   bottle do
     cellar :any
-    sha256 "1a387d453a26fe836d19dbbe24e9be3e65c35603752d710af13ff48404951b3d" => :mojave
-    sha256 "cde1636ed0b03d3dfbcae2b087297272b6b97767c0f34208976038d08650c7de" => :high_sierra
-    sha256 "5864ceb38a0201878750294f9ce0fcbf5f31d10769fe9fbbf7f71d3dd1f2c219" => :sierra
+    sha256 "0fc77c14dc4528aab60296ca21e215202d1d5bb8eede62e9230d25ea956561a2" => :catalina
+    sha256 "6a4a3ff9c1a9b85437866afd831f6287bc430b018b7b2ee1c5dcfdb3efcb4fe8" => :mojave
+    sha256 "d9b96ad39ceb88a37b061a8588e9e6d434099b3d93d9a02104667b675e1c71c0" => :high_sierra
   end
 
   depends_on "pkg-config" => :build
   depends_on "jpeg"
   depends_on "libde265"
   depends_on "libpng"
+  depends_on "shared-mime-info"
   depends_on "x265"
 
   def install
@@ -24,6 +24,10 @@ class Libheif < Formula
                           "--prefix=#{prefix}"
     system "make", "install"
     pkgshare.install "examples/example.heic"
+  end
+
+  def post_install
+    system Formula["shared-mime-info"].opt_bin/"update-mime-database", "#{HOMEBREW_PREFIX}/share/mime"
   end
 
   test do

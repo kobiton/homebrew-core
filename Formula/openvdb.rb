@@ -1,36 +1,29 @@
 class Openvdb < Formula
   desc "Sparse volume processing toolkit"
-  homepage "http://www.openvdb.org/"
-  url "https://github.com/dreamworksanimation/openvdb/archive/v5.2.0.tar.gz"
-  sha256 "86b3bc51002bc25ae8d69991228228c79b040cb1a5803d87543b407645f6ab20"
-  revision 1
-  head "https://github.com/dreamworksanimation/openvdb.git"
+  homepage "https://www.openvdb.org/"
+  url "https://github.com/AcademySoftwareFoundation/openvdb/archive/v6.2.1.tar.gz"
+  sha256 "d4dd17ad571d4dd048f010e6f4b7657391960ed73523ed1716a17e7cf1806f71"
+  head "https://github.com/AcademySoftwareFoundation/openvdb.git"
 
   bottle do
-    sha256 "8a4a4c65328e9d303e174c89a89cd7a838fe51eb30376a76523f95c1b3275918" => :mojave
-    sha256 "05deec4062038c7274fbf9f4bb7565818fa4d8a922ff7e2af5dc6f7639004342" => :high_sierra
-    sha256 "021270661f0d57dd6b5dac9660cedf5f239b12b55b9781a8e2c952b6a3dd854d" => :sierra
+    sha256 "3bd3b1a0572827e3904945d4f5251a4f946a5776b25a64668a7c27ed52d56f26" => :catalina
+    sha256 "1a2e126f54fc18e62f6591f2edcc54f6e9bfcddf88c8fdba77d13d4539fe8e0a" => :mojave
+    sha256 "a5d74669be61a935aca1d9151c5dff04c854f4a1976f421c15e1ebcc6ae3b0da" => :high_sierra
   end
-
-  option "with-glfw", "Installs the command-line tool to view OpenVDB files"
-
-  deprecated_option "with-viewer" => "with-glfw"
 
   depends_on "doxygen" => :build
   depends_on "boost"
   depends_on "c-blosc"
+  depends_on "glfw"
   depends_on "ilmbase"
   depends_on "jemalloc"
   depends_on "openexr"
   depends_on "tbb"
-  depends_on "glfw" => :optional
 
   resource "test_file" do
-    url "http://www.openvdb.org/download/models/cube.vdb.zip"
+    url "https://nexus.aswf.io/content/repositories/releases/io/aswf/openvdb/models/cube.vdb/1.0.0/cube.vdb-1.0.0.zip"
     sha256 "05476e84e91c0214ad7593850e6e7c28f777aa4ff0a1d88d91168a7dd050f922"
   end
-
-  needs :cxx11
 
   def install
     ENV.cxx11
@@ -54,17 +47,10 @@ class Openvdb < Formula
       "PYTHON_VERSION=",
       "TBB_INCL_DIR=#{Formula["tbb"].opt_include}",
       "TBB_LIB_DIR=#{Formula["tbb"].opt_lib}",
+      "GLFW_INCL_DIR=#{Formula["glfw"].opt_include}",
+      "GLFW_LIB_DIR=#{Formula["glfw"].opt_lib}",
+      "GLFW_LIB=-lglfw",
     ]
-
-    if build.with? "glfw"
-      args << "GLFW_INCL_DIR=#{Formula["glfw"].opt_include}"
-      args << "GLFW_LIB_DIR=#{Formula["glfw"].opt_lib}"
-      args << "GLFW_LIB=-lglfw"
-    else
-      args << "GLFW_INCL_DIR="
-      args << "GLFW_LIB_DIR="
-      args << "GLFW_LIB="
-    end
 
     ENV.append_to_cflags "-I #{buildpath}"
 

@@ -1,28 +1,33 @@
 class Uwsgi < Formula
   desc "Full stack for building hosting services"
   homepage "https://uwsgi-docs.readthedocs.org/en/latest/"
-  url "https://projects.unbit.it/downloads/uwsgi-2.0.17.1.tar.gz"
-  sha256 "d2318235c74665a60021a4fc7770e9c2756f9fc07de7b8c22805efe85b5ab277"
+  revision 1
   head "https://github.com/unbit/uwsgi.git"
 
-  bottle do
-    sha256 "9543320e6f7ea397fca95b9d8ee770b905895f63851b51d0153e9109c8bac02c" => :high_sierra
-    sha256 "2688bef0b4de3f696e5396bcb8ed3d676a77d0605a296ffb010e2d7ceef5ae3f" => :sierra
-    sha256 "3b51757ece80a6bb790d6db1a923ca46c7cccb7ab59b13150edaffc9229c0c07" => :el_capitan
+  stable do
+    url "https://projects.unbit.it/downloads/uwsgi-2.0.18.tar.gz"
+    sha256 "4972ac538800fb2d421027f49b4a1869b66048839507ccf0aa2fda792d99f583"
+
+    # Fix "library not found for -lgcc_s.10.5" with 10.14 SDK
+    # Remove in next release
+    patch do
+      url "https://github.com/unbit/uwsgi/commit/6b1b397f.diff?full_index=1"
+      sha256 "b2c3a22f980a4e3bd2ab2fe5c5356d8a91e567a3ab3e6ccbeeeb2ba4efe4568a"
+    end
   end
 
-  deprecated_option "with-python3" => "with-python"
+  bottle do
+    sha256 "6c17be7f1c2be510e4a7901f9e84acaeab7beb517190643622cd1fe81ef37871" => :catalina
+    sha256 "fa0a1738cc9fafdae2e03e7c9092f98d8873ee1ec0dbe0f6935c75e7ee7c954e" => :mojave
+    sha256 "562237e2f56cea601ba029b32c435a38247441a8188e37ee26543647bf940b7c" => :high_sierra
+    sha256 "80e82901e28914acedd3101a37559b82edebc37c1e5371b5876c4ff32f84cadc" => :sierra
+  end
 
-  depends_on "go" => [:build, :optional]
   depends_on "pkg-config" => :build
-  depends_on "openssl"
+  depends_on "openssl@1.1"
   depends_on "pcre"
   depends_on "python@2"
   depends_on "yajl"
-
-  depends_on "libyaml" => :optional
-  depends_on "python" => :optional
-  depends_on "zeromq" => :optional
 
   # "no such file or directory: '... libpython2.7.a'"
   # Reported 23 Jun 2016: https://github.com/unbit/uwsgi/issues/1299
@@ -39,18 +44,16 @@ class Uwsgi < Formula
     end
 
     ENV.append %w[CFLAGS LDFLAGS], "-arch #{MacOS.preferred_arch}"
-    openssl = Formula["openssl"]
+    openssl = Formula["openssl@1.1"]
     ENV.prepend "CFLAGS", "-I#{openssl.opt_include}"
     ENV.prepend "LDFLAGS", "-L#{openssl.opt_lib}"
-
-    yaml = build.with?("libyaml") ? "libyaml" : "embedded"
 
     (buildpath/"buildconf/brew.ini").write <<~EOS
       [uwsgi]
       ssl = true
       json = yajl
       xml = libxml2
-      yaml = #{yaml}
+      yaml = embedded
       inherit = base
       plugin_dir = #{libexec}/uwsgi
       embedded_plugins = null
@@ -75,18 +78,15 @@ class Uwsgi < Formula
                  transformation_offload transformation_tofile
                  transformation_toupper ugreen webdav zergpool]
 
-    plugins << "gccgo" if build.with? "go"
-
     (libexec/"uwsgi").mkpath
     plugins.each do |plugin|
       system "python", "uwsgiconfig.py", "--verbose", "--plugin", "plugins/#{plugin}", "brew"
     end
 
     python_versions = {
-      "python"=>"python2.7",
-      "python2"=>"python2.7",
+      "python"  => "python2.7",
+      "python2" => "python2.7",
     }
-    python_versions["python3"] = "python3" if build.with? "python"
     python_versions.each do |k, v|
       system v, "uwsgiconfig.py", "--verbose", "--plugin", "plugins/python", "brew", k
     end

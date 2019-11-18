@@ -1,36 +1,43 @@
 class Hydra < Formula
   desc "Network logon cracker which supports many services"
   homepage "https://github.com/vanhauser-thc/thc-hydra"
-  url "https://github.com/vanhauser-thc/thc-hydra/archive/8.6.tar.gz"
-  sha256 "05a87eb018507b24afca970081f067e64441460319fb75ca1e64c4a1f322b80b"
-  revision 2
+  url "https://github.com/vanhauser-thc/thc-hydra/archive/v9.0.tar.gz"
+  sha256 "56672e253c128abaa6fb19e77f6f59ba6a93762a9ba435505a009ef6d58e8d0e"
+  revision 3
   head "https://github.com/vanhauser-thc/thc-hydra.git"
 
   bottle do
     cellar :any
-    sha256 "53a99c685662301197e3fc43696f7da59b408947055a94786874e413546a3c81" => :mojave
-    sha256 "d49e7d0dd322ece528244fa888edc4f98e945e8b88a6c30f2f70b449e0d637b1" => :high_sierra
-    sha256 "bae23f8f760bc421dbc27877a2433f69189d17cce3a9153d74de3140a4d8ee5f" => :sierra
-    sha256 "ebeb58bc9aaf69d80552337c6f8adbe923390a8cc1d694dbef51c0a9d42699a6" => :el_capitan
+    sha256 "349f0dc6653ffbd73979c142a0c409a1a5eb226cc670922eded4a184311fe0bb" => :catalina
+    sha256 "1c3e624176225d39a30f4527f715c1f5e8c703495b87d69fc4d50f3f3fca8d44" => :mojave
+    sha256 "3d5e99635237d29089f6c73f94a383ac55d73ca13bccd36bd40a04bc881ba105" => :high_sierra
   end
 
   depends_on "pkg-config" => :build
+  depends_on "libssh"
   depends_on "mysql-client"
-  depends_on "openssl"
-  depends_on "gtk+" => :optional
-  depends_on "libssh" => :optional
+  depends_on "openssl@1.1"
 
   def install
     inreplace "configure" do |s|
       # Link against our OpenSSL
       # https://github.com/vanhauser-thc/thc-hydra/issues/80
-      s.gsub! "/opt/local/lib", Formula["openssl"].opt_lib
-      s.gsub! "/opt/local/*ssl", Formula["openssl"].opt_lib
-      s.gsub! "/opt/*ssl/include", Formula["openssl"].opt_include
-      # Avoid opportunistic linking of subversion
-      s.gsub! "libsvn", "oh_no_you_dont"
-      # Avoid opportunistic linking of libssh
-      s.gsub! "libssh", "certainly_not" if build.without? "libssh"
+      s.gsub! "/opt/local/lib", Formula["openssl@1.1"].opt_lib
+      s.gsub! "/opt/local/*ssl", Formula["openssl@1.1"].opt_lib
+      s.gsub! "/opt/*ssl/include", Formula["openssl@1.1"].opt_include
+      # Avoid opportunistic linking of everything
+      %w[
+        gtk+-2.0
+        libfreerdp2
+        libgcrypt
+        libidn
+        libmemcached
+        libmongoc
+        libpq
+        libsvn
+      ].each do |lib|
+        s.gsub! lib, "oh_no_you_dont"
+      end
     end
 
     # Having our gcc in the PATH first can cause issues. Monitor this.

@@ -3,13 +3,13 @@ class Gnuradio < Formula
   homepage "https://gnuradio.org/"
   url "https://gnuradio.org/releases/gnuradio/gnuradio-3.7.13.4.tar.gz"
   sha256 "c536c268b1e9c24f1206bbc881a5819ac46e662f4e8beaded6f3f441d3502f0d"
+  revision 11
   head "https://github.com/gnuradio/gnuradio.git"
 
   bottle do
-    sha256 "776bf89ad97f91a5dfde51675515b59dc40715130a09039c713a291bc11e4708" => :mojave
-    sha256 "bd03698a2b1a89f865eceb8d22eb335ec0b80cc5afb6a03c4c96f71560390e6c" => :high_sierra
-    sha256 "8967e3a4fb54a2f0a191d42fefa74066ffc3384290792c325b5d6ce72e1819d5" => :sierra
-    sha256 "dc19d373b871c7cf3325e5ff041a5a46aa3fe75cee2c8efa36b33b70bb492b73" => :el_capitan
+    sha256 "3cefbcfdcc521c4dd63f22d96929f3a02e6044ce821b884270b7c05f2cef51fb" => :catalina
+    sha256 "e017b330d6f1d06d8347c9b49aa2a1b6b89f8b320452a386f5e8a09bfa73a9ba" => :mojave
+    sha256 "3faa0b3095bf6208291fa6367dff9f6498358e20ea84d7f8b3b1dfe0f7dbae41" => :high_sierra
   end
 
   depends_on "cmake" => :build
@@ -20,15 +20,11 @@ class Gnuradio < Formula
   depends_on "boost"
   depends_on "fftw"
   depends_on "gsl"
-  depends_on "numpy"
+  depends_on "numpy@1.16"
   depends_on "portaudio"
   depends_on "python@2"
   depends_on "uhd"
   depends_on "zeromq"
-  depends_on "jack" => :optional
-  depends_on "pygtk" => :optional
-  depends_on "sdl" => :optional
-  depends_on "wxpython" => :optional
 
   # cheetah starts here
   resource "Markdown" do
@@ -67,6 +63,12 @@ class Gnuradio < Formula
     sha256 "964031c0944f913933f55ad1610938105a6657a69d1ac5a6dd50e16a679104d5"
   end
 
+  # patch for boost 1.70.0, remove after next release
+  patch do
+    url "https://github.com/gnuradio/gnuradio/commit/6dc8229fd0dda25c054c2194ee2c9b28affe92d8.patch?full_index=1"
+    sha256 "9836235ea69b3d66b5cd4b2cdc89f80d010797d2bd59dc5c6631a96af921db8c"
+  end
+
   def install
     ENV.prepend_path "PATH", "/System/Library/Frameworks/Python.framework/Versions/2.7/bin"
 
@@ -93,20 +95,17 @@ class Gnuradio < Formula
 
     resource("cppzmq").stage include.to_s
 
-    args = std_cmake_args
-    args << "-DGR_PKG_CONF_DIR=#{etc}/gnuradio/conf.d"
-    args << "-DGR_PREFSDIR=#{etc}/gnuradio/conf.d"
-    args << "-DENABLE_DEFAULT=OFF"
+    args = std_cmake_args + %W[
+      -DGR_PKG_CONF_DIR=#{etc}/gnuradio/conf.d
+      -DGR_PREFSDIR=#{etc}/gnuradio/conf.d
+      -DENABLE_DEFAULT=OFF
+    ]
 
     enabled = %w[GR_ANALOG GR_FFT VOLK GR_FILTER GNURADIO_RUNTIME
                  GR_BLOCKS GR_PAGER GR_NOAA GR_CHANNELS GR_AUDIO
                  GR_FCD GR_VOCODER GR_FEC GR_DIGITAL GR_DTV GR_ATSC
                  GR_TRELLIS GR_ZEROMQ GR_WAVELET GR_UHD DOXYGEN SPHINX
                  PYTHON GR_UTILS]
-    enabled << "GRC" if build.with? "pygtk"
-    enabled << "GR_WXGUI" if build.with? "wxpython"
-    enabled << "GR_VIDEO_SDL" if build.with? "sdl"
-
     enabled.each do |c|
       args << "-DENABLE_#{c}=ON"
     end

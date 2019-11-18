@@ -1,24 +1,24 @@
 class Fontforge < Formula
   desc "Command-line outline and bitmap font editor/converter"
   homepage "https://fontforge.github.io"
-  url "https://github.com/fontforge/fontforge/releases/download/20170731/fontforge-dist-20170731.tar.xz"
-  sha256 "840adefbedd1717e6b70b33ad1e7f2b116678fa6a3d52d45316793b9fd808822"
-  revision 3
+  url "https://github.com/fontforge/fontforge/releases/download/20190801/fontforge-20190801.tar.gz"
+  sha256 "d92075ca783c97dc68433b1ed629b9054a4b4c74ac64c54ced7f691540f70852"
+  revision 1
 
   bottle do
-    rebuild 1
-    sha256 "7917392b435917468ce7f8e4c31822ba376d901cc9303ab354c44ef8155fad49" => :mojave
-    sha256 "5a04540e69d56213fb104a968ad9ce2bc5c2ca152d5c3e0ecfccbd93981f80dc" => :high_sierra
-    sha256 "7c4e3def1ac5f5b374e773d6dd7bda60b09eb304a19c6b231a292125d4d14915" => :sierra
+    cellar :any
+    sha256 "5491094eb17337498a90804ce72fd154cdf643272467312a9dc1cfc1f5e56a82" => :catalina
+    sha256 "ceade22a6cbbecff190fedd4be117cfce9c6036c20a51de701f82a69cd0343a5" => :mojave
+    sha256 "0e91f1858662fa08537287af6e1884ef94377a46a5eb24cec61f3f9f41c48e8a" => :high_sierra
   end
-
-  option "with-extra-tools", "Build with additional font tools"
 
   depends_on "pkg-config" => :build
   depends_on "cairo"
   depends_on "fontconfig"
+  depends_on "freetype"
   depends_on "gettext"
   depends_on "giflib"
+  depends_on "glib"
   depends_on "jpeg"
   depends_on "libpng"
   depends_on "libspiro"
@@ -26,25 +26,16 @@ class Fontforge < Formula
   depends_on "libtool"
   depends_on "libuninameslist"
   depends_on "pango"
-  depends_on "python@2"
-
-  # Remove for > 20170731
-  # Fix "fatal error: 'mem.h' file not found" for --with-extra-tools
-  # Upstream PR from 22 Sep 2017 https://github.com/fontforge/fontforge/pull/3156
-  patch do
-    url "https://github.com/fontforge/fontforge/commit/9f69bd0f9.patch?full_index=1"
-    sha256 "f8afa9a6ab7a71650a3f013d9872881754e1ba4a265f693edd7ba70f2ec1d525"
-  end
+  depends_on "python"
+  depends_on "readline"
+  uses_from_macos "libxml2"
 
   def install
-    ENV["PYTHON_CFLAGS"] = `python-config --cflags`.chomp
-    ENV["PYTHON_LIBS"] = `python-config --ldflags`.chomp
-
-    # Fix header includes to avoid crash at runtime:
-    # https://github.com/fontforge/fontforge/pull/3147
-    inreplace "fontforgeexe/startnoui.c", "#include \"fontforgevw.h\"", "#include \"fontforgevw.h\"\n#include \"encoding.h\""
+    ENV["PYTHON_CFLAGS"] = `python3-config --cflags`.chomp
+    ENV["PYTHON_LIBS"] = `python3-config --ldflags`.chomp
 
     system "./configure", "--prefix=#{prefix}",
+                          "--enable-python-scripting=3",
                           "--disable-dependency-tracking",
                           "--disable-silent-rules",
                           "--without-x"
@@ -75,7 +66,8 @@ class Fontforge < Formula
   test do
     system bin/"fontforge", "-version"
     system bin/"fontforge", "-lang=py", "-c", "import fontforge; fontforge.font()"
-    ENV.append_path "PYTHONPATH", lib/"python2.7/site-packages"
-    system "python2.7", "-c", "import fontforge; fontforge.font()"
+    xy = Language::Python.major_minor_version "python3"
+    ENV.append_path "PYTHONPATH", lib/"python#{xy}/site-packages"
+    system "python3", "-c", "import fontforge; fontforge.font()"
   end
 end

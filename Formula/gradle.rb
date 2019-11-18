@@ -1,19 +1,16 @@
 class Gradle < Formula
   desc "Open-source build automation tool based on the Groovy and Kotlin DSL"
   homepage "https://www.gradle.org/"
-  url "https://services.gradle.org/distributions/gradle-4.10.2-all.zip"
-  sha256 "b7aedd369a26b177147bcb715f8b1fc4fe32b0a6ade0d7fd8ee5ed0c6f731f2c"
+  url "https://services.gradle.org/distributions/gradle-6.0-all.zip"
+  sha256 "a1eb4439c0a85bc7e64a22658d862e43b7d0ddfbf69a7abf6256e0b7514295df"
 
   bottle :unneeded
 
-  option "with-all", "Installs Javadoc, examples, and source in addition to the binaries"
-
-  depends_on :java => "1.7+"
+  depends_on :java => "1.8+"
 
   def install
     rm_f Dir["bin/*.bat"]
-    libexec.install %w[bin lib]
-    libexec.install %w[docs media samples src] if build.with? "all"
+    libexec.install %w[bin docs lib samples src]
     (bin/"gradle").write_env_script libexec/"bin/gradle", Language::Java.overridable_java_home_env
   end
 

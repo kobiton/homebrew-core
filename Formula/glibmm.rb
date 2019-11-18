@@ -1,31 +1,20 @@
 class Glibmm < Formula
   desc "C++ interface to glib"
   homepage "https://www.gtkmm.org/"
-  url "https://download.gnome.org/sources/glibmm/2.56/glibmm-2.56.0.tar.xz"
-  sha256 "6e74fcba0d245451c58fc8a196e9d103789bc510e1eee1a9b1e816c5209e79a9"
-  revision 1
+  url "https://download.gnome.org/sources/glibmm/2.62/glibmm-2.62.0.tar.xz"
+  sha256 "36659f13cc73282392d1305858f3bbca46fbd1ce2f078cc9db8b9f79b2e93cfe"
 
   bottle do
     cellar :any
-    sha256 "ff9adfa73059275ed61ce0b2d1098a65ab04381593e0c0871070a9efc0c7c053" => :mojave
-    sha256 "2c49d64310a4ed25cff3b1b82591a779b4febcdfde5cbf02249cc1c70af08671" => :high_sierra
-    sha256 "b3458579f8b8db463aad37b6ede1beba71ede39a54ba35834024b2d418e0d217" => :sierra
-    sha256 "7147107e5cafa29049f436f811169570f5fb5e7ec7a371b96906511bc51dd9ea" => :el_capitan
+    sha256 "9dd137d8cee10a3604a20c0c5318db7e9fb68e49328727d4b712589c8293d1a7" => :catalina
+    sha256 "161bab6c21bb5137f9c4603b0f6873cc3a8b30bfbfcdf49bb30812d070ebdfb1" => :mojave
+    sha256 "df7fe42bb76f0b9ca5b9e17a1dfde4419d8c99a92e11a3c1237be1d9e6795449" => :high_sierra
+    sha256 "f658b7bdcf4888b849b06d10c0c9686a8f624ceefec5579921f265f561d0076f" => :sierra
   end
 
   depends_on "pkg-config" => :build
   depends_on "glib"
-  depends_on "libsigc++"
-
-  # Remove for > 2.56.0
-  # Upstream commit from 26 Apr 2018 "ustring: Fix wchar conversion on macOS with libc++"
-  # See https://bugzilla.gnome.org/show_bug.cgi?id=795338
-  patch do
-    url "https://github.com/GNOME/glibmm/commit/f1530eca.patch?full_index=1"
-    sha256 "ae8990b93e29b47903da7eed8676cf806b34fd3b45d6bd5fb3d7a4f040b9f4c9"
-  end
-
-  needs :cxx11
+  depends_on "libsigc++@2"
 
   def install
     ENV.cxx11
@@ -46,7 +35,7 @@ class Glibmm < Formula
     EOS
     gettext = Formula["gettext"]
     glib = Formula["glib"]
-    libsigcxx = Formula["libsigc++"]
+    libsigcxx = Formula["libsigc++@2"]
     flags = %W[
       -I#{gettext.opt_include}
       -I#{glib.opt_include}/glib-2.0

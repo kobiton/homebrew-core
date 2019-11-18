@@ -3,13 +3,13 @@ class Wesnoth < Formula
   homepage "https://www.wesnoth.org/"
   url "https://downloads.sourceforge.net/project/wesnoth/wesnoth-1.12/wesnoth-1.12.6/wesnoth-1.12.6.tar.bz2"
   sha256 "a50f384cead15f68f31cfa1a311e76a12098428702cb674d3521eb169eb92e4e"
-  revision 7
+  revision 10
   head "https://github.com/wesnoth/wesnoth.git"
 
   bottle do
-    sha256 "415c02b6c6ff9664fb11f41ff9a7441356b3fb70eb4efc1d9dd21c3a9de7b370" => :high_sierra
-    sha256 "d1440a43271ccec672400bd6daefae1c448da134c35d4c282dffa038e934ed33" => :sierra
-    sha256 "f4de6ae40204fa43e16e0a970e508d7b9869965b06b1170e3a8b1c935f187c9c" => :el_capitan
+    sha256 "2edf0d0aefea381bb679a1530ad07029ba01c0fbf28ac61ca84e229b07263c64" => :mojave
+    sha256 "13978002d0394113986b5afd21a521dbbe20dde151c43cff0765b3513e9238ec" => :high_sierra
+    sha256 "48457b031fc7b69e86ac34f912031957cf53f76f1b6767f3a22f0b4f1071c3f5" => :sierra
   end
 
   depends_on "gettext" => :build
@@ -37,7 +37,7 @@ class Wesnoth < Formula
     args << "wesnothd"
     args << "-j#{ENV.make_jobs}"
 
-    scons *args
+    system "scons", *args
   end
 
   test do

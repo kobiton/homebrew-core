@@ -2,20 +2,15 @@ class Dbus < Formula
   # releases: even (1.10.x) = stable, odd (1.11.x) = development
   desc "Message bus system, providing inter-application communication"
   homepage "https://wiki.freedesktop.org/www/Software/dbus"
-  url "https://dbus.freedesktop.org/releases/dbus/dbus-1.12.10.tar.gz"
-  mirror "https://mirrors.ocf.berkeley.edu/debian/pool/main/d/dbus/dbus_1.12.10.orig.tar.gz"
-  sha256 "4b693d24976258c3f2fa9cc33ad9288c5fbfa7a16481dbd9a8a429f7aa8cdcf7"
+  url "https://dbus.freedesktop.org/releases/dbus/dbus-1.12.16.tar.gz"
+  mirror "https://deb.debian.org/debian/pool/main/d/dbus/dbus_1.12.16.orig.tar.gz"
+  sha256 "54a22d2fa42f2eb2a871f32811c6005b531b9613b1b93a0d269b05e7549fec80"
 
   bottle do
-    sha256 "b1d6af78d432ecd6f19c263241e56db3a13ef5cd259de11d0d737342721aa271" => :mojave
-    sha256 "5c87cb594f4601155728d50a8dfbebaa1f11c790ed251131f38aa9ac2ccf69bf" => :high_sierra
-    sha256 "e7e62579e173286de3cad5bfb2ecccaaac9f26e8dcbf3b0349f195a5ad7ddcd9" => :sierra
-    sha256 "0abbf97ba40e314370f5c7d325f770a27820ad73672109b818032241a8b45172" => :el_capitan
-  end
-
-  devel do
-    url "https://dbus.freedesktop.org/releases/dbus/dbus-1.13.6.tar.gz"
-    sha256 "b533693232d36d608a09f70c15440c1816319bac3055433300d88019166c1ae4"
+    sha256 "8462e874fa817d0bf96c6c5517bcb5083bd79eb00ac2cfc2edfc6f9a9f10211e" => :catalina
+    sha256 "651603d019666efaa74e73d4cfec6430e991c3e241ff05dfd4a393d6f3d0695f" => :mojave
+    sha256 "0cb8e6e96ecd0c85c6690ebd0f7a7688f1284024ceac12707cf555a9abdb6866" => :high_sierra
+    sha256 "75faeefeaff6028bec5dbf4c04c40d7d4def0ff50797b9f4b3520ec34c4e4111" => :sierra
   end
 
   head do
@@ -58,6 +53,10 @@ class Dbus < Formula
                           "--without-x",
                           "--disable-tests"
     system "make", "install"
+  end
+
+  def plist_name
+    "org.freedesktop.dbus-session"
   end
 
   def post_install

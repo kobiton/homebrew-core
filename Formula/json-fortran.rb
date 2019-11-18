@@ -1,19 +1,17 @@
 class JsonFortran < Formula
   desc "Fortran 2008 JSON API"
   homepage "https://github.com/jacobwilliams/json-fortran"
-  url "https://github.com/jacobwilliams/json-fortran/archive/6.9.0.tar.gz"
-  sha256 "bf19159372f580eab12e711fef8ac637624d32766dd3c30534007d1b4091f092"
+  url "https://github.com/jacobwilliams/json-fortran/archive/7.1.0.tar.gz"
+  sha256 "e7aa1f6e09b25ebacb17188147380c3f8c0a254754cd24869c001745fcecc9e6"
   head "https://github.com/jacobwilliams/json-fortran.git"
 
   bottle do
     cellar :any
-    sha256 "849c80fbab8cfb26e0071058a52515c2f65b648286a62f8033ba45e0a8f8c391" => :mojave
-    sha256 "3437332c2202e071910e8c6c16211f3df9e3cea332baa24faa3a59ff84b15bed" => :high_sierra
-    sha256 "3be6757ac7c898fe087798c99a34ee2b0fd47538facefcc71cfb9608f42fca27" => :sierra
-    sha256 "d639105a7407e9bf5d4353c09d5114d4173578bf0a4900253dd658b2fe5e9d92" => :el_capitan
+    sha256 "6c78e3ce735562f37b3f37a6d69363fdc75ffaf86f4d77a216b0aa49a9ac02a0" => :catalina
+    sha256 "cb39426c08042ad364fac5a0d33dbfb3fa1aaf1cb4dbfca588f55c1377682482" => :mojave
+    sha256 "2f485777f4d42f9efc26e04d5e9e5022dd125a98fae3836e68c2cc4dd380ee2a" => :high_sierra
+    sha256 "02426bf82ef55161c1b698fa68d455f35705bad09e04b07586d8ed9f44775f90" => :sierra
   end
-
-  option "with-unicode-support", "Build json-fortran to support unicode text in json objects and files"
 
   depends_on "cmake" => :build
   depends_on "ford" => :build
@@ -21,10 +19,9 @@ class JsonFortran < Formula
 
   def install
     mkdir "build" do
-      args = std_cmake_args
-      args << "-DUSE_GNU_INSTALL_CONVENTION:BOOL=TRUE" # Use more GNU/Homebrew-like install layout
-      args << "-DENABLE_UNICODE:BOOL=TRUE" if build.with? "unicode-support"
-      system "cmake", "..", *args
+      system "cmake", "..", *std_cmake_args,
+                            "-DUSE_GNU_INSTALL_CONVENTION:BOOL=TRUE",
+                            "-DENABLE_UNICODE:BOOL=TRUE"
       system "make", "install"
     end
   end

@@ -1,8 +1,8 @@
 class AtlassianCli < Formula
   desc "Command-line interface clients for Atlassian products"
   homepage "https://bobswift.atlassian.net/wiki/pages/viewpage.action?pageId=1966101"
-  url "https://bobswift.atlassian.net/wiki/download/attachments/16285777/atlassian-cli-8.0.0-distribution.zip"
-  sha256 "cdba80bf44e8550ec9755c5b82711a0c5d32d2dbfe15bdbb55a75657603320b0"
+  url "https://bobswift.atlassian.net/wiki/download/attachments/16285777/atlassian-cli-9.0.0-distribution.zip"
+  sha256 "3bf1760d6d2dae8fad7cfba9666de61ac0f58883c5c2c2744a4a90356670f1a7"
 
   bottle :unneeded
 
@@ -11,7 +11,6 @@ class AtlassianCli < Formula
   def install
     Dir.glob("*.sh") do |f|
       cmd = File.basename(f, ".sh")
-      inreplace cmd + ".sh", "`dirname $0`", share
       bin.install cmd + ".sh" => cmd
     end
     share.install "lib", "license"

@@ -1,19 +1,12 @@
 class Tomcat < Formula
   desc "Implementation of Java Servlet and JavaServer Pages"
   homepage "https://tomcat.apache.org/"
-  url "https://www.apache.org/dyn/closer.cgi?path=/tomcat/tomcat-9/v9.0.12/bin/apache-tomcat-9.0.12.tar.gz"
-  sha256 "1fa3d15dcbe7b1addf03cab39b27908b9e5bc3a26ab0c268c0abcc88920f51dc"
+  url "https://www.apache.org/dyn/closer.cgi?path=/tomcat/tomcat-9/v9.0.27/bin/apache-tomcat-9.0.27.tar.gz"
+  sha256 "6616a150e1593ef1a622298aaef9b889db70c8ee5122d35ad52adfcda1084d10"
 
   bottle :unneeded
 
-  option "with-fulldocs", "Install full documentation locally"
-
   depends_on :java => "1.8+"
-
-  resource "fulldocs" do
-    url "https://www.apache.org/dyn/closer.cgi?path=/tomcat/tomcat-9/v9.0.12/bin/apache-tomcat-9.0.12-fulldocs.tar.gz"
-    sha256 "3331252fefc6f768bdd0bd23d1e092d4f9883d4d8b01f3b15a8a873dd5821b83"
-  end
 
   def install
     # Remove Windows scripts
@@ -23,8 +16,6 @@ class Tomcat < Formula
     prefix.install %w[NOTICE LICENSE RELEASE-NOTES RUNNING.txt]
     libexec.install Dir["*"]
     bin.install_symlink "#{libexec}/bin/catalina.sh" => "catalina"
-
-    (pkgshare/"fulldocs").install resource("fulldocs") if build.with? "fulldocs"
   end
 
   plist_options :manual => "catalina run"

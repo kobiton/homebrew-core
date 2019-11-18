@@ -1,15 +1,25 @@
 class Watchman < Formula
   desc "Watch files and take action when they change"
   homepage "https://github.com/facebook/watchman"
-  url "https://github.com/facebook/watchman/archive/v4.9.0.tar.gz"
-  sha256 "1f6402dc70b1d056fffc3748f2fdcecff730d8843bb6936de395b3443ce05322"
-  revision 1
+  revision 3
   head "https://github.com/facebook/watchman.git"
 
+  stable do
+    url "https://github.com/facebook/watchman/archive/v4.9.0.tar.gz"
+    sha256 "1f6402dc70b1d056fffc3748f2fdcecff730d8843bb6936de395b3443ce05322"
+
+    # Upstream commit from 1 Sep 2017: "Have bin scripts use iter() method for python3"
+    patch do
+      url "https://github.com/facebook/watchman/commit/17958f7d.diff?full_index=1"
+      sha256 "edad4971fceed2aecfa2b9c3e8e22c455bfa073732a3a0c77b030e506ee860af"
+    end
+  end
+
   bottle do
-    sha256 "3d3a3d943fc99ebb189798a632c1284e9cf0c33c3e79861af37e2c1182806649" => :mojave
-    sha256 "188dc7775797d76f4f092ec010d804990755244f0feb39989b88a4fca4e5da23" => :high_sierra
-    sha256 "3dfb7b952b099624171987dfec946c39b74dd8f930c005e14cdd7c9d98275981" => :sierra
+    sha256 "7c01f1d4e6e8c15ec4d3625520b7e43e245d22f33ce7319dc962b7cb0b9b3d5d" => :catalina
+    sha256 "a9b3039561abdde021ba080ee1e37984f7f56184476a4ffee1db476561f92d83" => :mojave
+    sha256 "158a3dcce76f01446c9264a6f623a1c6be339118760ce61d88a9d38e2676ad45" => :high_sierra
+    sha256 "013faefc9001613c58680e5626b36fe943ca943649882054fbfbefccf4796415" => :sierra
   end
 
   depends_on "autoconf" => :build
@@ -17,7 +27,7 @@ class Watchman < Formula
   depends_on "libtool" => :build
   depends_on "pkg-config" => :build
   depends_on :macos => :yosemite # older versions don't support fstatat(2)
-  depends_on "openssl"
+  depends_on "openssl@1.1"
   depends_on "pcre"
   depends_on "python"
 

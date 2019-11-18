@@ -1,29 +1,36 @@
 class Pari < Formula
   desc "Computer algebra system designed for fast computations in number theory"
   homepage "https://pari.math.u-bordeaux.fr/"
-  url "https://pari.math.u-bordeaux.fr/pub/pari/unix/pari-2.11.0.tar.gz"
-  sha256 "3835caccaa3e0c64764521032d89efeb8773cce841f6655fec6d58e790f4c9a1"
+  url "https://pari.math.u-bordeaux.fr/pub/pari/unix/pari-2.11.2.tar.gz"
+  sha256 "4a6532b3c77350363fa618ead5cd794a172d7b7e5757a28f7788e658b5469339"
 
   bottle do
-    sha256 "62dd478f21d266b95bc7ef62a1cefbb760416540fa9ad4c481dab4160c61f6ae" => :mojave
-    sha256 "695ad213a9fbb81ca3ae948b5b597f5bd992e4f016fd04631aa031f455a2a218" => :high_sierra
-    sha256 "5763ae6604f64710145363b7eaf3e6a2c14f759f05329222da4ef973da1ceeed" => :sierra
-    sha256 "0445d9d8f3cfe90c13ed276b869b847667a4e610dc99477f02e4af356c02eff7" => :el_capitan
+    rebuild 1
+    sha256 "ce1a71dc72b9b3dec85f30da62171caca919ffb253309d516e0b92bbc0533a6a" => :catalina
+    sha256 "4e083fec22c646c2796cf0adb381b03d4e067b355a65bfccd7516ae891f3e57b" => :mojave
+    sha256 "dba2c279f5f8ed677a7f248c7d575bf3462623390e50e4243fac9b118e7009a7" => :high_sierra
+    sha256 "021f368e37e52f9dcb22fc665f8d5065532f8bd1a91bc8d9f817f6c4c8779970" => :sierra
   end
 
   depends_on "gmp"
   depends_on "readline"
-  depends_on :x11
 
   def install
     readline = Formula["readline"].opt_prefix
     gmp = Formula["gmp"].opt_prefix
     system "./Configure", "--prefix=#{prefix}",
                           "--with-gmp=#{gmp}",
-                          "--with-readline=#{readline}"
+                          "--with-readline=#{readline}",
+                          "--graphic=ps"
     # make needs to be done in two steps
     system "make", "all"
     system "make", "install"
+  end
+
+  def caveats; <<~EOS
+    If you need the graphical plotting functions you need to install X11 with:
+      brew cask install xquartz
+  EOS
   end
 
   test do

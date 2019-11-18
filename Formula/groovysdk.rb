@@ -1,12 +1,13 @@
 class Groovysdk < Formula
   desc "SDK for Groovy: a Java-based scripting language"
-  homepage "http://www.groovy-lang.org"
-  url "https://dl.bintray.com/groovy/maven/apache-groovy-sdk-2.5.2.zip"
-  sha256 "82cf4f424a431b0ebab97e7302cfbe7c0b15cd5d2ff87cb0d9af5003e2ea247b"
+  homepage "https://www.groovy-lang.org/"
+  url "https://dl.bintray.com/groovy/maven/apache-groovy-sdk-2.5.8.zip"
+  sha256 "37e030bbb14746869e822702db1c6dd57d7d077ceef4c12938b1c6c4d341f459"
 
   bottle :unneeded
 
-  depends_on :java => "1.6+"
+  # Groovy 2.5 requires JDK8+ to build and JDK7 is the minimum version of the JRE that we support.
+  depends_on :java => "1.7+"
 
   conflicts_with "groovy", :because => "both install the same binaries"
 

@@ -1,33 +1,21 @@
 class Ice < Formula
   desc "Comprehensive RPC framework"
   homepage "https://zeroc.com"
-  url "https://github.com/zeroc-ice/ice/archive/v3.7.1.tar.gz"
-  sha256 "b1526ab9ba80a3d5f314dacf22674dff005efb9866774903d0efca5a0fab326d"
-  revision 1
+  url "https://github.com/zeroc-ice/ice/archive/v3.7.3.tar.gz"
+  sha256 "90d71f0c5e779aa6988cc77371fde6d25df33b14014f9ac7f6f29bfbfdd9a457"
 
   bottle do
     cellar :any
-    sha256 "6078f948a29465feb24209e56ab6e2a98cdf81200c362c391492fe2f0a89e734" => :mojave
-    sha256 "5e82eaebcc364dda7720231d272636d799d3287869d7f56be68141427641efdf" => :high_sierra
-    sha256 "1c1f3181f3e8b82cda5810b4317edd4a40b4185700c2f7b095d1be970d4c539b" => :sierra
+    sha256 "3fdec454548d572b2f8524b326570a404c227e546ec4040d302ddb46f7949f07" => :catalina
+    sha256 "6a0804cfa9537a78d77b4c0304fb8ade3238795c3b152ddf2b5f86f05c770205" => :mojave
+    sha256 "5eced597ad649064bb8386c1b5a19e43f4774ae56587f280eb988fd10cd2d9a1" => :high_sierra
   end
-
-  option "with-java", "Build Ice for Java and the IceGrid GUI app"
 
   depends_on "lmdb"
-  depends_on :macos => :mavericks
   depends_on "mcpp"
-  depends_on :java => ["1.8+", :optional]
-
-  patch do
-    url "https://github.com/zeroc-ice/ice/compare/v3.7.1..v3.7.1-xcode10.patch?full_index=1"
-    sha256 "28eff5dd6cb6065716a7664f3973213a2e5186ddbdccb1c1c1d832be25490f1b"
-  end
 
   def install
     ENV.O2 # Os causes performance issues
-    # Ensure Gradle uses a writable directory even in sandbox mode
-    ENV["GRADLE_USER_HOME"] = "#{buildpath}/.gradle"
 
     args = [
       "prefix=#{prefix}",
@@ -36,12 +24,24 @@ class Ice < Formula
       "LMDB_HOME=#{Formula["lmdb"].opt_prefix}",
       "CONFIGS=shared cpp11-shared xcodesdk cpp11-xcodesdk",
       "PLATFORMS=all",
-      # We don't build slice2py, slice2js, slice2rb to prevent clashes with
-      # the translators installed by the PyPI/GEM/npm packages.
-      "SKIP=slice2confluence slice2py slice2rb slice2js",
-      "LANGUAGES=cpp objective-c #{build.with?("java") ? "java java-compat" : ""}",
+      "SKIP=slice2confluence",
+      "LANGUAGES=cpp objective-c",
     ]
     system "make", "install", *args
+
+    (libexec/"bin").mkpath
+    %w[slice2py slice2rb slice2js].each do |r|
+      mv bin/r, libexec/"bin"
+    end
+  end
+
+  def caveats; <<~EOS
+    slice2py, slice2js and slice2rb were installed in:
+
+      #{opt_libexec}/bin
+
+    You may wish to add this directory to your PATH.
+  EOS
   end
 
   test do

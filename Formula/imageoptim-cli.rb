@@ -3,35 +3,24 @@ require "language/node"
 class ImageoptimCli < Formula
   desc "CLI for ImageOptim, ImageAlpha and JPEGmini"
   homepage "https://jamiemason.github.io/ImageOptim-CLI/"
-  url "https://github.com/JamieMason/ImageOptim-CLI/archive/2.0.3.tar.gz"
-  sha256 "47fc8a1f14478389cb71dc8a03ac6b3176ba311d1a2390867b792b60ef209fb3"
-  revision 1
+  url "https://github.com/JamieMason/ImageOptim-CLI/archive/3.0.2.tar.gz"
+  sha256 "957261d38fa85e0ec377efb2eceae695e3d87b621bae64853f9f5163efd3594b"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "1c507116de8b59a3437eb91b73ee7997b91f54409e7a57b84c9bd92aae88008e" => :mojave
-    sha256 "32d15b612091c5a6efe37374f6a49245579561e9a46b651875fef52241efc76a" => :high_sierra
-    sha256 "1df36a9f85175e39aeadde4dadcef277dd948c84a1ca8a1dd396e6d25894e3c0" => :sierra
-    sha256 "1f061b2328960f327bdba6e6ef3447d4d4c789a3bc9e8e0b6229a21d25ee7533" => :el_capitan
+    sha256 "56a9b2dba8f47850a26c335311f8c436b683c0b92ef5ab0b83e91688cf64ec7a" => :catalina
+    sha256 "b7b1923ed31ab32540a5dffcf798675401ca48249fae54f49d67bc6c78feede9" => :mojave
+    sha256 "6f1aa4b2e4de3e7a1502f1f8747283589697e5f0f0506f4d24acd53381311706" => :high_sierra
   end
 
-  depends_on "node" => :build
-
-  resource "node" do
-    url "https://nodejs.org/dist/v10.9.0/node-v10.9.0.tar.xz"
-    sha256 "d17ef8eb72d6a31f50a663d554beb9bcb55aa2ce57cf189abfc9b1ba20530d02"
-  end
+  depends_on "node@10" => :build
+  depends_on "yarn" => :build
 
   def install
-    # build node from source instead of downloading precompiled nexe node binary
-    resource("node").stage buildpath/".brew_home/.nexe"
-    inreplace "package.json", "\"build:bin\": \"nexe --target 'mac-x64-10.0.0' --input",
-      "\"build:bin\": \"nexe --build --target 'mac-x64-#{resource("node").version}' --loglevel=verbose --input"
-
-    system "npm", "ci", *Language::Node.local_npm_install_args
-    system "npm", "run-script", "build"
-    libexec.install "dist", "osascript"
-    bin.install_symlink libexec/"dist/imageoptim"
+    system "yarn"
+    system "npm", "run", "build"
+    system "npm", "install", *Language::Node.std_npm_install_args(libexec)
+    bin.install_symlink Dir["#{libexec}/bin/*"]
   end
 
   test do

@@ -3,14 +3,14 @@ require "language/node"
 class Serverless < Formula
   desc "Build applications with serverless architectures"
   homepage "https://serverless.com"
-  url "https://registry.npmjs.org/serverless/-/serverless-1.32.0.tgz"
-  sha256 "ad53df78a15e85b7530f3c4bf8c6684247337ce964209789fcf6b818da52e9ea"
+  url "https://github.com/serverless/serverless/archive/v1.57.0.tar.gz"
+  sha256 "24efd84dd69c00ec49fd0dcef772177344b79f42362c0d0af4471b46cbfd2c1f"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "85c8ca2b6725105b84b37e1477fdd6e824d8dc0c31433ec3ccbf589a8aa9febd" => :mojave
-    sha256 "e1d39ab6b8444524adb4b7e4a8a927522f0739fcc2c20f60f3a41a29a90cedad" => :high_sierra
-    sha256 "b6e661570b2937b9d079767cdcabc2cf4eeeb45ca456f8a640f0a0936e0e593e" => :sierra
+    sha256 "5a57df00a3c804cb6d75b19aa9d356e35124493f36c4dff1b43e1f499a95fc19" => :catalina
+    sha256 "3d3d30f4dfe01d600df156e6ebb6de225de8d369af6c259833bb369fe1558e69" => :mojave
+    sha256 "48adbbc42c517143e526d7af7e6581bdc5ff9f6745f3cc842e99739c4ed83891" => :high_sierra
   end
 
   depends_on "node"
@@ -29,6 +29,8 @@ class Serverless < Formula
         stage: dev
         region: eu-west-1
     EOS
+
+    system("#{bin}/serverless config credentials --provider aws --key aa --secret xx")
     output = shell_output("#{bin}/serverless package")
     assert_match "Serverless: Packaging service...", output
   end

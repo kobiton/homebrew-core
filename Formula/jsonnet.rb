@@ -1,25 +1,23 @@
 class Jsonnet < Formula
   desc "Domain specific configuration language for defining JSON data"
   homepage "https://jsonnet.org/"
-  url "https://github.com/google/jsonnet/archive/v0.11.2.tar.gz"
-  sha256 "c7c33f159a9391e90ab646b3b5fd671dab356d8563dc447ee824ecd77f4609f8"
+  url "https://github.com/google/jsonnet/archive/v0.14.0.tar.gz"
+  sha256 "7f41cdc4cb366cfc1de3aada926a2f7e640ef025887eb05cdaf8342d6e4e088b"
+  head "https://github.com/google/jsonnet.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "085740ce03c6801c58895b554ab23eae2ac8a8e2a1c528519324ccf543965e42" => :mojave
-    sha256 "c146c572e65547f42d39580bbaed91539928c7d54ed6c1970d24e4507c53d638" => :high_sierra
-    sha256 "b35454f33de80b8129bab932aa4979374bc729a4b69211e3ac2800ac4a47849a" => :sierra
-    sha256 "813122fb2e3cb40932a4c270ed9b9163055df3898a2868bda9e18cf06b403e24" => :el_capitan
+    sha256 "34027529c69b14c27c5a903bd1ee6c6fc368b3d9115b4c63e7cb93ed1e64a2e3" => :catalina
+    sha256 "51c48fabc272d0fd1affde0bc7025b067913067e68fe5b142815d92270b151a0" => :mojave
+    sha256 "5e90257ebfb7be1662553482275a2507a858642659703af00ee339e125edc810" => :high_sierra
+    sha256 "3bcb8c5591acc3566d1ed94d2e21b9988d1622e203de62c5fe110996b84564ca" => :sierra
   end
-
-  depends_on :macos => :mavericks
-
-  needs :cxx11
 
   def install
     ENV.cxx11
     system "make"
     bin.install "jsonnet"
+    bin.install "jsonnetfmt"
   end
 
   test do
@@ -35,11 +33,11 @@ class Jsonnet < Formula
 
     expected_output = {
       "person1" => {
-        "name" => "Alice",
+        "name"    => "Alice",
         "welcome" => "Hello Alice!",
       },
       "person2" => {
-        "name" => "Bob",
+        "name"    => "Bob",
         "welcome" => "Hello Bob!",
       },
     }

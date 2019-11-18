@@ -1,13 +1,14 @@
 class Clamav < Formula
   desc "Anti-virus software"
   homepage "https://www.clamav.net/"
-  url "https://www.clamav.net/downloads/production/clamav-0.100.2.tar.gz"
-  sha256 "4a2e4f0cd41e62adb5a713b4a1857c49145cd09a69957e6d946ecad575206dd6"
+  url "https://www.clamav.net/downloads/production/clamav-0.102.0.tar.gz"
+  mirror "https://fossies.org/linux/misc/clamav-0.102.0.tar.gz"
+  sha256 "48fe188c46c793c2d0cb5c81c106e4690251aff6dc8aa6575dc688343291bee1"
 
   bottle do
-    sha256 "3c3cf0708c41acea618c1fa44514860e2f628525fff24b32bf7d9b889b0eae6d" => :mojave
-    sha256 "b32daa605ce566aeee7f8f6f69bc4b38f4ee5500284f74111eedefb22bfffc02" => :high_sierra
-    sha256 "23f15b3fd6bb54d16ca0d12c070160d42d7683a619045a1488049e410f279e8c" => :sierra
+    sha256 "4e78b3649f40ff746343f6593074cca1df281d480323e31e9d08e6cdda77e48a" => :catalina
+    sha256 "e0ca454c1ef225dcaf647a3f709819b73b28c66861256159b6718c80098f8a70" => :mojave
+    sha256 "887186bdbadcb1c2aec51a4152c8a244b4ee767fd162786f4625d2017fc97d2f" => :high_sierra
   end
 
   head do
@@ -19,10 +20,10 @@ class Clamav < Formula
   end
 
   depends_on "pkg-config" => :build
-  depends_on "openssl"
+  depends_on "json-c"
+  depends_on "openssl@1.1"
   depends_on "pcre"
-  depends_on "json-c" => :optional
-  depends_on "yara" => :optional
+  depends_on "yara"
 
   skip_clean "share/clamav"
 
@@ -33,15 +34,13 @@ class Clamav < Formula
       --prefix=#{prefix}
       --libdir=#{lib}
       --sysconfdir=#{etc}/clamav
-      --with-openssl=#{Formula["openssl"].opt_prefix}
-      --with-pcre=#{Formula["pcre"].opt_prefix}
       --disable-zlib-vcheck
       --enable-llvm=no
+      --with-libjson=#{Formula["json-c"].opt_prefix}
+      --with-openssl=#{Formula["openssl@1.1"].opt_prefix}
+      --with-pcre=#{Formula["pcre"].opt_prefix}
+      --with-zlib=#{MacOS.sdk_path_if_needed}/usr
     ]
-
-    args << (build.with?("json-c") ? "--with-libjson=#{Formula["json-c"].opt_prefix}" : "--without-libjson")
-    args << "--disable-yara" if build.without? "yara"
-    args << "--with-zlib=#{MacOS.sdk_path}/usr" unless MacOS::CLT.installed?
 
     pkgshare.mkpath
     system "autoreconf", "-fvi" if build.head?

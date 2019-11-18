@@ -4,23 +4,24 @@ class Agda < Formula
   include Language::Haskell::Cabal
 
   desc "Dependently typed functional programming language"
-  homepage "http://wiki.portal.chalmers.se/agda/"
+  homepage "https://wiki.portal.chalmers.se/agda/"
+  revision 1
 
   stable do
-    url "https://hackage.haskell.org/package/Agda-2.5.4.1/Agda-2.5.4.1.tar.gz"
-    sha256 "7759aa76936e6a35325c2e186a7546553921775155a426c8edc9a234f58ab72f"
+    url "https://hackage.haskell.org/package/Agda-2.6.0.1/Agda-2.6.0.1.tar.gz"
+    sha256 "7bb88a9cd4a556259907ccc71d54e2acc9d3e9ce05486ffdc83f721c7c06c0e8"
 
     resource "stdlib" do
       url "https://github.com/agda/agda-stdlib.git",
-          :revision => "a1a10b39d35b8fc40e87723a89f5682252d46380"
+          :tag      => "v1.1",
+          :revision => "dffb8023a63e7e66a90a8664752245971a915e66"
     end
   end
 
   bottle do
-    sha256 "ff07f75efd1934c0b729a2130bf55ce2c3a50eb8462998a4e905852f9215dca8" => :mojave
-    sha256 "a040cb1a273037a0ed2983be3c7ccddf8c606e762e976f22da5b7c89a7c5ae8a" => :high_sierra
-    sha256 "b097269cfd028fae6bf73db2eccb41e253d4962340ae962e104196e36868985b" => :sierra
-    sha256 "8b189b0fa2e7c2332d9ca1239c21f0dca0df714f59eb2fd5dd5e0483f33bd90a" => :el_capitan
+    sha256 "2baa8f12e01c319b627c0638fb507ab17e413836f8baf0eb8fc97f9fd6093e32" => :mojave
+    sha256 "9cd4769e7bb29ff52854efcdbba60a52efc69ac97c938667ae0aa424f11ea4e6" => :high_sierra
+    sha256 "9504f8bc0bf5fa728f97411307458945c8b29a6927e998794bcab8ca4506be1c" => :sierra
   end
 
   head do
@@ -32,8 +33,9 @@ class Agda < Formula
   end
 
   depends_on "cabal-install" => [:build, :test]
+  depends_on "emacs"
   depends_on "ghc"
-  depends_on "emacs" => :recommended
+  uses_from_macos "zlib"
 
   def install
     # install Agda core
@@ -56,10 +58,8 @@ class Agda < Formula
     end
 
     # compile the included Emacs mode
-    if build.with? "emacs"
-      system bin/"agda-mode", "compile"
-      elisp.install_symlink Dir["#{share}/*/Agda-#{version}/emacs-mode/*"]
-    end
+    system bin/"agda-mode", "compile"
+    elisp.install_symlink Dir["#{share}/*/Agda-#{version}/emacs-mode/*"]
   end
 
   def caveats; <<~EOS
@@ -118,7 +118,7 @@ class Agda < Formula
       postulate
         return : ∀ {A : Set} → A → IO A
 
-      {-# COMPILED return (\\_ -> return) #-}
+      {-# COMPILE GHC return = \\_ -> return #-}
 
       main : _
       main = return tt

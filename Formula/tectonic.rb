@@ -1,15 +1,16 @@
 class Tectonic < Formula
   desc "Modernized, complete, self-contained TeX/LaTeX engine"
   homepage "https://tectonic-typesetting.github.io/"
-  url "https://github.com/tectonic-typesetting/tectonic/archive/v0.1.8.tar.gz"
-  sha256 "e979988f89714e04e45caa894796ebce66e4ecba05bad8a9af0c323f574ed6af"
-  revision 1
+  url "https://github.com/tectonic-typesetting/tectonic/archive/v0.1.11.tar.gz"
+  sha256 "e700dc691dfd092adfe098b716992136343ddfac5eaabb1e8cfae4e63f8454c7"
+  revision 3
 
   bottle do
-    sha256 "6fcddff4f23ae86a90e1c374b5c4f2aea0ff4684ef2d98dc4186b8ea24e4e8f2" => :mojave
-    sha256 "3b3cd8477c1a706e05908a4a4131741fa69fd6e9a6f9acc4b91b66fff1d51e23" => :high_sierra
-    sha256 "49b3824f125845d9ecb6f1d7ff35878af459efb135ca9b180fc672f00c0ec02d" => :sierra
-    sha256 "57df3cd7e38a5e6d7777af8e3aa5b6da6515b00e8bd7c6ddbecc201b9c2e3ef6" => :el_capitan
+    cellar :any
+    rebuild 1
+    sha256 "f0ca20c3fb6590fc243d4d10b4c7441f0f9f2db02dc094bcc6b79f9b00021712" => :catalina
+    sha256 "444c5e60329bda85226028b831b300c46620fc7ffb398767bd55e657dc13b8c7" => :mojave
+    sha256 "73e06f54020a87762d6126205d26c7d50d216e3cbdb3778ed0828d32a89ef032" => :high_sierra
   end
 
   depends_on "pkg-config" => :build
@@ -19,7 +20,7 @@ class Tectonic < Formula
   depends_on "harfbuzz"
   depends_on "icu4c"
   depends_on "libpng"
-  depends_on "openssl"
+  depends_on "openssl@1.1"
 
   def install
     ENV.cxx11
@@ -27,15 +28,15 @@ class Tectonic < Formula
 
     # Ensure that the `openssl` crate picks up the intended library.
     # https://crates.io/crates/openssl#manual-configuration
-    ENV["OPENSSL_DIR"] = Formula["openssl"].opt_prefix
+    ENV["OPENSSL_DIR"] = Formula["openssl@1.1"].opt_prefix
 
-    system "cargo", "install", "--root", prefix, "--path", "."
-    pkgshare.install "tests"
+    system "cargo", "install", "--locked", "--root", prefix, "--path", "."
   end
 
   test do
-    system bin/"tectonic", "-o", testpath, pkgshare/"tests/xenia/paper.tex"
-    assert_predicate testpath/"paper.pdf", :exist?, "Failed to create paper.pdf"
-    assert_match "PDF document", shell_output("file paper.pdf")
+    (testpath/"test.tex").write 'Hello, World!\bye'
+    system bin/"tectonic", "-o", testpath, "--format", "plain", testpath/"test.tex"
+    assert_predicate testpath/"test.pdf", :exist?, "Failed to create test.pdf"
+    assert_match "PDF document", shell_output("file test.pdf")
   end
 end

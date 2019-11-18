@@ -1,21 +1,19 @@
 class CabalInstall < Formula
   desc "Command-line interface for Cabal and Hackage"
   homepage "https://www.haskell.org/cabal/"
-  url "https://hackage.haskell.org/package/cabal-install-2.4.0.0/cabal-install-2.4.0.0.tar.gz"
-  sha256 "1329e9564b736b0cfba76d396204d95569f080e7c54fe355b6d9618e3aa0bef6"
+  url "https://hackage.haskell.org/package/cabal-install-3.0.0.0/cabal-install-3.0.0.0.tar.gz"
+  sha256 "a432a7853afe96c0fd80f434bd80274601331d8c46b628cd19a0d8e96212aaf1"
   head "https://github.com/haskell/cabal.git", :branch => "2.4"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "874a6a0dfa5653320e4986c752f188c33eb7b73e64078f66d02a9506a8e1995d" => :mojave
-    sha256 "85a9f41433e5e530e94bf3cc7c43dbf367d789656c2737fdcf894126e343d61e" => :high_sierra
-    sha256 "9422f5c3a54c09076faede3a94c396cb52b1d31744497185ebca6736704a9315" => :sierra
-    sha256 "53c944614e215fac004e14b3b43a0d8201f58054ad59f782677278067bfe7909" => :el_capitan
+    sha256 "b18ee2ea7c31be5fa6068f73ba656136f363b7ef4d010ecfe95d78d7b89f9e18" => :mojave
+    sha256 "2e6375fa4bd525b2957d2c3ae46f7034649a0d700ef58f2720d1a4c2c43b0d1a" => :high_sierra
+    sha256 "b134c0335ad5ef2acee9d11ec855e5b5e44cde3eda343a92a6ebfd2231bed329" => :sierra
   end
 
   depends_on "ghc"
-
-  fails_with :clang if MacOS.version <= :lion # Same as ghc.rb
+  uses_from_macos "zlib"
 
   def install
     cd "cabal-install" if build.head?

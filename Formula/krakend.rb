@@ -1,25 +1,21 @@
 class Krakend < Formula
   desc "Ultra-High performance API Gateway built in Go"
   homepage "https://www.krakend.io/"
-  url "https://github.com/devopsfaith/krakend-ce/archive/0.6.1.tar.gz"
-  sha256 "f6dd5d8dbb5a3be488516ea5c0b3b234c80a330f7981891f64aaddd356302b2d"
+  url "https://github.com/devopsfaith/krakend-ce/archive/1.0.0.tar.gz"
+  sha256 "7626cb961c820e4b3b851a4cbd6d5d976288216891591c1be3a0c21d32477199"
 
   bottle do
     cellar :any_skip_relocation
-    rebuild 1
-    sha256 "484bfc764e1d77e76854664c400634ce08e3898ae08f98d621c4423165b9c9f1" => :mojave
-    sha256 "0f399b9eb0a9dcfe09ccebb99cd07205e3f4e3dc65766c7df98233e0d5edd7e8" => :high_sierra
-    sha256 "7705b40cd7b4c654ff8f76ac5e7933d7b7b485166eeb17016c4eccfd04eac590" => :sierra
+    sha256 "2169f9552692bdf17a81705929f8d4fda02a61d409107d7a06820ed96c1b5315" => :catalina
+    sha256 "f2af9a4f455794c0ed9ab63fb85da708b8f76f2aff154c6c6cdb204589ac80a0" => :mojave
+    sha256 "431731a0c27ed6a2dc4b6ef0be3bb73c97153bfd8190d9c62a7cb4a88cf12cc2" => :high_sierra
   end
 
-  depends_on "dep" => :build
   depends_on "go" => :build
 
   def install
-    ENV["GOPATH"] = buildpath
     (buildpath/"src/github.com/devopsfaith/krakend-ce").install buildpath.children
     cd "src/github.com/devopsfaith/krakend-ce" do
-      system "make", "deps"
       system "make", "build"
       bin.install "krakend"
       prefix.install_metafiles
@@ -40,7 +36,7 @@ class Krakend < Formula
         }
       }
     EOS
-    assert_match "Unsupported version", shell_output("#{bin}/krakend check -c krakend_unsupported_version.json 2>&1")
+    assert_match "Unsupported version", shell_output("#{bin}/krakend check -c krakend_unsupported_version.json 2>&1", 1)
 
     (testpath/"krakend_bad_file.json").write <<~EOS
       {
@@ -48,7 +44,7 @@ class Krakend < Formula
         "bad": file
       }
     EOS
-    assert_match "ERROR", shell_output("#{bin}/krakend check -c krakend_bad_file.json 2>&1")
+    assert_match "ERROR", shell_output("#{bin}/krakend check -c krakend_bad_file.json 2>&1", 1)
 
     (testpath/"krakend.json").write <<~EOS
       {

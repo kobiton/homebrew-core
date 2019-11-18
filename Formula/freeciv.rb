@@ -3,12 +3,13 @@ class Freeciv < Formula
   homepage "https://freeciv.wikia.com/"
   url "https://downloads.sourceforge.net/project/freeciv/Freeciv%202.6/2.6.0/freeciv-2.6.0.tar.bz2"
   sha256 "7c20399198d6c7d846fed9a69b02e01134ae5340a3ae0f99d1e38063ade6c999"
+  revision 2
 
   bottle do
-    sha256 "d7c127c1bbe7d964de0fe50dcd44515d644e805511b1418f05cf1b9c9285d9c8" => :mojave
-    sha256 "8ba7771987465daac08790cf9325c8d1c28df67cb55a1e3a257504618c1a803b" => :high_sierra
-    sha256 "e123133c2ebbac4dce6d5b443f25b94cf8c90359c745fdfcd43fa56110817bb9" => :sierra
-    sha256 "933abaa9e21126537f6864f2e6389480df81c8b38f4a47e2beea72ecfd0928da" => :el_capitan
+    sha256 "3de88c5d6230897f92b145eee14294bff55ce133c3e81258c77792b12f482996" => :catalina
+    sha256 "e1846824dd58a21076dcd3dcc92538d21ab0571c3e21dc13a39850194a192976" => :mojave
+    sha256 "3896454c21b30406c48d25877a7deed3aeee943219c976ac62ea9f7825d7903f" => :high_sierra
+    sha256 "dc55a50e4055b42302630bc6471eda4ac8c5fc6be45bed562824126901918765" => :sierra
   end
 
   head do

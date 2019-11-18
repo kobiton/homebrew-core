@@ -1,15 +1,13 @@
 class Ghostscript < Formula
   desc "Interpreter for PostScript and PDF"
   homepage "https://www.ghostscript.com/"
-  url "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs925/ghostpdl-9.25.tar.xz"
-  sha256 "9a6f382badeb86cc5474f0f8f85cde57c0b898bf236be00494754988d0aa0133"
+  url "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs950/ghostpdl-9.50.tar.gz"
+  sha256 "dd94c5a06c03c58b47b929d03260f491d4807eaf5be83abd283278927b11c9ee"
 
   bottle do
-    rebuild 1
-    sha256 "918c31840a8265047280c72655f647aa47e448e62a3ae1ba1c602324e42c2919" => :mojave
-    sha256 "96a9ef8172962180fd20708e9251223a96de85283257cd1182efc3c89162da71" => :high_sierra
-    sha256 "d249b53a400ec9400858edf92b7a24523b19f3e6ab9f7198dbdb866100e0dd22" => :sierra
-    sha256 "f0d1d1ec82107c9a2633cbb1d33b8b819ae3b9b33ae9a9db5e74416d750b4bf1" => :el_capitan
+    sha256 "c1e11a68fdd8b406979fc51791cb1f2a25d76c48a94570c41d6baecc5b338ee1" => :catalina
+    sha256 "8d035baadee0af460d3703593dfa646225499de19e97df29ce415e46ac414590" => :mojave
+    sha256 "e3327de86ff58f2f348c40cda8b0e4c6eebb120187dbb5d93be14fd887b54c05" => :high_sierra
   end
 
   head do
@@ -23,7 +21,6 @@ class Ghostscript < Formula
 
   depends_on "pkg-config" => :build
   depends_on "libtiff"
-  depends_on :x11 => :optional
 
   # https://sourceforge.net/projects/gs-fonts/
   resource "fonts" do
@@ -42,14 +39,20 @@ class Ghostscript < Formula
       --disable-fontconfig
       --without-libidn
       --with-system-libtiff
+      --without-x
     ]
-    args << "--without-x" if build.without? "x11"
 
     if build.head?
       system "./autogen.sh", *args
     else
       system "./configure", *args
     end
+
+    # Fix for shared library bug https://bugs.ghostscript.com/show_bug.cgi?id=701211
+    # Can be removed in next version, and possibly replaced by passing
+    # --enable-gpdl to configure
+    inreplace "Makefile", "PCL_XPS_TARGETS=$(PCL_TARGET) $(XPS_TARGET)",
+                          "PCL_XPS_TARGETS=$(PCL_TARGET) $(XPS_TARGET) $(GPDL_TARGET)"
 
     # Install binaries and libraries
     system "make", "install"
@@ -73,8 +76,8 @@ index f50c09c00adb..8855133b400c 100644
 @@ -89,18 +89,33 @@ GPDL_SONAME_MAJOR_MINOR=$(GPDL_SONAME_BASE)$(GS_SOEXT)$(SO_LIB_VERSION_SEPARATOR
  # similar linkers it must containt the trailing "="
  # LDFLAGS_SO=-shared -Wl,$(LD_SET_DT_SONAME)$(LDFLAGS_SO_PREFIX)$(GS_SONAME_MAJOR)
- 
- 
+
+
  # MacOS X
 -#GS_SOEXT=dylib
 -#GS_SONAME=$(GS_SONAME_BASE).$(GS_SOEXT)
@@ -88,7 +91,7 @@ index f50c09c00adb..8855133b400c 100644
 -#LDFLAGS_SO_MAC=-dynamiclib -install_name $(GS_SONAME_MAJOR_MINOR)
 +GS_LDFLAGS_SO=-dynamiclib -install_name $(GS_SONAME_MAJOR_MINOR)
  #LDFLAGS_SO=-dynamiclib -install_name $(FRAMEWORK_NAME)
- 
+
 +PCL_SONAME=$(PCL_SONAME_BASE).$(GS_SOEXT)
 +PCL_SONAME_MAJOR=$(PCL_SONAME_BASE).$(GS_VERSION_MAJOR).$(GS_SOEXT)
 +PCL_SONAME_MAJOR_MINOR=$(PCL_SONAME_BASE).$(GS_VERSION_MAJOR).$(GS_VERSION_MINOR).$(GS_SOEXT)

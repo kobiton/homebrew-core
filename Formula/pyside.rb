@@ -1,67 +1,56 @@
 class Pyside < Formula
   desc "Official Python bindings for Qt"
   homepage "https://wiki.qt.io/Qt_for_Python"
-  url "https://download.qt.io/official_releases/QtForPython/pyside2/PySide2-5.11.2-src/pyside-setup-everywhere-src-5.11.2.tar.xz"
-  sha256 "18f572f1f832e476083d30fccabab167450f2a8cbe5cd9c6e6e4fa078ccb86c2"
+  url "https://download.qt.io/official_releases/QtForPython/pyside2/PySide2-5.13.2-src/pyside-setup-opensource-src-5.13.2.tar.xz"
+  sha256 "3e255d64df08880d0281ebe86009d5ea45f24332b308954d967c33995f75e543"
 
   bottle do
-    sha256 "4d0afc4ec29bb5038b9200401533617c726dfcdf9734ce6d0d7946ccf6448ade" => :mojave
-    sha256 "282a171f80a2f6eadd354e868077759a702595396e5f2e0bfdd638509c4d5e6b" => :high_sierra
-    sha256 "1a9e043fb1993fb2673f4aeb947fac0d87fe862e922a387f268249d2bdcaf7d1" => :sierra
+    sha256 "fea86f39d15b29aac8ed23fda31d69eb46a63f76b8a70da89b64f4398a97f32a" => :catalina
+    sha256 "0a121ff7a1f1cdf1801f327fbedbf520939e73d417adba0e077513d0660a9148" => :mojave
+    sha256 "df3df6b24b051d6132a87cdb09b5a40e6aee86248665c9c35ecdf71af1432ce6" => :high_sierra
   end
 
-  depends_on "cmake" => [:build, :test]
-  depends_on "llvm"
+  depends_on "cmake" => :build
+  depends_on "llvm" => :build
   depends_on "python"
-  depends_on "python@2"
   depends_on "qt"
 
   def install
+    ENV.remove "HOMEBREW_LIBRARY_PATHS", Formula["llvm"].opt_lib
+
     args = %W[
       --ignore-git
-      --no-examples
-      --macos-use-libc++
-      --jobs=#{ENV.make_jobs}
+      --parallel=#{ENV.make_jobs}
       --install-scripts #{bin}
     ]
 
     xy = Language::Python.major_minor_version "python3"
 
     system "python3", *Language::Python.setup_install_args(prefix),
-           "--install-lib", lib/"python#{xy}/site-packages", *args
+           "--install-lib", lib/"python#{xy}/site-packages", *args,
+           "--build-type=shiboken2"
 
-    system "python2", *Language::Python.setup_install_args(prefix),
-           "--install-lib", lib/"python2.7/site-packages", *args
+    system "python3", *Language::Python.setup_install_args(prefix),
+           "--install-lib", lib/"python#{xy}/site-packages", *args,
+           "--build-type=pyside2"
 
-    pkgshare.install "examples/samplebinding", "examples/utils"
+    lib.install_symlink Dir.glob(lib/"python#{xy}/site-packages/PySide2/*.dylib")
+    lib.install_symlink Dir.glob(lib/"python#{xy}/site-packages/shiboken2/*.dylib")
   end
 
   test do
-    ["python2", "python3"].each do |python|
-      system python, "-c", "import PySide2"
-      %w[
-        Core
-        Gui
-        Location
-        Multimedia
-        Network
-        Quick
-        Svg
-        WebEngineWidgets
-        Widgets
-        Xml
-      ].each { |mod| system python, "-c", "import PySide2.Qt#{mod}" }
-    end
-    ["python@2", "python"].each do |python|
-      if python == "python"
-        ENV.prepend_path "PATH", Formula["python"].opt_libexec/"bin"
-      end
-      system "cmake", "-H#{pkgshare}/samplebinding",
-                      "-B.",
-                      "-G",
-                      "Unix Makefiles",
-                      "-DCMAKE_BUILD_TYPE=Release"
-      system "make"
-    end
+    system "python3", "-c", "import PySide2"
+    %w[
+      Core
+      Gui
+      Location
+      Multimedia
+      Network
+      Quick
+      Svg
+      WebEngineWidgets
+      Widgets
+      Xml
+    ].each { |mod| system "python3", "-c", "import PySide2.Qt#{mod}" }
   end
 end

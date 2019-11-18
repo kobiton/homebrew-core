@@ -1,16 +1,15 @@
 class Libedit < Formula
   desc "BSD-style licensed readline alternative"
   homepage "https://thrysoee.dk/editline/"
-  url "https://thrysoee.dk/editline/libedit-20180525-3.1.tar.gz"
-  version "20180525-3.1"
-  sha256 "c41bea8fd140fb57ba67a98ec1d8ae0b8ffa82f4aba9c35a87e5a9499e653116"
+  url "https://thrysoee.dk/editline/libedit-20191025-3.1.tar.gz"
+  version "20191025-3.1"
+  sha256 "6dff036660d478bfaa14e407fc5de26d22da1087118c897b1a3ad2e90cb7bf39"
 
   bottle do
     cellar :any
-    sha256 "6717f6d821405c420aae5079c9d923ec3cd2a3ff62a6081c42f658e531faa64b" => :mojave
-    sha256 "a8907ccf48a24561ad151f527dd7c6c7097600b71d564de5ef95a6bdba48a3b8" => :high_sierra
-    sha256 "968593c13f12a4e12728fa319504a8786910efe4b38eda4290a0f9e674a31af3" => :sierra
-    sha256 "556f24d0c21be5ecbb753e8c1bab7f60acf199bb77423370c1534b6046ffc482" => :el_capitan
+    sha256 "c7cc54cea12647c6f0fe804e3e85768e3a861d170789bfe53c07cde186dfcdd8" => :catalina
+    sha256 "bb80053d3becbb175049265573c5905641ba2f1fe4db357f7a168d14da489925" => :mojave
+    sha256 "14505d667f2efb073f9b5258e3ab5a7ca8bfd3dcf611c0ed151005fa1221bca8" => :high_sierra
   end
 
   keg_only :provided_by_macos

@@ -1,13 +1,16 @@
 class Libgda < Formula
   desc "Provides unified data access to the GNOME project"
-  homepage "http://www.gnome-db.org/"
-  url "https://download.gnome.org/sources/libgda/5.2/libgda-5.2.5.tar.xz"
-  sha256 "e3d2e4c28c08a22efd520767fa9d16e92cc1821f693261d7cb2892cc23ec90c8"
+  homepage "https://www.gnome-db.org/"
+  url "https://download.gnome.org/sources/libgda/5.2/libgda-5.2.9.tar.xz"
+  sha256 "59caed8ca72b1ac6437c9844f0677f8a296d52cfd1c0049116026abfb1d87d9b"
+  revision 2
 
   bottle do
-    sha256 "6dc574ad6963f7779266af499e740d663fd70d26dd3e3212c57cdc556abc7060" => :mojave
-    sha256 "ba273939064c8f4e4adc764660888e80b9be67486554dd25e00f5d941a0c0c0f" => :high_sierra
-    sha256 "2183cd2116b161091c1a421a3e584064a754ab11f7838dbba9e5ece6b13fc3af" => :sierra
+    rebuild 1
+    sha256 "1c2fa0318e26d0a3ae3789fa5ebc87514d0e7a7d5068146178f299b9804e8132" => :catalina
+    sha256 "206bc82010e8e77ba728eada64bad3d5eaa3b9756c4dd438236103ed89738d1d" => :mojave
+    sha256 "e2c155fb503a725f5f8052c975588437a9ed4fc994354d42aad8f81648f0d148" => :high_sierra
+    sha256 "52d4df5f60be7e3cf5c1f51dc0318f920cec2f985f951fa533cc69adffcc9897" => :sierra
   end
 
   depends_on "gobject-introspection" => :build
@@ -17,14 +20,15 @@ class Libgda < Formula
   depends_on "gettext"
   depends_on "glib"
   depends_on "libgcrypt"
-  depends_on "openssl"
+  depends_on "libgee"
+  depends_on "openssl@1.1"
   depends_on "readline"
-  depends_on "sqlite"
-
-  # Bug reported at https://gitlab.gnome.org/GNOME/libgda/issues/142
-  patch :DATA
 
   def install
+    # this build uses the sqlite source code that comes with libgda,
+    # as opposed to using the system or brewed sqlite3, which is not supported on macOS,
+    # as mentioned in https://github.com/GNOME/libgda/blob/95eeca4b0470f347c645a27f714c62aa6e59f820/libgda/sqlite/README#L31
+
     system "./configure", "--disable-debug",
                           "--disable-dependency-tracking",
                           "--disable-silent-rules",
@@ -33,23 +37,12 @@ class Libgda < Formula
                           "--disable-gtk-doc",
                           "--without-java",
                           "--enable-introspection",
-                          "--enable-gi-system-install=no"
+                          "--enable-system-sqlite=no"
     system "make"
     system "make", "install"
   end
-end
 
-__END__
-diff --git a/libgda/sqlite/virtual/gda-vprovider-data-model.c b/libgda/sqlite/virtual/gda-vprovider-data-model.c
-index d6674de..31c7993 100644
---- a/libgda/sqlite/virtual/gda-vprovider-data-model.c
-+++ b/libgda/sqlite/virtual/gda-vprovider-data-model.c
-@@ -280,7 +280,7 @@ virtual_filtered_data_free (VirtualFilteredData *data)
- static VirtualFilteredData *
- virtual_filtered_data_ref (VirtualFilteredData *data)
- {
--	g_return_if_fail (data != NULL);
-+	g_return_val_if_fail (data != NULL, NULL);
-	data->refcount ++;
-	return data;
- }
+  test do
+    system "#{bin}/gda-sql", "-v"
+  end
+end

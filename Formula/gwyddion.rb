@@ -1,14 +1,14 @@
 class Gwyddion < Formula
   desc "Scanning Probe Microscopy visualization and analysis tool"
   homepage "http://gwyddion.net/"
-  url "http://gwyddion.net/download/2.51/gwyddion-2.51.tar.gz"
-  sha256 "67c1319b3a3e5682a37390b34d2580208a624c7d56dae8b5a3389fa5856508ee"
-  revision 1
+  url "http://gwyddion.net/download/2.54/gwyddion-2.54.tar.gz"
+  sha256 "4809f8709adb18aecff9dc0271832fd9840f02d4bc0e69d25c59d745f05cf81d"
 
   bottle do
-    sha256 "a0cdc1c579926f9f9e8bc42c98d287b4312257b8bad06570d64e90cf97fa7068" => :mojave
-    sha256 "29e031b68d9a65cec743209a818efd48a0acad4dfba11e7b266cfc00a81ef809" => :high_sierra
-    sha256 "259250a3db045fe51b5086b8fbba50e94e673bcb729519c669ff22d72e2886fd" => :sierra
+    sha256 "30244622aea628ca3dcdd7f57e1a17e73aed09a1ca57340cf6dabe543929b671" => :catalina
+    sha256 "70e7fac78dd42c0d19cbdf80d07e1553f1c14e9b319a3a9f88aaac99c9a56d8b" => :mojave
+    sha256 "81e115edc3f1a97601629b5d4ab26cf3134d3b322c4688dc228acec5aad84452" => :high_sierra
+    sha256 "adfad7a2851c71f604a9a3efe6b284f18e4cfc60d167538a93d86876d6af400e" => :sierra
   end
 
   depends_on "pkg-config" => :build
@@ -20,7 +20,7 @@ class Gwyddion < Formula
   depends_on "libxml2"
   depends_on "minizip"
   depends_on "pygtk"
-  depends_on "python@2"
+  depends_on "python@2" # does not support Python 3
 
   def install
     system "./configure", "--disable-dependency-tracking",

@@ -1,34 +1,34 @@
 class StoneSoup < Formula
   desc "Dungeon Crawl Stone Soup: a roguelike game"
   homepage "https://crawl.develz.org/"
-  url "https://crawl.develz.org/release/0.22/stone_soup-0.22.0.tar.xz"
-  sha256 "02e36ccc458747e89ab84835f6dd7df554e8e40537397797c5bb61a4d376597d"
+  url "https://crawl.develz.org/release/0.24/stone_soup-0.24.0.tar.xz"
+  sha256 "eb069ae421d4246a3332d9081fb6e08b4bfaa71c407ffc17c194c5f9170d7561"
 
   bottle do
-    sha256 "098f4c729890622a1f75e144a2ea87b3ad44c4f148ced01e224b93edfc52101f" => :mojave
-    sha256 "1f2fd929557b2eb7f8b9a8091479210c94b360d9a69aa1cc79f3712daad9a4d8" => :high_sierra
-    sha256 "90d1d10bfb4fd49ec62fd40aebeb622312d603ffd20553f18e5473725767dde3" => :sierra
-    sha256 "3690a7a849debe2f941a948ab4fbeb017985bdd163eb973841e201fb21532f0c" => :el_capitan
+    sha256 "4a1647599ab29da11bc0bcb6f57f9554b3d1315e044637bfffe7a1518cab0e92" => :catalina
+    sha256 "0f8c131437b46bf836a852386ee2155f759ddee3ab5d672c68a3416fce409248" => :mojave
+    sha256 "ebdc756c9a25432d009c259e2e47b3c7e78b0ba579f29c4c67d475b10486bf76" => :high_sierra
   end
 
-  option "with-tiles", "Enable graphic tiles and sound"
-
   depends_on "pkg-config" => :build
+  depends_on "python" => :build
   depends_on "lua@5.1"
   depends_on "pcre"
 
-  if build.with? "tiles"
-    depends_on "sdl2"
-    depends_on "sdl2_mixer"
-    depends_on "sdl2_image"
-    depends_on "libpng"
-    depends_on "freetype"
+  resource "PyYAML" do
+    url "https://files.pythonhosted.org/packages/e3/e8/b3212641ee2718d556df0f23f78de8303f068fe29cdaa7a91018849582fe/PyYAML-5.1.2.tar.gz"
+    sha256 "01adf0b6c6f61bd11af6e10ca52b7d4057dd0be0343eb9283c878cf3af56aee4"
   end
-
-  needs :cxx11
 
   def install
     ENV.cxx11
+    ENV.prepend_path "PATH", Formula["python"].opt_libexec/"bin"
+    xy = Language::Python.major_minor_version "python3"
+    ENV.prepend_create_path "PYTHONPATH", buildpath/"vendor/lib/python#{xy}/site-packages"
+
+    resource("PyYAML").stage do
+      system "python3", *Language::Python.setup_install_args(buildpath/"vendor")
+    end
 
     cd "source" do
       args = %W[
@@ -46,11 +46,6 @@ class StoneSoup < Formula
         BUILD_PCRE=
         USE_PCRE=y
       ]
-      if build.with? "tiles"
-        inreplace "Makefile", "contrib/install/$(ARCH)/lib/libSDL2main.a", ""
-        args << "TILES=y"
-        args << "SOUND=y"
-      end
 
       # FSF GCC doesn't support the -rdynamic flag
       args << "NO_RDYNAMIC=y" unless ENV.compiler == :clang
@@ -62,7 +57,7 @@ class StoneSoup < Formula
       # On 10.9, stone-soup will try to use xcrun and fail due to an empty
       # DEVELOPER_DIR
       devdir = MacOS::Xcode.prefix.to_s
-      devdir += "/" if MacOS.version >= :mavericks && !MacOS::Xcode.installed?
+      devdir += "/" unless MacOS::Xcode.installed?
 
       system "make", "install",
         "DEVELOPER_DIR=#{devdir}", "SDKROOT=#{MacOS.sdk_path}",

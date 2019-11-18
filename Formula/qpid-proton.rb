@@ -1,27 +1,30 @@
 class QpidProton < Formula
   desc "High-performance, lightweight AMQP 1.0 messaging library"
   homepage "https://qpid.apache.org/proton/"
-  url "https://www.apache.org/dyn/closer.lua?path=qpid/proton/0.24.0/qpid-proton-0.24.0.tar.gz"
-  sha256 "384aba2561388f1fa592809a058f5cc93579beab398721182d58df6469b1ae25"
-  head "https://git.apache.org/qpid-proton.git"
+  url "https://www.apache.org/dyn/closer.lua?path=qpid/proton/0.29.0/qpid-proton-0.29.0.tar.gz"
+  sha256 "7dfee950e40f3bd89edf1b1d41874fe129ba25ea3068300aa2578ddc67680bef"
+  revision 1
+  head "https://gitbox.apache.org/repos/asf/qpid-proton.git"
 
   bottle do
     cellar :any
-    sha256 "832fd7db6ac604c47d66b35d4171eb26d523b7916ac10345da3355477cc191e5" => :mojave
-    sha256 "c6f6a73a0277433a7241ffd8f13de0a7ddf2b6a7e894169026db2dbdf1665c66" => :high_sierra
-    sha256 "70f55ed22438eb4beec799b70723f104eb9bb9e53988b54e2b0bf69c344991b3" => :sierra
-    sha256 "f73b3ecdfcdc3743181e7daae8e0f4fb00a47a07e1960a3836c9d70c71bf7499" => :el_capitan
+    sha256 "0b3f1c52f2a0c02531a0a86cdb41a31d1d641309fa8f5de551b6e6b5922cc971" => :mojave
+    sha256 "0844cba721198292397a460bafdcc7362b2553c1bd13b9176e5397dff8ea17ba" => :high_sierra
+    sha256 "51e8e477136a8c92363adb25f5f8fd2aa244a2b4f493874a94e380279e75ddf8" => :sierra
   end
 
   depends_on "cmake" => :build
   depends_on "libuv"
-  depends_on "openssl"
+  depends_on "openssl@1.1"
 
   def install
-    system "cmake", ".", "-DBUILD_BINDINGS=",
+    mkdir "build" do
+      system "cmake", "..", "-DBUILD_BINDINGS=",
                          "-DLIB_INSTALL_DIR=#{lib}",
+                         "-Dproactor=libuv",
                          *std_cmake_args
-    system "make", "install"
+      system "make", "install"
+    end
   end
 
   test do

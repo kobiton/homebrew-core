@@ -3,17 +3,17 @@ class Netpbm < Formula
   homepage "https://netpbm.sourceforge.io/"
   # Maintainers: Look at https://sourceforge.net/p/netpbm/code/HEAD/tree/
   # for stable versions and matching revisions.
-  url "http://svn.code.sf.net/p/netpbm/code/stable", :revision => 3269
-  version "10.73.20"
+  url "https://svn.code.sf.net/p/netpbm/code/stable", :revision => 3603
+  version "10.73.27"
   version_scheme 1
-  head "http://svn.code.sf.net/p/netpbm/code/trunk"
+  head "https://svn.code.sf.net/p/netpbm/code/trunk"
 
   bottle do
     cellar :any
-    sha256 "6b9d5fac4ba4a69e7e8c2c358e85b51e728665a8f30eb767b1f421c71595bb29" => :mojave
-    sha256 "19c9c04e9b7bf75584fd62982521802ddd73e8ff7ce7c897cda0802090911469" => :high_sierra
-    sha256 "3d70d1f884a2403712a5049c90822aaa0eabf1f8d583655238e08e891f958626" => :sierra
-    sha256 "c703cfef4c6aee5892cdf276ec131aba6a19854fd7f7b98fda6f62b4b3baa4b8" => :el_capitan
+    sha256 "0cfe434022c5d517d3d5857a6665c34bd2cacda459d72c0d98eede9059baaaea" => :catalina
+    sha256 "469cb2a025a09badb8b1f8c8f591fe9e7970b1d3f31c3652081f56180ddb944a" => :mojave
+    sha256 "98c91433c81c781fa85d6c43d48c8dedf8dc4136adec1c9d7ee7b94abc35eb89" => :high_sierra
+    sha256 "24e357df064d03650ceb98903d09ee5c130effcdf76e78276595073756ce8722" => :sierra
   end
 
   depends_on "jasper"

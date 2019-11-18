@@ -1,16 +1,16 @@
 class Opam < Formula
   desc "The OCaml package manager"
   homepage "https://opam.ocaml.org"
-  url "https://github.com/ocaml/opam/releases/download/2.0.0/opam-full-2.0.0.tar.gz"
-  sha256 "9dad4fcb4f53878c9daa6285d8456ccc671e21bfa71544d1f926fb8a63bfed25"
+  url "https://github.com/ocaml/opam/releases/download/2.0.5/opam-full-2.0.5.tar.gz"
+  sha256 "776c7e64d6e24c2ef1efd1e6a71d36e007645efae94eaf860c05c1929effc76f"
   head "https://github.com/ocaml/opam.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "6fc6f874caa189da262165ed96a5c736fa2b1a0cae2d2b001a385d97ee64d5a7" => :mojave
-    sha256 "bf493fae73098388300f324fe116fc4f16bd8a0e52a9e40b2d74e50cf930d613" => :high_sierra
-    sha256 "dfb95d7d716cea33067b600c7322cddbd1fb9a2e2578c75a38c83b0cc6b36900" => :sierra
-    sha256 "ef2fce566058d21f080ae5229c9f84a2d692845530acb5ed272c41dfd68c5138" => :el_capitan
+    sha256 "2eaa945aa00834374c7170da065b5d2c15a5df25130bb9b336fb17097f7000cd" => :catalina
+    sha256 "73d4d1936a7862127e77efa45a07af5e4b49ed00227e9455671ca2a87a32875c" => :mojave
+    sha256 "8799c5a87853dba2a74a3cbc58a7ecb39197ade8372726d044f617ca6bf55a33" => :high_sierra
+    sha256 "2e81e914a8259d6f97e808d4def682154d45545efc6efc67c2c344dc5e97e1d8" => :sierra
   end
 
   depends_on "ocaml" => [:build, :test]
@@ -32,7 +32,7 @@ class Opam < Formula
     OPAM uses ~/.opam by default for its package database, so you need to
     initialize it first by running:
 
-    $  opam init
+    $ opam init
   EOS
   end
 

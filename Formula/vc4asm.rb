@@ -6,6 +6,7 @@ class Vc4asm < Formula
 
   bottle do
     cellar :any_skip_relocation
+    sha256 "d8a425ef7d84c5a1ba477c07e3b04f5fddb0dce92e5cf67a963ecfbc12b3caec" => :catalina
     sha256 "fc0a060875dd9233a3675b034055b1ae23d8775701529024b91f184a7e97521e" => :mojave
     sha256 "db9bbf5ee3cb47a0f3ffa1d9bf355205873237e9f2dbd26777546935401ef4b0" => :high_sierra
     sha256 "2547c982e3fde40316d01d802bd01bf49af208e6737ecafeaeb8ad988ea3255d" => :sierra
@@ -19,8 +20,6 @@ class Vc4asm < Formula
     url "https://raw.githubusercontent.com/maazl/vc4asm/c6991f0/src/Makefile"
     sha256 "2ea9a9e660e85dace2e9b1c9be17a57c8a91e89259d477f9f63820aee102a2d3"
   end
-
-  needs :cxx11
 
   def install
     ENV.cxx11

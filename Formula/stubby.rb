@@ -1,15 +1,15 @@
 class Stubby < Formula
   desc "DNS privacy enabled stub resolver service based on getdns"
   homepage "https://dnsprivacy.org/wiki/display/DP/DNS+Privacy+Daemon+-+Stubby"
-  url "https://github.com/getdnsapi/stubby/archive/v0.2.3.tar.gz"
-  sha256 "5fbe10f421f1313b5e2259b0eec96785af0c5b460431cf86bb6450a11cb3f473"
+  url "https://github.com/getdnsapi/stubby/archive/v0.2.6.tar.gz"
+  sha256 "634b0b9fb8f36416e210fa65800a6c1672bcf9f4f276a042ccf89567ad8ef781"
   head "https://github.com/getdnsapi/stubby.git", :branch => "develop"
 
   bottle do
-    sha256 "52c7a16a90d2ae750d1c0bf8936cbf4a575b831e9b44f21a2e8f3fe31402ab31" => :mojave
-    sha256 "0a09202232898b51e34ccf898e794eca7ebe920209b535a32b224c28cc188552" => :high_sierra
-    sha256 "e027e65ca40fbc66101c7e18889588a825d7b2f528238a616f441c42d297807f" => :sierra
-    sha256 "7a1223ce531d26cd4c97690b2c966ef583b8350e508623dee27da418917a0597" => :el_capitan
+    rebuild 1
+    sha256 "c7e9b790cdc0cdafba63e1856369698182d028b0e050879b47451100ba7974cf" => :catalina
+    sha256 "ab22feeb762899b728ae55a2c702fd622ebdb2edaf776e11c0af2c9f2cddba0c" => :mojave
+    sha256 "02913e7695ae6ff3120a4f676490f6cdeeb10b92192537718ac2a23742d43276" => :high_sierra
   end
 
   depends_on "autoconf" => :build
@@ -31,7 +31,7 @@ class Stubby < Formula
 
   def plist; <<~EOS
     <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE plist PUBLIC "-/Apple/DTD PLIST 1.0/EN" "http:/www.apple.com/DTDs/PropertyList-1.0.dtd">
+    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
     <plist version="1.0">
       <dict>
         <key>Label</key>
@@ -45,12 +45,7 @@ class Stubby < Formula
           <string>#{opt_bin}/stubby</string>
           <string>-C</string>
           <string>#{etc}/stubby/stubby.yml</string>
-          <string>-l</string>
         </array>
-        <key>StandardErrorPath</key>
-        <string>#{var}/log/stubby/stubby.log</string>
-        <key>StandardOutPath</key>
-        <string>#{var}/log/stubby/stubby.log</string>
       </dict>
     </plist>
   EOS

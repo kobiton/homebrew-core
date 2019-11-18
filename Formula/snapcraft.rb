@@ -3,15 +3,15 @@ class Snapcraft < Formula
 
   desc "Package any app for every Linux desktop, server, cloud or device"
   homepage "https://snapcraft.io/"
-  url "https://files.pythonhosted.org/packages/eb/46/c2cc809e56786719169240e7517e4775f4ddae4d40cacaddc2797aa1788d/snapcraft-2.43.1.tar.gz"
-  sha256 "5a4e12a0e775cf2e7255abe24f5c9104cd57ac75a0a187388827f9ace4589698"
+  url "https://github.com/snapcore/snapcraft/archive/3.8.tar.gz"
+  sha256 "0430418d771caff48cd740e1317467cd00e846e04eb62651ae985a147a37b4ec"
+  revision 1
 
   bottle do
     cellar :any
-    sha256 "a1456fd1cd3cd7c7dec24929d0280a5f7176e1f3c8455bbe9f9962ca25828df7" => :mojave
-    sha256 "6519f046d9082655f592a9b7a69ada791220c7772564d0c55937fa48a476a36c" => :high_sierra
-    sha256 "5f4e1123e4affd783d7d66d5898a4d357f2d65f4cb5f8cb4548662fafea8f892" => :sierra
-    sha256 "f1677f46fc83de19a99295af80da0275899a23c2b16a4260b6303e37fc18cecb" => :el_capitan
+    sha256 "1e4b0134d6439cc7a395b8d358168c20eb308b77b1624cd1f6f42698f0669673" => :catalina
+    sha256 "246c3c04bfe41a9a63bc30738a85646fa6e37a30d5dc83e329f96740ff881025" => :mojave
+    sha256 "687f50d9443171aa19e683e2c46119ba9ff152a621907b4837ef05a808e9bd32" => :high_sierra
   end
 
   depends_on "libsodium"
@@ -19,6 +19,7 @@ class Snapcraft < Formula
   depends_on "lxc"
   depends_on "python"
   depends_on "squashfs"
+  depends_on "xdelta"
 
   resource "certifi" do
     url "https://files.pythonhosted.org/packages/15/d4/2f888fc463d516ff7bf2379a4e9a552fef7f22a94147655d9b1097108248/certifi-2018.1.18.tar.gz"
@@ -26,8 +27,8 @@ class Snapcraft < Formula
   end
 
   resource "cffi" do
-    url "https://files.pythonhosted.org/packages/10/f7/3b302ff34045f25065091d40e074479d6893882faef135c96f181a57ed06/cffi-1.11.4.tar.gz"
-    sha256 "df9083a992b17a28cd4251a3f5c879e0198bb26c9e808c4647e0a18739f1d11d"
+    url "https://files.pythonhosted.org/packages/93/1a/ab8c62b5838722f29f3daffcc8d4bd61844aa9b5f437341cc890ceee483b/cffi-1.12.3.tar.gz"
+    sha256 "041c81822e9f84b1d9c401182e174996f0bae9991f33725d059b771744290774"
   end
 
   resource "chardet" do
@@ -36,8 +37,8 @@ class Snapcraft < Formula
   end
 
   resource "click" do
-    url "https://files.pythonhosted.org/packages/95/d9/c3336b6b5711c3ab9d1d3a80f1a3e2afeb9d8c02a7166462f6cc96570897/click-6.7.tar.gz"
-    sha256 "f15516df478d5a56180fbf80e68f206010e6d160fc39fa508b65e035fd75130b"
+    url "https://files.pythonhosted.org/packages/f8/5c/f60e9d8a1e77005f664b76ff8aeaee5bc05d0a91798afd7f53fc998dbc47/Click-7.0.tar.gz"
+    sha256 "5b94b49521f6456670fdb30cd82a4eca9412788a93fa6dd6df72c94d5a8ff2d7"
   end
 
   resource "configparser" do
@@ -65,9 +66,19 @@ class Snapcraft < Formula
     sha256 "c58390b0d191db948fc9ab681f07fdfce2a573cd012356bada47d56795d00ee2"
   end
 
+  resource "pbr" do
+    url "https://files.pythonhosted.org/packages/81/80/1df9176f9021c588155d0c7a86f1e963cec77fefa31934bc380acb0dbd5e/pbr-5.4.2.tar.gz"
+    sha256 "9b321c204a88d8ab5082699469f52cc94c5da45c51f114113d01b3d993c24cdf"
+  end
+
   resource "petname" do
     url "https://files.pythonhosted.org/packages/b8/6c/3b5c55a6632771b6a3ffc46ebb1d01bd7d2ca7ce3b44ebfd3c6ceeb9a6f6/petname-2.2.tar.gz"
     sha256 "be1da50a6aa01e39840e9a4b79b527a333b256733cb681f52669c08df7819ace"
+  end
+
+  resource "pylxd" do
+    url "https://files.pythonhosted.org/packages/42/4f/39c3614b91f0b9e8ba757d2bacb13b356b5c8d0f6be1fdebbc2b795ae831/pylxd-2.2.9.tar.gz"
+    sha256 "2bd5ce9c258d495312cf9f9e1b392ad6d1d40b7dd2a35a789e2cceb2bef184cc"
   end
 
   resource "progressbar33" do
@@ -91,8 +102,8 @@ class Snapcraft < Formula
   end
 
   resource "PyNaCl" do
-    url "https://files.pythonhosted.org/packages/08/19/cf56e60efd122fa6d2228118a9b345455b13ffe16a14be81d025b03b261f/PyNaCl-1.2.1.tar.gz"
-    sha256 "e0d38fa0a75f65f556fb912f2c6790d1fa29b7dd27a1d9cc5591b281321eaaa9"
+    url "https://files.pythonhosted.org/packages/61/ab/2ac6dea8489fa713e2b4c6c5b549cc962dd4a842b5998d9e80cf8440b7cd/PyNaCl-1.3.0.tar.gz"
+    sha256 "0c6100edd16fefd1557da078c7a31e7b7d7a52ce39fdca2bec29d4f7b6e7600c"
   end
 
   resource "pysha3" do

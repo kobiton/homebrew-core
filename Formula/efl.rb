@@ -1,14 +1,13 @@
 class Efl < Formula
   desc "Enlightenment Foundation Libraries"
   homepage "https://www.enlightenment.org"
-  url "https://download.enlightenment.org/rel/libs/efl/efl-1.21.0.tar.xz"
-  sha256 "7e65be78a537aa67e447b945f01f4ecf9ddfa14d509bf6bbf53a60253ecbae4b"
+  url "https://download.enlightenment.org/rel/libs/efl/efl-1.22.4.tar.xz"
+  sha256 "454002b98922f5590048ff523237c41f93d8ab0a76174be167dea0677c879120"
 
   bottle do
-    rebuild 1
-    sha256 "402615004f916c4bce4ea9c861f591fe31975fe894c56e00840adf74c726cb21" => :mojave
-    sha256 "983569d3063cdbe45059c119bcd7f82bbc4a73412f2600435420191ce6b218ad" => :high_sierra
-    sha256 "035342390bc34cec44f89cd056618ffad4212152f3d23d20d074b8bb1f9ea0d4" => :sierra
+    sha256 "d04b2c44f519e791014658b0994f49eee9940ca684ea2de402923bea23db4adc" => :mojave
+    sha256 "6d222b36c6172b11ad731ca15481c31a46ad38544ffed22d0d0a778861e63e85" => :high_sierra
+    sha256 "5e303d498b339b5c248e9167efd68c362013d9198fdf5dbed98138721688a8db" => :sierra
   end
 
   depends_on "gettext" => :build
@@ -29,12 +28,10 @@ class Efl < Formula
   depends_on "libspectre"
   depends_on "libtiff"
   depends_on "luajit"
-  depends_on "openssl"
+  depends_on "openssl@1.1"
   depends_on "poppler"
   depends_on "pulseaudio"
   depends_on "shared-mime-info"
-
-  needs :cxx11
 
   def install
     ENV.cxx11

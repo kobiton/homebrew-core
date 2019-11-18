@@ -2,15 +2,14 @@ class Libressl < Formula
   desc "Version of the SSL/TLS protocol forked from OpenSSL"
   homepage "https://www.libressl.org/"
   # Please ensure when updating version the release is from stable branch.
-  url "https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-2.7.4.tar.gz"
-  mirror "https://mirrorservice.org/pub/OpenBSD/LibreSSL/libressl-2.7.4.tar.gz"
-  sha256 "1e3a9fada06c1c060011470ad0ff960de28f9a0515277d7336f7e09362517da6"
+  url "https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-3.0.2.tar.gz"
+  mirror "https://mirrorservice.org/pub/OpenBSD/LibreSSL/libressl-3.0.2.tar.gz"
+  sha256 "df7b172bf79b957dd27ef36dcaa1fb162562c0e8999e194aa8c1a3df2f15398e"
 
   bottle do
-    sha256 "b13f008fb2415cf9c026b886fd359304c2534270d18b318b11f8356fe926e6ff" => :mojave
-    sha256 "2abf2817dc620567a9b2fb276559956db8876f373ed99cea07e801e5602199da" => :high_sierra
-    sha256 "a38f908150d5c5db02c78321936d72898b84f502d04067de5e2a77a8225720f4" => :sierra
-    sha256 "914ced83b7b05447f6a1fa844f6c8042c06b7694abb50966c0afa9e9d9d6ab31" => :el_capitan
+    sha256 "531debda97ed07c4aa1df7f1cbf7a26d91f4aba53ba7326398a7e133fac5eb29" => :catalina
+    sha256 "b550466fa288be9fa60713747c3727da994e01083ff4fd9fad8b233791e4055c" => :mojave
+    sha256 "adc627acb1c044b5a993aa976af23039ce5988b7be7725982070ee9fe0bf9810" => :high_sierra
   end
 
   head do
@@ -21,7 +20,8 @@ class Libressl < Formula
     depends_on "libtool" => :build
   end
 
-  keg_only "LibreSSL is not linked to prevent conflict with the system OpenSSL"
+  keg_only :provided_by_macos,
+    "LibreSSL is not linked to prevent conflict with the system OpenSSL"
 
   def install
     args = %W[

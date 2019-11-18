@@ -1,16 +1,16 @@
 class Overmind < Formula
   desc "Process manager for Procfile-based applications and tmux"
   homepage "https://github.com/DarthSim/overmind"
-  url "https://github.com/DarthSim/overmind/archive/v1.2.1.tar.gz"
-  sha256 "114a51b45fe02205d28db1fb1b6e23e501c3935f7d3b8862e7db70c41153542f"
+  url "https://github.com/DarthSim/overmind/archive/v2.0.3.tar.gz"
+  sha256 "88833b71d83ffcf40dce1314e62c19dc65e5acd51c8397e4149781c30e9fa73a"
   head "https://github.com/DarthSim/overmind.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "2c5aa09dbc0d6d00ec9e4b6f4ae56a9ec65b21992cad837996c50db403a0c261" => :mojave
-    sha256 "1d46dfcd6a60c9e504251302ff2c65f84f575c68f1b7315cd847e52762d83c63" => :high_sierra
-    sha256 "db203925a49561a4841a7c888b5a3d8b15857b62fa1d4398bfc5ade14481bf1b" => :sierra
-    sha256 "daf31f46ad521fdb79d74e6c7ec995e109f4714b68ac0fa9ae7d4a010793f0a7" => :el_capitan
+    sha256 "66e5376c20be89e3f12c9605353d52182102e45a018a4a930269e0c941b5cbb2" => :catalina
+    sha256 "a71962febb318f1914fdc2c6715c749a76b12a48850f3d7d6506a81f966c54ea" => :mojave
+    sha256 "b711bc71b4f5f45512a565fd2f17bd9db16881194fb6d0e0c2d917b7f0ef2d48" => :high_sierra
+    sha256 "c4ed8a432dc73661f7a92f3d67db6d19e4a765cde72591c7df1fb11f8d450291" => :sierra
   end
 
   depends_on "go" => :build
@@ -26,7 +26,7 @@ class Overmind < Formula
     expected_message = "overmind: open ./Procfile: no such file or directory"
     assert_match expected_message, shell_output("#{bin}/overmind start 2>&1", 1)
     (testpath/"Procfile").write("test: echo 'test message'")
-    expected_message = "inappropriate ioctl for device"
+    expected_message = "test message"
     assert_match expected_message, shell_output("#{bin}/overmind start")
   end
 end

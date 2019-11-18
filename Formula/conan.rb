@@ -3,24 +3,23 @@ class Conan < Formula
 
   desc "Distributed, open source, package manager for C/C++"
   homepage "https://github.com/conan-io/conan"
-  url "https://github.com/conan-io/conan/archive/1.8.0.tar.gz"
-  sha256 "af4e10ae7b7a7a6eb116e6c4fd74bff8966af3d39e83f8a8f5bb291586b1ab08"
+  url "https://github.com/conan-io/conan/archive/1.20.3.tar.gz"
+  sha256 "b33a14169e26130d6298dc8f613670cf2481dd3024879753a7f8ee408094b4bd"
   head "https://github.com/conan-io/conan.git"
 
   bottle do
     cellar :any
-    sha256 "46890f4898eb52946cd986febb715823368c6c1edb34c25672600fbf1b93fc19" => :mojave
-    sha256 "4c2e554e9f88b7c260e9cc322502c017615ac46138dac76e00386a1a1e57ca6e" => :high_sierra
-    sha256 "7fbd99360374e650f093ac1c2a727660dc593d849b0177f1e8dd128313b9750b" => :sierra
+    sha256 "bd220a91ac73c33f691c2d976b33675fbbc9a5a5c681623b9c02e0d100309e61" => :catalina
+    sha256 "b0dbb57a0e0f6bf72a01d757b6cb04f7d0c375ea8fb2fedbc9f7b672d5d6c8d7" => :mojave
+    sha256 "459dc547bcb1cb646c9cdffa848349e10db8e90a2e8802318e633f73d344c457" => :high_sierra
   end
 
   depends_on "pkg-config" => :build
   depends_on "libffi"
-  depends_on "openssl"
+  depends_on "openssl@1.1"
   depends_on "python"
 
   def install
-    inreplace "conans/requirements.txt", "PyYAML>=3.11, <3.14.0", "PyYAML>=3.11"
     venv = virtualenv_create(libexec, "python3")
     system libexec/"bin/pip", "install", "-v", "--no-binary", ":all:",
                               "--ignore-installed", "PyYAML==3.13", buildpath

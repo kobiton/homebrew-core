@@ -2,20 +2,20 @@ class Mytop < Formula
   desc "Top-like query monitor for MySQL"
   homepage "http://www.mysqlfanboy.com/mytop-3/"
   url "http://www.mysqlfanboy.com/mytop-3/mytop-1.9.1.tar.gz"
-  mirror "https://mirrorservice.org/sites/ftp.debian.org/debian/pool/main/m/mytop/mytop_1.9.1.orig.tar.gz"
-  mirror "https://mirrors.ocf.berkeley.edu/debian/pool/main/m/mytop/mytop_1.9.1.orig.tar.gz"
+  mirror "https://deb.debian.org/debian/pool/main/m/mytop/mytop_1.9.1.orig.tar.gz"
   sha256 "179d79459d0013ab9cea2040a41c49a79822162d6e64a7a85f84cdc44828145e"
-  revision 6
+  revision 7
 
   bottle do
     cellar :any
-    sha256 "5b527889fdc6a68a292dd3627fc3ba22c765d8f91aabb32834d9c5334fa8a2f5" => :high_sierra
-    sha256 "2ea6e6774df1e161e6bdbc6b7d844635710b83ab3a7f4097a9b5ac579328f550" => :sierra
-    sha256 "cb6f08e0b574f59ec9e075f7445d9835b6b09d71be5f8c6879f452a63fe5d2a2" => :el_capitan
+    sha256 "5318df299e0ce050c36698497d22959187b24e8dd81cc5766860a7a06f2ab718" => :catalina
+    sha256 "dc6eb11ecde1b19856bee11e61a04a6d28b67c341043ac6bf21e15f750aec836" => :mojave
+    sha256 "78f2298b2724d094921eac4909c175cdd07bf46a9096ed5b697ef22034c89f7a" => :high_sierra
+    sha256 "4cdb2985bb26fefac0b41da8d686bd6b4e56fcce52f3ca7ef572016f1f01d40f" => :sierra
   end
 
   depends_on "mysql-client"
-  depends_on "openssl"
+  depends_on "openssl@1.1"
 
   conflicts_with "mariadb", :because => "both install `mytop` binaries"
 
@@ -29,6 +29,14 @@ class Mytop < Formula
     sha256 "d6d38a416da79de874c5f1825221f22e972ad500b6527d190cc6e9ebc45194b4"
   end
 
+  # In Mojave, this is not part of the system Perl anymore
+  if MacOS.version >= :mojave
+    resource "DBI" do
+      url "https://cpan.metacpan.org/authors/id/T/TI/TIMB/DBI-1.641.tar.gz"
+      sha256 "5509e532cdd0e3d91eda550578deaac29e2f008a12b64576e8c261bb92e8c2c1"
+    end
+  end
+
   resource "DBD::mysql" do
     url "https://cpan.metacpan.org/authors/id/C/CA/CAPTTOFU/DBD-mysql-4.046.tar.gz"
     sha256 "6165652ec959d05b97f5413fa3dff014b78a44cf6de21ae87283b28378daf1f7"
@@ -37,8 +45,7 @@ class Mytop < Formula
   # Pick up some patches from Debian to improve functionality & fix
   # some syntax warnings when using recent versions of Perl.
   patch do
-    url "https://mirrorservice.org/sites/ftp.debian.org/debian/pool/main/m/mytop/mytop_1.9.1-2.debian.tar.xz"
-    mirror "https://mirrors.ocf.berkeley.edu/debian/pool/main/m/mytop/mytop_1.9.1-2.debian.tar.xz"
+    url "https://deb.debian.org/debian/pool/main/m/mytop/mytop_1.9.1-2.debian.tar.xz"
     sha256 "9c97b7d2a2d4d169c5f263ce0adb6340b71e3a0afd4cdde94edcead02421489a"
     apply "patches/01_fix_pod.patch",
           "patches/02_remove_db_test.patch",

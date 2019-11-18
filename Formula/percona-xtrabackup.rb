@@ -1,13 +1,14 @@
 class PerconaXtrabackup < Formula
   desc "Open source hot backup tool for InnoDB and XtraDB databases"
   homepage "https://www.percona.com/software/mysql-database/percona-xtrabackup"
-  url "https://www.percona.com/downloads/XtraBackup/Percona-XtraBackup-2.4.12/source/tarball/percona-xtrabackup-2.4.12.tar.gz"
-  sha256 "de02cfd5bde96ddbf50339ef3a4646004dde52239698df45c19ed3e8ee40738e"
+  url "https://www.percona.com/downloads/XtraBackup/Percona-XtraBackup-2.4.14/source/tarball/percona-xtrabackup-2.4.14.tar.gz"
+  sha256 "4dffa6986aef358675b318b3b9f4a9b8df48e8fc4987ad2469bba1b186b47662"
+  revision 2
 
   bottle do
-    sha256 "7f69dd77c9d2fa2f7d2b3634eca30bcbd083f426b033a049394c7c804bf788df" => :high_sierra
-    sha256 "afe400789cd164fc668d888f8c0e0e7ca5a861aad7df9291648bf932a2ac8225" => :sierra
-    sha256 "39b82780d9716d07186228027a09feb53ded26e25e671abcf463273687d45750" => :el_capitan
+    sha256 "3de1cc8089d273eaf169764138c669f8a87f5a74c585f8f259d0e49c74023bba" => :catalina
+    sha256 "c23450a2570d5cfce83aa24bdcb7d151261bd7cde183a570681a0b6d7fcdf5d6" => :mojave
+    sha256 "fcbbc4998956a5aee3f2ae098e913be5b9a0f732e534f8d21f5b9b1253ef21b8" => :high_sierra
   end
 
   depends_on "cmake" => :build
@@ -15,7 +16,12 @@ class PerconaXtrabackup < Formula
   depends_on "libev"
   depends_on "libgcrypt"
   depends_on "mysql-client"
-  depends_on "openssl"
+  depends_on "openssl@1.1"
+
+  resource "DBI" do
+    url "https://cpan.metacpan.org/authors/id/T/TI/TIMB/DBI-1.641.tar.gz"
+    sha256 "5509e532cdd0e3d91eda550578deaac29e2f008a12b64576e8c261bb92e8c2c1"
+  end
 
   resource "DBD::mysql" do
     url "https://cpan.metacpan.org/authors/id/C/CA/CAPTTOFU/DBD-mysql-4.046.tar.gz"
@@ -31,8 +37,11 @@ class PerconaXtrabackup < Formula
     cmake_args = %w[
       -DBUILD_CONFIG=xtrabackup_release
       -DCOMPILATION_COMMENT=Homebrew
+      -DINSTALL_PLUGINDIR=lib/percona-xtrabackup/plugin
       -DINSTALL_MANDIR=share/man
       -DWITH_MAN_PAGES=ON
+      -DINSTALL_MYSQLTESTDIR=
+      -DCMAKE_CXX_FLAGS="-DBOOST_NO_CXX11_HDR_ARRAY"
     ]
 
     # macOS has this value empty by default.
@@ -51,12 +60,19 @@ class PerconaXtrabackup < Formula
 
     share.install "share/man"
 
-    rm_rf prefix/"xtrabackup-test" # Remove unnecessary files
-    # remove conflicting libraries that are already installed by mysql
+    # remove conflicting library that is already installed by mysql
     rm lib/"libmysqlservices.a"
-    rm lib/"plugin/keyring_file.so"
 
     ENV.prepend_create_path "PERL5LIB", libexec/"lib/perl5"
+
+    # In Mojave, this is not part of the system Perl anymore
+    if MacOS.version >= :mojave
+      resource("DBI").stage do
+        system "perl", "Makefile.PL", "INSTALL_BASE=#{libexec}"
+        system "make", "install"
+      end
+    end
+
     resource("DBD::mysql").stage do
       system "perl", "Makefile.PL", "INSTALL_BASE=#{libexec}"
       system "make", "install"

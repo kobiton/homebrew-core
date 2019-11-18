@@ -1,14 +1,14 @@
 class PerconaServer < Formula
   desc "Drop-in MySQL replacement"
   homepage "https://www.percona.com"
-  url "https://www.percona.com/downloads/Percona-Server-5.7/Percona-Server-5.7.22-22/source/tarball/percona-server-5.7.22-22.tar.gz"
-  sha256 "3b94644861628fa6e17b82318220327f0beb2767739c976c961c8a9eb6c9783a"
+  url "https://www.percona.com/downloads/Percona-Server-8.0/Percona-Server-8.0.17-8/source/tarball/percona-server-8.0.17-8.tar.gz"
+  sha256 "0a96de68a71acce0c3c57cdd554b63a8f7c3026bd5aec88a384f76ce9ff4fced"
+  revision 1
 
   bottle do
-    sha256 "939d9bf211128159aa8fa8063d5a2444f018c9f4c957c12aff8dfb8fbcc36d77" => :mojave
-    sha256 "b532aa8c191442279c499bf270ab0dbccbaf7f5e54cfc9540a3d825436c55e7d" => :high_sierra
-    sha256 "598e49c07d52132f8293474c57449ca4f8f92a755edb356909be3ddb51b46a1a" => :sierra
-    sha256 "8d4b7018c451090ba8af05928eee7d082f9986211ed3dc9eaf83010456a3bd5b" => :el_capitan
+    sha256 "c5130d3655f622d40afa0ab11ddf8e841406c0b60e596f5409d500e8505eb615" => :catalina
+    sha256 "537dbc5b54969e47787285513caa1993c80158c6068ff45fe5807ba1b4e48ebf" => :mojave
+    sha256 "f43db3e88e293624f1f0d53510127be08bd8332689e0a2143874ea105dbc0b54" => :high_sierra
   end
 
   pour_bottle? do
@@ -17,22 +17,30 @@ class PerconaServer < Formula
   end
 
   depends_on "cmake" => :build
+
   # https://github.com/Homebrew/homebrew-core/issues/1475
   # Needs at least Clang 3.3, which shipped alongside Lion.
-  # Note: MySQL themselves don't support anything below El Capitan.
-  depends_on :macos => :lion
-  depends_on "openssl"
+  # Note: MySQL themselves don't support anything below Sierra.
+  depends_on :macos => :yosemite
+  depends_on "openssl@1.1"
 
-  conflicts_with "mariadb", "mysql", "mysql-cluster",
+  conflicts_with "mariadb", "mysql",
     :because => "percona, mariadb, and mysql install the same binaries."
   conflicts_with "mysql-connector-c",
     :because => "both install MySQL client libraries"
   conflicts_with "mariadb-connector-c",
     :because => "both install plugins"
 
+  # https://bugs.mysql.com/bug.php?id=86711
+  # https://github.com/Homebrew/homebrew-core/pull/20538
+  fails_with :clang do
+    build 800
+    cause "Wrong inlining with Clang 8.0, see MySQL Bug #86711"
+  end
+
   resource "boost" do
-    url "https://downloads.sourceforge.net/project/boost/boost/1.59.0/boost_1_59_0.tar.bz2"
-    sha256 "727a932322d94287b62abb1bd2d41723eec4356a7728909e38adb65ca25241ca"
+    url "https://downloads.sourceforge.net/project/boost/boost/1.69.0/boost_1_69_0.tar.bz2"
+    sha256 "8f32d4617390d1c2d16f26a27ab60d97807b35440d45891fa340fc2648b04406"
   end
 
   # Where the database files should be located. Existing installs have them
@@ -43,26 +51,26 @@ class PerconaServer < Formula
   end
 
   def install
-    # Set HAVE_MEMSET_S flag to fix compilation
-    # https://bugs.launchpad.net/percona-server/+bug/1741647
-    ENV.prepend "CPPFLAGS", "-DHAVE_MEMSET_S=1"
-
-    # https://dev.mysql.com/doc/refman/5.7/en/source-configuration-options.html
     # -DINSTALL_* are relative to `CMAKE_INSTALL_PREFIX` (`prefix`)
     args = %W[
+      -DFORCE_INSOURCE_BUILD=1
       -DCOMPILATION_COMMENT=Homebrew
-      -DDEFAULT_CHARSET=utf8
-      -DDEFAULT_COLLATION=utf8_general_ci
+      -DDEFAULT_CHARSET=utf8mb4
+      -DDEFAULT_COLLATION=utf8mb4_0900_ai_ci
       -DINSTALL_DOCDIR=share/doc/#{name}
       -DINSTALL_INCLUDEDIR=include/mysql
       -DINSTALL_INFODIR=share/info
       -DINSTALL_MANDIR=share/man
       -DINSTALL_MYSQLSHAREDIR=share/mysql
-      -DINSTALL_PLUGINDIR=lib/plugin
+      -DINSTALL_PLUGINDIR=lib/percona-server/plugin
       -DMYSQL_DATADIR=#{datadir}
       -DSYSCONFDIR=#{etc}
-      -DWITH_EDITLINE=system
       -DWITH_SSL=yes
+      -DWITH_UNIT_TESTS=OFF
+      -DWITH_EMBEDDED_SERVER=ON
+      -DENABLED_LOCAL_INFILE=1
+      -DWITH_INNODB_MEMCACHED=ON
+      -DWITH_EDITLINE=system
     ]
 
     # MySQL >5.7.x mandates Boost as a requirement to build & has a strict
@@ -78,8 +86,6 @@ class PerconaServer < Formula
     # TokuDB does not compile on macOS
     # https://bugs.launchpad.net/percona-server/+bug/1531446
     args.concat %w[-DWITHOUT_TOKUDB=1]
-
-    args << "-DWITH_UNIT_TESTS=OFF"
 
     system "cmake", ".", *std_cmake_args, *args
     system "make"
@@ -165,23 +171,21 @@ class PerconaServer < Formula
   end
 
   test do
-    begin
-      # Expects datadir to be a completely clean dir, which testpath isn't.
-      dir = Dir.mktmpdir
-      system bin/"mysqld", "--initialize-insecure", "--user=#{ENV["USER"]}",
-      "--basedir=#{prefix}", "--datadir=#{dir}", "--tmpdir=#{dir}"
+    # Expects datadir to be a completely clean dir, which testpath isn't.
+    dir = Dir.mktmpdir
+    system bin/"mysqld", "--initialize-insecure", "--user=#{ENV["USER"]}",
+    "--basedir=#{prefix}", "--datadir=#{dir}", "--tmpdir=#{dir}"
 
-      pid = fork do
-        exec bin/"mysqld", "--bind-address=127.0.0.1", "--datadir=#{dir}"
-      end
-      sleep 2
-
-      output = shell_output("curl 127.0.0.1:3306")
-      output.force_encoding("ASCII-8BIT") if output.respond_to?(:force_encoding)
-      assert_match version.to_s, output
-    ensure
-      Process.kill(9, pid)
-      Process.wait(pid)
+    pid = fork do
+      exec bin/"mysqld", "--bind-address=127.0.0.1", "--datadir=#{dir}"
     end
+    sleep 2
+
+    output = shell_output("curl 127.0.0.1:3306")
+    output.force_encoding("ASCII-8BIT") if output.respond_to?(:force_encoding)
+    assert_match version.to_s, output
+  ensure
+    Process.kill(9, pid)
+    Process.wait(pid)
   end
 end

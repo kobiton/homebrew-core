@@ -1,27 +1,22 @@
 class Helmfile < Formula
   desc "Deploy Kubernetes Helm Charts"
   homepage "https://github.com/roboll/helmfile"
-  url "https://github.com/roboll/helmfile/archive/v0.40.1.tar.gz"
-  sha256 "3194a334ebf1b887fd936d45b92b118391ca0552229680c00ec6f2fe37125106"
+  url "https://github.com/roboll/helmfile/archive/v0.92.1.tar.gz"
+  sha256 "dcb08533087aea527f581910c29e200a114556b462b53f34d92c7e75e97d73f3"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "479480b3ccd169bddc68cec3cb5d2d143b5b76a692f4111dcda8945972d8a9bf" => :mojave
-    sha256 "f6bbadcaf376d10d7d89dd187a87e092e3fe4a4773a8090fd017756c12bec521" => :high_sierra
-    sha256 "0c7daa1ee05d76d1444cae10e1a851320408a443b9fffeeae0b5d7012b824bdd" => :sierra
+    sha256 "e8989644d0bf103551918ab8b4595cfbf019a86d75f08e0671ae560739dc11cd" => :catalina
+    sha256 "b5af2e51bb7a7b4268d4b8c8e008d3444a452779c1d0dc2335bf84831fe6a25a" => :mojave
+    sha256 "7bda38b2c8ec08b30d42e2295867155ac264344d020d44155ba09453d4fb3284" => :high_sierra
   end
 
   depends_on "go" => :build
-  depends_on "kubernetes-helm"
+  depends_on "helm"
 
   def install
-    ENV["GOPATH"] = buildpath
-    (buildpath/"src/github.com/roboll/helmfile").install buildpath.children
-    cd "src/github.com/roboll/helmfile" do
-      system "go", "build", "-ldflags", "-X main.Version=v#{version}",
+    system "go", "build", "-ldflags", "-X main.Version=v#{version}",
              "-o", bin/"helmfile", "-v", "github.com/roboll/helmfile"
-      prefix.install_metafiles
-    end
   end
 
   test do
@@ -33,8 +28,9 @@ class Helmfile < Formula
     releases:
     - name: test
     EOS
-    system Formula["kubernetes-helm"].opt_bin/"helm", "init", "--client-only"
-    output = '"stable" has been added to your repositories'
-    assert_match output, shell_output("#{bin}/helmfile -f helmfile.yaml repos")
+    system Formula["helm"].opt_bin/"helm", "create", "foo"
+    output = "Adding repo stable https://kubernetes-charts.storage.googleapis.com"
+    assert_match output, shell_output("#{bin}/helmfile -f helmfile.yaml repos 2>&1")
+    assert_match version.to_s, shell_output("#{bin}/helmfile -v")
   end
 end

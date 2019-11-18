@@ -3,9 +3,9 @@ class Go < Formula
   homepage "https://golang.org"
 
   stable do
-    url "https://dl.google.com/go/go1.11.1.src.tar.gz"
-    mirror "https://fossies.org/linux/misc/go1.11.1.src.tar.gz"
-    sha256 "558f8c169ae215e25b81421596e8de7572bd3ba824b79add22fba6e284db1117"
+    url "https://dl.google.com/go/go1.13.4.src.tar.gz"
+    mirror "https://fossies.org/linux/misc/go1.13.4.src.tar.gz"
+    sha256 "95dbeab442ee2746b9acf0934c8e2fc26414a0565c008631b04addb8c02e7624"
 
     go_version = version.to_s.split(".")[0..1].join(".")
     resource "gotools" do
@@ -15,9 +15,9 @@ class Go < Formula
   end
 
   bottle do
-    sha256 "1725509d0bd6e3196ad61e332e8ecae08726dc4edb609f6197fd355d28c0bc89" => :mojave
-    sha256 "7470daceb0516695e04f087ca184731f646abb47d64968f7b09e266cefac9a1b" => :high_sierra
-    sha256 "88e2eb2ab4a409f0a68840624b1964b9e6d2314bce34498725a723b52a239639" => :sierra
+    sha256 "77af3e8081a002c86b4b87ec97dc5dc28cab49704913a4db22ebc7ce838dc6ad" => :catalina
+    sha256 "2fc74073a90a7073dab940868ac23fa6cd465af8a39ed2d882b18d62bec2265f" => :mojave
+    sha256 "20d5242dbbb08128c254a1cc96f55cfc9add74c9567600dfd9366f3d028f5563" => :high_sierra
   end
 
   head do
@@ -28,12 +28,11 @@ class Go < Formula
     end
   end
 
-  depends_on :macos => :yosemite
+  depends_on :macos => :el_capitan
 
   # Don't update this unless this version cannot bootstrap the new version.
   resource "gobootstrap" do
     url "https://storage.googleapis.com/golang/go1.7.darwin-amd64.tar.gz"
-    version "1.7"
     sha256 "51d905e0b43b3d0ed41aaf23e19001ab4bc3f96c3ca134b48f7892485fc52961"
   end
 
@@ -65,16 +64,6 @@ class Go < Formula
     bin.install_symlink libexec/"bin/godoc"
   end
 
-  def caveats; <<~EOS
-    A valid GOPATH is required to use the `go get` command.
-    If $GOPATH is not specified, $HOME/go will be used by default:
-      https://golang.org/doc/code.html#GOPATH
-
-    You may wish to add the GOROOT-based install location to your PATH:
-      export PATH=$PATH:#{opt_libexec}/bin
-  EOS
-  end
-
   test do
     (testpath/"hello.go").write <<~EOS
       package main
@@ -95,6 +84,7 @@ class Go < Formula
     assert_predicate libexec/"bin/godoc", :executable?
 
     ENV["GOOS"] = "freebsd"
+    ENV["GOARCH"] = "amd64"
     system bin/"go", "build", "hello.go"
   end
 end

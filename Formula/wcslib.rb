@@ -1,15 +1,15 @@
 class Wcslib < Formula
   desc "Library and utilities for the FITS World Coordinate System"
   homepage "https://www.atnf.csiro.au/people/mcalabre/WCS/"
-  url "https://www.atnf.csiro.au/pub/software/wcslib/wcslib-5.19.1.tar.bz2"
-  sha256 "59b9f0e5a2c040773cc846c684d84c09b986c1393e97b378a41b92d9d3df0f98"
+  url "https://www.atnf.csiro.au/pub/software/wcslib/wcslib-6.4.tar.bz2"
+  sha256 "13c11ff70a7725563ec5fa52707a9965fce186a1766db193d08c9766ea107000"
 
   bottle do
     cellar :any
-    sha256 "bb97c202d67ecf98cf74431e6eef36a7e4272e7549765ffa34139daff5173b07" => :mojave
-    sha256 "3f65a03fa9f939560f4bc2776d1c4349a641b8e5386fae073a551413049bfbde" => :high_sierra
-    sha256 "a4a31772504b45bd2bd7b4a955bc2624c6c1849ba56cf9382d4f65765b7627c8" => :sierra
-    sha256 "b465fcf1d06195230abb08abf6dfe38aec48707a5f78bb9bc006f83cd866c006" => :el_capitan
+    sha256 "f10115b998dd47898b972b17f9988de920195861d0f97ca8069b9c42bec12b9c" => :catalina
+    sha256 "7576767feb83f577b9b8cd0543d59465fc8c9878602d8e4003802981211d32dd" => :mojave
+    sha256 "31fbb2d390351ab6a27bdfc7cad5c521a13c93d95caeb319550d5f32f6bc965f" => :high_sierra
+    sha256 "2139f69d161b83857d2768fb5a9dd78d77eb2b94e4c80f6385093a4168228374" => :sierra
   end
 
   depends_on "cfitsio"
@@ -22,12 +22,6 @@ class Wcslib < Formula
                           "--with-cfitsioinc=#{Formula["cfitsio"].opt_include}",
                           "--without-pgplot",
                           "--disable-fortran"
-
-    # Currently doesn't support parallel make.  Patch sent to author 2018/08/31.
-    # Author (mcalabre@atnf.csiro.au) expects to integrate by end of 2018/09.
-    # Patch: https://gist.github.com/dstndstn/0492f69eb27a11cdd622d01105643dd0
-    ENV.deparallelize
-    system "make"
     system "make", "install"
   end
 

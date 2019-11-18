@@ -1,21 +1,25 @@
 class Geckodriver < Formula
   desc "WebDriver <-> Marionette proxy"
   homepage "https://github.com/mozilla/geckodriver"
-  url "https://github.com/mozilla/geckodriver/archive/v0.23.0.tar.gz"
-  sha256 "2ed7eac7c40ff3813e11410d65d8b15b05a55cb15df8413577cad03f13e5a86a"
+  # Get the commit id for stable releases from https://github.com/mozilla/geckodriver/releases
+  url "https://hg.mozilla.org/mozilla-central/archive/e9783a644016aa9b317887076618425586730d73.zip/testing/"
+  version "0.26.0"
+  sha256 "89f20b2d492b44b40ee049d0f0d4d91c52758b74dd7b5c7acad89a88ca1f177e"
   head "https://hg.mozilla.org/mozilla-central/", :using => :hg
 
   bottle do
-    sha256 "15d57a2252a5e6c6aa43d77862ef1bc052854bbe2d22ce2a20675e97b803596c" => :mojave
-    sha256 "1d146bd0da0d5489f1032c35c6dd92b5a4f8dee20ab2881fe8c74ab266c62b10" => :high_sierra
-    sha256 "e6802e185deefb48c408acc7ceef12420e2b7648851e07d0dbd4220184fb40a0" => :sierra
+    cellar :any_skip_relocation
+    sha256 "e22f2630bb243d2ff0129f1e1807a21d7564563b198f5dcb0f15f9cc2d352c21" => :catalina
+    sha256 "dc64495740d253d396aa2be1442dbcab5ad82b95b37f28c65eb724394e302ea7" => :mojave
+    sha256 "aa4813eced6f47bf448a0f19ff1f73abc109122613a92aef6b217237020eba01" => :high_sierra
   end
 
   depends_on "rust" => :build
 
   def install
-    dir = build.head? ? "testing/geckodriver" : "."
-    cd(dir) { system "cargo", "install", "--root", prefix, "--path", "." }
+    cd "testing/geckodriver" do
+      system "cargo", "install", "--locked", "--root", prefix, "--path", "."
+    end
     bin.install_symlink bin/"geckodriver" => "wires"
   end
 

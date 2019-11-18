@@ -1,14 +1,15 @@
 class Libcerf < Formula
   desc "Numeric library for complex error functions"
-  homepage "http://apps.jcns.fz-juelich.de/doku/sc/libcerf"
-  url "http://apps.jcns.fz-juelich.de/src/libcerf/libcerf-1.8.tgz"
-  sha256 "b2001dc594e9d85e2f4133fec52b4f7da02e9c2ea20518175fdebf5c81dd3857"
+  homepage "https://jugit.fz-juelich.de/mlz/libcerf"
+  url "https://jugit.fz-juelich.de/mlz/libcerf/uploads/924b8d245ad3461107ec630734dfc781/libcerf-1.13.tgz"
+  sha256 "011303e59ac63b280d3d8b10c66b07eb02140fcb75954d13ec26bf830e0ea2f9"
 
   bottle do
     cellar :any
-    sha256 "f74059a55e96d1531d1f65c0ddc095e50f35561f6d22c43bb84867f19fea5b37" => :mojave
-    sha256 "d78fb0a50d8fa626174b5a484bb6dd07117585c70d9bf0deffe3be42eb350d10" => :high_sierra
-    sha256 "b6a4a2fed720ad9c8982c084d6419d6a23c5a69b9e7069d1546692c56b786330" => :sierra
+    sha256 "eef861f3d750d45f7190b65afd3cc1460c7461d5b10978790cf9b66f736e3d52" => :catalina
+    sha256 "a181d4bf63f5ad9a5f00268a8551e7d62c52e81a88b9e9a29dba148d1a16412f" => :mojave
+    sha256 "48ac5501edc4e90465af39ae8ff57234993f5b9b9f4b08fd8ba00443fd5d977b" => :high_sierra
+    sha256 "401e716456c99bb123252b2f256e6fc70d6a741a23c8bd16d1a2ae0998641387" => :sierra
   end
 
   depends_on "cmake" => :build
@@ -17,8 +18,6 @@ class Libcerf < Formula
     mkdir "build" do
       system "cmake", "..", *std_cmake_args
       system "make", "install"
-
-      mv prefix/"man", share
     end
   end
 

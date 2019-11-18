@@ -2,28 +2,28 @@ class Monero < Formula
   desc "Official monero wallet and cpu miner"
   homepage "https://getmonero.org/"
   url "https://github.com/monero-project/monero.git",
-      :tag => "v0.13.0.2",
-      :revision => "77ef8c1839e1984471605e072a20e04d1e7eb6f8"
+      :tag      => "v0.15.0.0",
+      :revision => "69c488a479609df2838c14cd0cf500242758f449"
 
   bottle do
     cellar :any
-    sha256 "2c2fec630f12b92dd1690805c679e995a1a3c1d47647882896b0498e26e35fc8" => :mojave
-    sha256 "3cbd5dc098bf626882f7bdb6d33f7d07946d52f8f23f50b245cdf1bff01091e5" => :high_sierra
-    sha256 "6f11faae72beb73cdfdbb0904b1130bee48c4b733d049f83fda514bcaff21e9d" => :sierra
+    sha256 "9692a78382ea9a4c4d12e43c228c1789696d8fb1a3d137bd29b9cdce8b2e532a" => :catalina
+    sha256 "350e30d0dc79742c442f44e5f80621d75f502ea044337422d4e6e9333bf3d084" => :mojave
+    sha256 "65ebae03a8a85a9d406f19eabfba28e84cb32e36b8af51a06a2d23846eb9d0f0" => :high_sierra
   end
 
   depends_on "cmake" => :build
   depends_on "pkg-config" => :build
   depends_on "boost"
   depends_on "libsodium"
-  depends_on "openssl"
+  depends_on "openssl@1.1"
   depends_on "readline"
   depends_on "unbound"
   depends_on "zeromq"
 
   resource "cppzmq" do
-    url "https://github.com/zeromq/cppzmq/archive/v4.2.3.tar.gz"
-    sha256 "3e6b57bf49115f4ae893b1ff7848ead7267013087dc7be1ab27636a97144d373"
+    url "https://github.com/zeromq/cppzmq/archive/v4.3.0.tar.gz"
+    sha256 "27d1f56406ba94ee779e639203218820975cf68174f92fbeae0f645df0fcada4"
   end
 
   def install
@@ -37,6 +37,27 @@ class Monero < Formula
     # Reported upstream 25 May 2018 https://github.com/monero-project/monero/issues/3862
     rm lib/"libminiupnpc.a"
     rm_rf include/"miniupnpc"
+  end
+
+  plist_options :manual => "monerod"
+
+  def plist; <<~EOS
+    <?xml version="1.0" encoding="UTF-8"?>
+    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+    <plist version="1.0">
+    <dict>
+      <key>Label</key>
+      <string>#{plist_name}</string>
+      <key>ProgramArguments</key>
+      <array>
+        <string>#{opt_bin}/monerod</string>
+        <string>--non-interactive</string>
+      </array>
+      <key>RunAtLoad</key>
+      <true/>
+    </dict>
+    </plist>
+  EOS
   end
 
   test do

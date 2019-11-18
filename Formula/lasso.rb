@@ -1,19 +1,22 @@
 class Lasso < Formula
   desc "Library for Liberty Alliance and SAML protocols"
-  homepage "http://lasso.entrouvert.org/"
+  homepage "https://lasso.entrouvert.org/"
   url "https://dev.entrouvert.org/releases/lasso/lasso-2.6.0.tar.gz"
   sha256 "146bff7a25166467d960003346cbc3291f3f29067e305cb82ebb12354c7d0acf"
+  revision 2
 
   bottle do
-    sha256 "8b6d5f0e436583e3293a3d2f857ffd9f3cb2950c689aa9db2792810fc4a1a8a9" => :mojave
-    sha256 "bf7e791e207eb49a71fd8369bb1f7ce5433ddf9e83a4cc92b180c23333543e71" => :high_sierra
-    sha256 "9a3af6f2270df07b19b6a3ad94c2fdc9278ed24ec9453ad8351d54d7030df144" => :sierra
+    cellar :any
+    sha256 "2c88e8cd95ae369d367c06345174b9f9503ef9cf45907e9536a6930eeb7ccfbd" => :catalina
+    sha256 "2205d01fc955e79915ec59ba8acfa1221fcac6cd382529fcc08a2db6809e01e8" => :mojave
+    sha256 "e65e3b3b6ce40489b6674c51ccd6266d8a8167e6de99eb237e3a5a8a7473e33a" => :high_sierra
+    sha256 "de394e2052991b6fe749d8f8e00f7999c84241cfa93cb68791f2e2cb1a68381a" => :sierra
   end
 
   depends_on "pkg-config" => :build
   depends_on "glib"
   depends_on "libxmlsec1"
-  depends_on "openssl"
+  depends_on "openssl@1.1"
 
   def install
     system "./configure", "--disable-dependency-tracking",

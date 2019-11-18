@@ -3,14 +3,14 @@ class Ocamlsdl < Formula
   homepage "https://ocamlsdl.sourceforge.io/"
   url "https://downloads.sourceforge.net/project/ocamlsdl/OCamlSDL/ocamlsdl-0.9.1/ocamlsdl-0.9.1.tar.gz"
   sha256 "abfb295b263dc11e97fffdd88ea1a28b46df8cc2b196777093e4fe7f509e4f8f"
-  revision 10
+  revision 12
 
   bottle do
     cellar :any
-    sha256 "e6d8087ac27d4c45abded02c279e898619be45bd8693e2ed649ae8a764798db1" => :mojave
-    sha256 "5b3c887b0120e2c2bd245039a61112515d589ec612b5aa9549997c86ff0c7e95" => :high_sierra
-    sha256 "d17971236af3fe65db605b25423399e239d622428b34157e6c4e636ed0a52652" => :sierra
-    sha256 "c59f56c6176d701173eb224d430889132a57053cc1a4856940c272bda9d51cac" => :el_capitan
+    sha256 "9b8746dfb697548d75febd38d30d2da37d5607d952de6beb04ca953ae3aa1937" => :catalina
+    sha256 "d31de998e5cf5d9ced506dd831f21a5e26037fcb267cd8e28119704d4c73e778" => :mojave
+    sha256 "c108a69107578704b2e161ac6002e8d7b51f9f6442d2de52046c1df33e20f50a" => :high_sierra
+    sha256 "dd2959698fbdde6d1cd947dd1c3c7b872cebbff43bac5b8ef6c4770bb4e4584e" => :sierra
   end
 
   depends_on "ocaml"

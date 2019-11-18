@@ -1,37 +1,34 @@
 class Ruby < Formula
   desc "Powerful, clean, object-oriented scripting language"
   homepage "https://www.ruby-lang.org/"
-  url "https://cache.ruby-lang.org/pub/ruby/2.5/ruby-2.5.2.tar.xz"
-  sha256 "8be6b6afdf09957a6e2c2a6ada4b1982a391a828b34e49072c4beb60febb678d"
+  url "https://cache.ruby-lang.org/pub/ruby/2.6/ruby-2.6.5.tar.xz"
+  sha256 "d5d6da717fd48524596f9b78ac5a2eeb9691753da5c06923a6c31190abe01a62"
 
   bottle do
-    sha256 "526209b8748df1669b9c73eab9e205627e9e2b249ac41765b12f76880a7296c6" => :mojave
-    sha256 "0192b435eadc54981acc4db8aa3859f256a7a0468873d3462429d5baa7aff2d0" => :high_sierra
-    sha256 "7d258f00243199129e9dc0b1e5bfda6ad50e94b637cd184d2e379390587ce063" => :sierra
-  end
-
-  devel do
-    url "https://cache.ruby-lang.org/pub/ruby/2.6/ruby-2.6.0-preview2.tar.xz"
-    version "2.6.0-preview2"
-    sha256 "00ddfb5e33dee24469dd0b203597f7ecee66522ebb496f620f5815372ea2d3ec"
+    rebuild 1
+    sha256 "74304ae76b81629a80edb0655c34883b00ab674fa10e0db4bd5336015acc5e17" => :catalina
+    sha256 "da318a12d35502d95a8bea49f735bb74af72cdb38b687b2f565d75b139941736" => :mojave
+    sha256 "9416860e0cd56aa45bfce03801a81eefcb0a25e0ccb123a82c51f5f1b6911abb" => :high_sierra
   end
 
   head do
-    url "https://github.com/ruby/ruby.git"
+    url "https://github.com/ruby/ruby.git", :branch => "trunk"
     depends_on "autoconf" => :build
   end
 
+  keg_only :provided_by_macos
+
   depends_on "pkg-config" => :build
   depends_on "libyaml"
-  depends_on "openssl"
+  depends_on "openssl@1.1"
   depends_on "readline"
 
   # Should be updated only when Ruby is updated (if an update is available).
   # The exception is Rubygem security fixes, which mandate updating this
   # formula & the versioned equivalents and bumping the revisions.
   resource "rubygems" do
-    url "https://rubygems.org/rubygems/rubygems-2.7.7.tgz"
-    sha256 "4cb2c9a36c0e4a3d5c20eb6795638632858fd72236d281963140221946ab55cb"
+    url "https://rubygems.org/rubygems/rubygems-3.0.6.tgz"
+    sha256 "fd6785ac24728bd5bf8f0883d197fe0cea4df37d485c5353c93fbe573b8941b1"
   end
 
   def api_version
@@ -39,7 +36,7 @@ class Ruby < Formula
   end
 
   def rubygems_bindir
-    HOMEBREW_PREFIX/"bin"
+    HOMEBREW_PREFIX/"lib/ruby/gems/#{api_version}/bin"
   end
 
   def install
@@ -48,7 +45,7 @@ class Ruby < Formula
 
     system "autoconf" if build.head?
 
-    paths = %w[libyaml openssl readline].map { |f| Formula[f].opt_prefix }
+    paths = %w[libyaml openssl@1.1 readline].map { |f| Formula[f].opt_prefix }
     args = %W[
       --prefix=#{prefix}
       --enable-shared
@@ -56,6 +53,7 @@ class Ruby < Formula
       --with-sitedir=#{HOMEBREW_PREFIX}/lib/ruby/site_ruby
       --with-vendordir=#{HOMEBREW_PREFIX}/lib/ruby/vendor_ruby
       --with-opt-dir=#{paths.join(":")}
+      --without-gmp
     ]
     args << "--disable-dtrace" unless MacOS::CLT.installed?
 
@@ -143,7 +141,7 @@ class Ruby < Formula
           "#{api_version}"
         ]
 
-        @default_dir ||= File.join(*path)
+        @homebrew_path ||= File.join(*path)
       end
 
       def self.private_dir
@@ -173,9 +171,9 @@ class Ruby < Formula
 
       def self.default_path
         if Gem.user_home && File.exist?(Gem.user_home)
-          [user_dir, default_dir, private_dir]
+          [user_dir, default_dir, old_default_dir, private_dir]
         else
-          [default_dir, private_dir]
+          [default_dir, old_default_dir, private_dir]
         end
       end
 
@@ -186,7 +184,22 @@ class Ruby < Formula
       def self.ruby
         "#{opt_bin}/ruby"
       end
+
+      # https://github.com/Homebrew/homebrew-core/issues/40872#issuecomment-542092547
+      class BasicSpecification
+        def self.default_specifications_dir
+          File.join(Gem.old_default_dir, "specifications", "default")
+        end
+      end
     end
+  EOS
+  end
+
+  def caveats; <<~EOS
+    By default, binaries installed by gem will be placed into:
+      #{rubygems_bindir}
+
+    You may want to add this to your PATH.
   EOS
   end
 

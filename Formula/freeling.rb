@@ -3,14 +3,13 @@ class Freeling < Formula
   homepage "http://nlp.lsi.upc.edu/freeling/"
   url "https://github.com/TALP-UPC/FreeLing/releases/download/4.1/FreeLing-4.1.tar.gz"
   sha256 "ccb3322db6851075c9419bb5e472aa6b2e32cc7e9fa01981cff49ea3b212247e"
-  revision 1
+  revision 3
 
   bottle do
-    rebuild 1
-    sha256 "e5027d909c999468a8fb3deea03a63b449e4b0cdb679ea0a447c5074641f08f9" => :mojave
-    sha256 "80fc641e9bb01820522377114bde6396423746df8b66ecb902359bc28e3f8d1e" => :high_sierra
-    sha256 "4a98299f8447dab5da5245828fae099e0699686f2b5e8d982c8ea8848f1e1eee" => :sierra
-    sha256 "8fb3e6914290b9164fb316a2b6725c457c8309aa0d9335fbda1308c46696b945" => :el_capitan
+    sha256 "ef41339b443cbacf31b4e67cfeb8574afcb6d1b180fba12635c351752b4994f8" => :catalina
+    sha256 "3faed316cb8f13fafe70e3d6e838dd9f8ce11b8606a16b9368b348e56a701aac" => :mojave
+    sha256 "8fd91b77f8dfc1aeb5bee785ccf8efa943aa534f993d32d64f800a1e64878c02" => :high_sierra
+    sha256 "a3ec3ea6662f4c7ee75aa77c6fb76d63fcdda6c92d56afbd228807a4bb02f2c4" => :sierra
   end
 
   depends_on "cmake" => :build

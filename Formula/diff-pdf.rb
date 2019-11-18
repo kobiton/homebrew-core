@@ -1,15 +1,15 @@
 class DiffPdf < Formula
   desc "Visually compare two PDF files"
   homepage "https://vslavik.github.io/diff-pdf/"
-  url "https://github.com/vslavik/diff-pdf/archive/v0.2.tar.gz"
-  sha256 "cb90f2e0fd4bc3fe235111f982bc20455a1d6bc13f4219babcba6bd60c1fe466"
-  revision 34
+  url "https://github.com/vslavik/diff-pdf/releases/download/v0.3/diff-pdf-0.3.tar.gz"
+  sha256 "8f1beb45d48fecfb09c802e95154ad9b8d4b73e90796eaf7ab835f107b495da0"
+  revision 7
 
   bottle do
     cellar :any
-    sha256 "67d7a15100d30a7564af8c23f157180043a657df7571fbd37f2a5f822c9970e2" => :mojave
-    sha256 "803da9c4f492d5b81acbb6d89688a37e197b4bfdf3bc8159e9bea85e1c68e31c" => :high_sierra
-    sha256 "f7b538c741b7c52a727bdca9b72edf8d07a33cc0d9cc9bab5e9edea5f9b2a623" => :sierra
+    sha256 "889d4938538d254d0b6e4d1438d8b361e038da3b92b00377686ab599f042accc" => :catalina
+    sha256 "5cf188696cd121f90dc5ea99796bd993718c058f6827aaa17d11356486378779" => :mojave
+    sha256 "44aa69f3298817c949621ea5af607bf08e8699c2f973e71fcf20fa5979c81d35" => :high_sierra
   end
 
   depends_on "autoconf" => :build
@@ -21,7 +21,6 @@ class DiffPdf < Formula
   depends_on :x11
 
   def install
-    system "./bootstrap"
     system "./configure", "--disable-dependency-tracking",
                           "--disable-silent-rules",
                           "--prefix=#{prefix}"

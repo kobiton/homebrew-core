@@ -1,15 +1,13 @@
 class Petsc < Formula
   desc "Portable, Extensible Toolkit for Scientific Computation (real)"
   homepage "https://www.mcs.anl.gov/petsc/"
-  url "http://ftp.mcs.anl.gov/pub/petsc/release-snapshots/petsc-lite-3.9.3.tar.gz"
-  sha256 "8828fe1221f038d78a8eee3325cdb22ad1055a2f0671871815ee9f47365f93bb"
+  url "http://ftp.mcs.anl.gov/pub/petsc/release-snapshots/petsc-lite-3.12.1.tar.gz"
+  sha256 "28c25cde288f689605f2160613feef45863c9ef3ceb2d1a44c2226b779938781"
 
   bottle do
-    rebuild 1
-    sha256 "b03109bfbe4896ef2326797e7726bb7cf4c9514a4ca0aef209f31dd3983e852d" => :mojave
-    sha256 "a8f87b8dfda728cb297bb27b18d2238d50f6774086e9170698913597abfe80d7" => :high_sierra
-    sha256 "6366422eb66c5b6d100fbfcb69e657f5f3b74807345c052e0a4a5d601ef27f60" => :sierra
-    sha256 "d1e6494ab696ef49852a59e1e8e4e81a90f06da95ba8dfbf05662372580e7c53" => :el_capitan
+    sha256 "17fcb8ebb261cfdeafe67d969fbea00b1b4f88ee25e8bb37e917d7a883760a4b" => :catalina
+    sha256 "2805f002f154fc9e2bb756b474c685d826b86b3ae6fba4a367f7962e2c329cb4" => :mojave
+    sha256 "dc247eed659aa0954082096c81bc575d038b98c627be5f3a13bdf5be46032bc6" => :high_sierra
   end
 
   depends_on "hdf5"
@@ -36,7 +34,7 @@ class Petsc < Formula
   end
 
   test do
-    test_case = "#{pkgshare}/examples/ksp/ksp/examples/tutorials/ex1.c"
+    test_case = "#{pkgshare}/examples/src/ksp/ksp/examples/tutorials/ex1.c"
     system "mpicc", test_case, "-I#{include}", "-L#{lib}", "-lpetsc", "-o", "test"
     output = shell_output("./test")
     # This PETSc example prints several lines of output. The last line contains

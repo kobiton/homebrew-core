@@ -1,27 +1,24 @@
 class Atk < Formula
   desc "GNOME accessibility toolkit"
   homepage "https://library.gnome.org/devel/atk/"
-  url "https://download.gnome.org/sources/atk/2.30/atk-2.30.0.tar.xz"
-  sha256 "dd4d90d4217f2a0c1fee708a555596c2c19d26fef0952e1ead1938ab632c027b"
+  url "https://download.gnome.org/sources/atk/2.34/atk-2.34.1.tar.xz"
+  sha256 "d4f0e3b3d21265fcf2bc371e117da51c42ede1a71f6db1c834e6976bb20997cb"
 
   bottle do
-    sha256 "ef98c860ad49b7c335854dc8a558e193353a8afad8d22d0bc1be1d82ccc716c7" => :mojave
-    sha256 "13a414fd51dc409c7fb66ff5a91920f11cda4a18e311b16249df7a1395e8f2b5" => :high_sierra
-    sha256 "945bbdb2a8e1ed4802a9b437fcdfccd59d0de099bcbee66e32a42f7cf9c86896" => :sierra
-    sha256 "786efff084a599afbdc9ab706da2e64ae1c4fc29110ab8f7379649a9651599e2" => :el_capitan
+    cellar :any
+    sha256 "01909cda5426d86c09f354fae84bdf29fdc42428b42d07eb799a49452cac7909" => :catalina
+    sha256 "481a81e57b58fd84251bd10a364433c5558802084f2dc4e459515b27703c6abb" => :mojave
+    sha256 "f80df2351f0b557484f7eb7c3b6dbd34e73dfdedd07a8cf0f1fd56be155f615f" => :high_sierra
+    sha256 "ec44e1cc0f0c110579b3e2a339bff88a9455f187cadd4cac3eec420cf2347ffe" => :sierra
   end
 
   depends_on "gobject-introspection" => :build
-  depends_on "meson-internal" => :build
+  depends_on "meson" => :build
   depends_on "ninja" => :build
   depends_on "pkg-config" => :build
   depends_on "glib"
 
-  patch :DATA
-
   def install
-    ENV.refurbish_args
-
     mkdir "build" do
       system "meson", "--prefix=#{prefix}", ".."
       system "ninja"
@@ -57,21 +54,3 @@ class Atk < Formula
     system "./test"
   end
 end
-
-__END__
-diff --git a/meson.build b/meson.build
-index 59abf5e..7af4f12 100644
---- a/meson.build
-+++ b/meson.build
-@@ -73,11 +73,6 @@ if host_machine.system() == 'linux'
-   common_ldflags += cc.get_supported_link_arguments(test_ldflags)
- endif
-
--# Maintain compatibility with autotools on macOS
--if host_machine.system() == 'darwin'
--  common_ldflags += [ '-compatibility_version 1', '-current_version 1.0', ]
--endif
--
- # Functions
- checked_funcs = [
-   'bind_textdomain_codeset',

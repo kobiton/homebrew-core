@@ -1,15 +1,14 @@
 class Fibjs < Formula
   desc "JavaScript on Fiber"
-  homepage "http://fibjs.org/"
-  url "https://github.com/fibjs/fibjs/releases/download/v0.26.1/fullsrc.zip"
-  sha256 "36bf6add810959c9474a0f247473fe3b2a34f49cb7a3bcc4a5ac5d7fced17068"
+  homepage "https://fibjs.org/"
+  url "https://github.com/fibjs/fibjs/releases/download/v0.29.0/fullsrc.zip"
+  sha256 "4e858fcfaf0e62bd06a7dfb8090c2bfabc9f5b7307d32908b33e0b93cae8052f"
   head "https://github.com/fibjs/fibjs.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "184dbe978e4283f82ec7a9c8760beb7de36beea4e1ec318bd4441f0df3b20619" => :mojave
-    sha256 "b0644c726c59d6e378117861dd7df2f461160eea7c10a14b551ce6999667eef3" => :high_sierra
-    sha256 "c92cd08f2df73f58392e8cb756c37cd0a7cc428658a4a38dce831e8357682987" => :sierra
+    sha256 "f733b3255e882d70e948c855e32105c639e64daa52778568e8e85bb0aabc31f8" => :mojave
+    sha256 "ea138f4c4158377036469a8e783d0baeaf28cf8c960baacfc017e5455d9a27b6" => :high_sierra
   end
 
   depends_on "cmake" => :build

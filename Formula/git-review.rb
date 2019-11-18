@@ -1,15 +1,16 @@
 class GitReview < Formula
   desc "Submit git branches to gerrit for review"
   homepage "https://git.openstack.org/cgit/openstack-infra/git-review"
-  url "https://files.pythonhosted.org/packages/f9/d5/c4d61b4f44db860a0ec61da6c713e55eb037bd37c31ec834137b97e3e89e/git-review-1.27.0.tar.gz"
-  sha256 "7a30afdd3c62e1ef69ebda3f22c17efccd1a0a89c761b9b0d301108a11a37476"
+  url "https://files.pythonhosted.org/packages/2c/e6/e4f1b999af2493a5cc5e050f0869b29f30914f94016abf48c77c6307745b/git-review-1.28.0.tar.gz"
+  sha256 "8e3aabb7b9484063e49c2504d137609401e32ad5128ff2a5cf43e98d5d3dc15a"
   head "https://git.openstack.org/openstack-infra/git-review.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "2f73ab5bf100915a3df63c43c33990c4f80525760432d7823b22f38cc9cd1a52" => :mojave
-    sha256 "4b8a4140d010eda40ba87bb4758a3f7bc4f720f2ccc6a96ce162f06604228c9d" => :high_sierra
-    sha256 "7fcf58eeb89e646c95b6f11450b4e042d1b5a21c4075d1efe33900037281e6c6" => :sierra
+    sha256 "35e5d4f99cf65a2e0454ab13fdd300795cf4a9da707799eff38edcb2340e3c63" => :catalina
+    sha256 "a12f62ba8ae2ec1f8247e21d1bf99eb6b2e07e801518ec65fa190558c5e36b14" => :mojave
+    sha256 "9ddf50178ac4c2bc4f8c5bb102eb36d20ad3c52d5ed2569adc08fb66c7f91bea" => :high_sierra
+    sha256 "a1cd9a36808cccc52105851a8f09ff29c82469d14701aad6c7ea06abe17c8a5f" => :sierra
   end
 
   depends_on "python"
@@ -30,8 +31,13 @@ class GitReview < Formula
   end
 
   resource "requests" do
-    url "https://files.pythonhosted.org/packages/54/1f/782a5734931ddf2e1494e4cd615a51ff98e1879cbe9eecbdfeaf09aa75e9/requests-2.19.1.tar.gz"
-    sha256 "ec22d826a36ed72a7358ff3fe56cbd4ba69dd7a6718ffd450ff0e9df7a47ce6a"
+    url "https://files.pythonhosted.org/packages/97/10/92d25b93e9c266c94b76a5548f020f3f1dd0eb40649cb1993532c0af8f4c/requests-2.20.0.tar.gz"
+    sha256 "99dcfdaaeb17caf6e526f32b6a7b780461512ab3f1d992187801694cba42770c"
+  end
+
+  resource "six" do
+    url "https://files.pythonhosted.org/packages/dd/bf/4138e7bfb757de47d1f4b6994648ec67a51efe58fa907c1e11e350cddfca/six-1.12.0.tar.gz"
+    sha256 "d16a0141ec1a18405cd4ce8b4613101da75da0e9a7aec5bdd4fa804d0e0eba73"
   end
 
   resource "urllib3" do
@@ -59,6 +65,8 @@ class GitReview < Formula
 
   test do
     system "git", "init"
+    system "git", "config", "user.name", "BrewTestBot"
+    system "git", "config", "user.email", "BrewTestBot@test.com"
     system "git", "remote", "add", "gerrit", "https://github.com/Homebrew/homebrew.github.io"
     (testpath/".git/hooks/commit-msg").write "# empty - make git-review happy"
     (testpath/"foo").write "test file"

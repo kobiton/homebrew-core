@@ -1,31 +1,29 @@
 class Caddy < Formula
   desc "Alternative general-purpose HTTP/2 web server"
   homepage "https://caddyserver.com/"
-  url "https://github.com/mholt/caddy/archive/v0.11.0.tar.gz"
-  sha256 "81e593d258460a9f5c6b5a5f46890a08b6b1ce15f5c0fc7bcaf09826368c3a1a"
-  head "https://github.com/mholt/caddy.git"
+  url "https://github.com/caddyserver/caddy/archive/v1.0.4.tar.gz"
+  sha256 "bf81245d2b347c89a8e8aa358a224b722d55cb6e1c266bbdffbe6acc54d130a5"
+  head "https://github.com/caddyserver/caddy.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "c79f9d92e2aff50c3f5fce3e521448b0c8234f0dd7e38a7ee2ef6cba19a8b478" => :mojave
-    sha256 "14906b4bf0d7cb2b8bf034d7464645af3b06b484631b001e1e7af5358af112b5" => :high_sierra
-    sha256 "5a73e124c3e217c89325f753542dc626f80bbe78a5dcfe2f4613bd59a609f883" => :sierra
-    sha256 "04c0e14fd79ee5cf0aba00b8d3ab233bdf50eb47ee33e204a7e750c6c6a23615" => :el_capitan
+    sha256 "d0a61a2b2b722b4bc23be979479785f6da07dd51cf5dff18791d0accdd6e65f1" => :catalina
+    sha256 "a63d911c9dfc6832155bd9c70755185f69d8e238129644b2e9f0fc2436d260f3" => :mojave
+    sha256 "e51157637abfcda12254807018d278ae804827b94d6797b105ee9599f3c2ef6e" => :high_sierra
   end
 
   depends_on "go" => :build
 
   def install
-    ENV["GOPATH"] = buildpath
     ENV["GOOS"] = "darwin"
-    ENV["GOARCH"] = MacOS.prefer_64_bit? ? "amd64" : "386"
+    ENV["GOARCH"] = "amd64"
 
-    (buildpath/"src/github.com/mholt").mkpath
-    ln_s buildpath, "src/github.com/mholt/caddy"
+    (buildpath/"src/github.com/caddyserver").mkpath
+    ln_s buildpath, "src/github.com/caddyserver/caddy"
 
     system "go", "build", "-ldflags",
-           "-X github.com/mholt/caddy/caddy/caddymain.gitTag=#{version}",
-           "-o", bin/"caddy", "github.com/mholt/caddy/caddy"
+           "-X github.com/caddyserver/caddy/caddy/caddymain.gitTag=#{version}",
+           "-o", bin/"caddy", "github.com/caddyserver/caddy/caddy"
   end
 
   plist_options :manual => "caddy -conf #{HOMEBREW_PREFIX}/etc/Caddyfile"

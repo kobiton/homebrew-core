@@ -1,15 +1,15 @@
 class Restview < Formula
   desc "Viewer for ReStructuredText documents that renders them on the fly"
   homepage "https://mg.pov.lt/restview/"
-  url "https://github.com/mgedmin/restview/archive/2.9.1.tar.gz"
-  sha256 "a229119f7730c85ec75e4372c4cf69f9d846381ac4bdbc8ed672302a80c116d2"
+  url "https://github.com/mgedmin/restview/archive/2.9.2.tar.gz"
+  sha256 "155a5744111d3d1f9e7903f4445ff41c04b42c0be29705f57fb98b3d33b283bd"
   revision 1
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "f921ce885b343dae99d1e76b7d26fb1c4aaf6561040533b36389c79cf7e4c982" => :mojave
-    sha256 "f8133cfdbcbf588cf0625ab3bedcd760e27da652913139b4c163d18a002730a7" => :high_sierra
-    sha256 "de0d55f13c376469abd7f21dfdaa29d3c794673091324dc446b9334e0be884d1" => :sierra
+    sha256 "4604570163a307b9c8f0650d4f659cf985bc52260a653c3659ad22ca28e96769" => :catalina
+    sha256 "83b3b6d66d30c2d5362cb6418b41bee11b86940bac91aeab6e2d2e558560d87e" => :mojave
+    sha256 "776a2d539bfcaa95f2ff94db1aafe9e5a7817341b5484ea253f667a8f7538ec3" => :high_sierra
   end
 
   depends_on "python"
@@ -20,8 +20,8 @@ class Restview < Formula
   end
 
   resource "cffi" do
-    url "https://files.pythonhosted.org/packages/e7/a7/4cd50e57cc6f436f1cc3a7e8fa700ff9b8b4d471620629074913e3735fb2/cffi-1.11.5.tar.gz"
-    sha256 "e90f17980e6ab0f3c2f3730e56d1fe9bcba1891eeea58966e89d352492cc74f4"
+    url "https://files.pythonhosted.org/packages/93/1a/ab8c62b5838722f29f3daffcc8d4bd61844aa9b5f437341cc890ceee483b/cffi-1.12.3.tar.gz"
+    sha256 "041c81822e9f84b1d9c401182e174996f0bae9991f33725d059b771744290774"
   end
 
   resource "cmarkgfm" do
