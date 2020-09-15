@@ -6,6 +6,7 @@ class FfmpegAT343 < Formula
   head "https://github.com/FFmpeg/FFmpeg.git"
 
   bottle do
+    root_url "https://kobiton-devvn.s3-ap-southeast-1.amazonaws.com/downloads/ffmpeg"
     sha256 "0ed7155ac8ddeea49a851a82b3b12b4caaf9cba24ae0cf062f561a12c7801f32" => :catalina
   end
 
