@@ -5,6 +5,10 @@ class FfmpegAT343 < Formula
   sha256 "b3c2cae99585f34e8cae26cb2d658cf3d92dd008f17b2a39519e729fd9125768"
   head "https://github.com/FFmpeg/FFmpeg.git"
 
+  bottle do
+    sha256 "0ed7155ac8ddeea49a851a82b3b12b4caaf9cba24ae0cf062f561a12c7801f32" => :catalina
+  end
+
   option "with-chromaprint", "Enable the Chromaprint audio fingerprinting library"
   option "with-fdk-aac", "Enable the Fraunhofer FDK AAC library"
   option "with-libass", "Enable ASS/SSA subtitle format"
